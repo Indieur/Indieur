@@ -1,0 +1,322 @@
+.services-introduction {
+  position: relative;
+
+  width: 100%;
+
+  padding: 62px 0;
+
+  overflow: hidden;
+
+  background: #1255e5;
+
+  color: #ffffff;
+
+
+  // =====================================================
+  // CONTENT
+  // =====================================================
+
+  &__content {
+    width: 100%;
+
+    max-width: 950px;
+
+    margin: 0 auto;
+
+    text-align: center;
+  }
+
+
+  // =====================================================
+  // EYEBROW
+  // =====================================================
+
+  &__eyebrow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    width: fit-content;
+
+    margin: 0 auto 16px;
+
+    color: #fecd09;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.6px;
+
+    line-height: 1;
+
+    text-transform: uppercase;
+
+
+    span {
+      display: block;
+
+      width: 25px;
+
+      height: 2px;
+
+      flex: 0 0 25px;
+
+      border-radius: 20px;
+
+      background: #fecd09;
+    }
+  }
+
+
+  // =====================================================
+  // HEADING
+  // =====================================================
+
+  h2 {
+    display: block;
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 40px;
+
+    font-weight: 700;
+
+    line-height: 1.18;
+
+    letter-spacing: -0.8px;
+
+    text-align: center;
+  }
+
+
+  h2 strong {
+    color: #fecd09;
+
+    font-weight: 700;
+  }
+
+
+  // =====================================================
+  // MAIN DESCRIPTION
+  // =====================================================
+
+  &__description {
+    max-width: 850px;
+
+    margin: 17px auto 0;
+
+    color: rgba(255, 255, 255, 0.88);
+
+    font-size: 12px;
+
+    font-weight: 400;
+
+    line-height: 1.75;
+
+    text-align: center;
+  }
+
+
+  // =====================================================
+  // SUPPORTING TEXT
+  // =====================================================
+
+  &__subtext {
+    max-width: 700px;
+
+    margin: 8px auto 0;
+
+    color: rgba(255, 255, 255, 0.68);
+
+    font-size: 11px;
+
+    font-weight: 400;
+
+    line-height: 1.7;
+
+    text-align: center;
+  }
+
+
+  // =====================================================
+  // TABLET
+  // =====================================================
+
+  @media (max-width: 991px) {
+
+    padding: 55px 0;
+
+
+    &__content {
+      max-width: 750px;
+    }
+
+
+    h2 {
+      font-size: 35px;
+    }
+
+
+    &__description {
+      max-width: 680px;
+
+      font-size: 11px;
+    }
+
+
+    &__subtext {
+      font-size: 10px;
+    }
+  }
+
+
+  // =====================================================
+  // MOBILE
+  // =====================================================
+
+  @media (max-width: 767px) {
+
+    padding: 48px 20px;
+
+
+    &__content {
+      max-width: 100%;
+    }
+
+
+    // ---------------------------------------------
+    // EYEBROW
+    // ---------------------------------------------
+
+    &__eyebrow {
+      gap: 7px;
+
+      margin-bottom: 13px;
+
+      font-size: 7px;
+
+      letter-spacing: 1.2px;
+
+
+      span {
+        width: 17px;
+
+        flex-basis: 17px;
+      }
+    }
+
+
+    // ---------------------------------------------
+    // HEADING
+    // ---------------------------------------------
+
+    h2 {
+      font-size: 28px;
+
+      line-height: 1.2;
+
+      letter-spacing: -0.4px;
+    }
+
+
+    h2 strong {
+      display: block;
+    }
+
+
+    // ---------------------------------------------
+    // DESCRIPTION
+    // ---------------------------------------------
+
+    &__description {
+      margin-top: 13px;
+
+      font-size: 10px;
+
+      line-height: 1.7;
+    }
+
+
+    // ---------------------------------------------
+    // SUPPORTING TEXT
+    // ---------------------------------------------
+
+    &__subtext {
+      margin-top: 7px;
+
+      font-size: 9px;
+
+      line-height: 1.65;
+    }
+  }
+
+
+  // =====================================================
+  // SMALL MOBILE
+  // =====================================================
+
+  @media (max-width: 480px) {
+
+    padding: 42px 17px;
+
+
+    &__eyebrow {
+      font-size: 6.5px;
+
+      letter-spacing: 1px;
+    }
+
+
+    h2 {
+      font-size: 24px;
+
+      line-height: 1.2;
+    }
+
+
+    &__description {
+      font-size: 9px;
+
+      line-height: 1.65;
+    }
+
+
+    &__subtext {
+      font-size: 8.5px;
+
+      line-height: 1.6;
+    }
+  }
+
+
+  // =====================================================
+  // VERY SMALL MOBILE
+  // =====================================================
+
+  @media (max-width: 360px) {
+
+    padding: 38px 15px;
+
+
+    h2 {
+      font-size: 22px;
+    }
+
+
+    &__description {
+      font-size: 8.5px;
+    }
+
+
+    &__subtext {
+      font-size: 8px;
+    }
+  }
+}

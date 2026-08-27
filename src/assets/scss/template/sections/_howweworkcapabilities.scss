@@ -1,0 +1,1146 @@
+.how-work-capabilities {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  padding: 95px 0;
+
+  background: #f7f9fc;
+  color: #111827;
+
+
+  // =====================================================
+  // SECTION HEADER
+  // =====================================================
+
+  &__header {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto 55px;
+
+    text-align: center;
+  }
+
+
+  // =====================================================
+  // EYEBROW
+  // =====================================================
+
+ &__eyebrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  width: fit-content;
+  margin: 0 auto 18px;
+
+  color: #1255e5;
+
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  line-height: 1;
+
+  text-transform: uppercase;
+
+  &::before,
+  &::after {
+    content: "";
+
+    display: block;
+
+    width: 28px;
+    height: 2px;
+
+    flex: 0 0 28px;
+
+    border-radius: 20px;
+
+    background: #1255e5;
+  }
+}
+
+
+  // =====================================================
+  // MAIN HEADING
+  // =====================================================
+
+  &__heading {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    text-align: center;
+
+
+    h2 {
+      display: block;
+
+      width: 100%;
+
+      margin: 0;
+      padding: 0;
+
+      color: #111827;
+
+      font-size: 40px;
+      font-weight: 700;
+
+      line-height: 1.16;
+      letter-spacing: -0.8px;
+
+      text-align: center;
+    }
+
+
+    h2 strong {
+      display: block;
+
+      width: 100%;
+
+      margin: 0;
+      padding: 0;
+
+      color: #1255e5;
+
+      font-weight: 700;
+
+      text-align: center;
+    }
+
+
+    // ===================================================
+    // SUPPORTING TEXT
+    // ===================================================
+
+    p {
+      display: block;
+
+      width: 100%;
+      max-width: 650px;
+
+      margin: 18px auto 0;
+      padding: 0;
+
+      color: #697589;
+
+      font-size: 12px;
+      font-weight: 400;
+
+      line-height: 1.7;
+
+      text-align: center;
+    }
+  }
+
+
+  // =====================================================
+  // CAPABILITY STACK
+  // =====================================================
+
+  &__stack {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+  }
+
+
+  // =====================================================
+  // CAPABILITY CARD
+  // =====================================================
+
+  .how-work-capability {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns: 90px minmax(0, 1fr) 150px;
+
+    align-items: center;
+
+    gap: 30px;
+
+    width: 100%;
+    min-height: 185px;
+
+    padding: 28px 30px;
+
+    margin: 0 0 14px;
+
+    border: 1px solid #e4e9f1;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    box-shadow:
+      0 6px 25px rgba(17, 38, 74, 0.035);
+
+    box-sizing: border-box;
+
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+
+    &:hover {
+      transform: translateX(6px);
+
+      border-color: #cbd9f4;
+
+      box-shadow:
+        0 12px 35px rgba(18, 85, 229, 0.08);
+
+
+      .how-work-capability__icon {
+        transform: rotate(5deg);
+
+        background: #1255e5;
+
+        color: #ffffff;
+      }
+
+
+      .how-work-capability__arrow {
+        transform: translateX(5px);
+
+        color: #1255e5;
+      }
+    }
+  }
+
+
+  // =====================================================
+  // NUMBER BOX
+  // =====================================================
+
+  .how-work-capability__number {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 70px;
+    height: 70px;
+
+    border-radius: 8px;
+
+    background: #f2f6fd;
+
+    color: #1255e5;
+
+    font-size: 25px;
+    font-weight: 800;
+
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+
+  .how-work-capability__number::after {
+    content: "";
+
+    position: absolute;
+
+    right: -5px;
+    bottom: -5px;
+
+    width: 16px;
+    height: 16px;
+
+    border-radius: 3px;
+
+    background: #fecd09;
+  }
+
+
+  // =====================================================
+  // CARD CONTENT
+  // =====================================================
+
+  .how-work-capability__content {
+    min-width: 0;
+    width: 100%;
+  }
+
+
+  .how-work-capability__eyebrow {
+    display: block;
+
+    width: fit-content;
+
+    margin: 0 0 7px;
+
+    color: #1255e5;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+    line-height: 1.4;
+  }
+
+
+  .how-work-capability__content h3 {
+    display: block;
+
+    margin: 0 0 10px;
+
+    color: #111827;
+
+    font-size: 23px;
+    font-weight: 700;
+
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+  }
+
+
+  .how-work-capability__content p {
+    display: block;
+
+    width: 100%;
+    max-width: 650px;
+
+    margin: 0;
+
+    color: #697589;
+
+    font-size: 12px;
+    font-weight: 400;
+
+    line-height: 1.75;
+  }
+
+
+  // =====================================================
+  // RIGHT VISUAL
+  // =====================================================
+
+  .how-work-capability__visual {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 18px;
+
+    min-width: 0;
+  }
+
+
+  .how-work-capability__icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+
+    flex: 0 0 58px;
+
+    border-radius: 8px;
+
+    background: #f2f6fd;
+
+    color: #1255e5;
+
+    font-size: 25px;
+    font-weight: 400;
+
+    line-height: 1;
+
+    transition:
+      transform 0.3s ease,
+      background 0.3s ease,
+      color 0.3s ease;
+  }
+
+
+  .how-work-capability__arrow {
+    color: #a6b2c4;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    transition:
+      transform 0.3s ease,
+      color 0.3s ease;
+  }
+
+
+  // =====================================================
+  // YELLOW ACCENT
+  // =====================================================
+
+  .how-work-capability--yellow {
+
+    .how-work-capability__number {
+      background: #fff9df;
+
+      color: #c79f00;
+    }
+
+
+    .how-work-capability__number::after {
+      background: #1255e5;
+    }
+
+
+    .how-work-capability__icon {
+      background: #fff9df;
+
+      color: #c79f00;
+    }
+
+
+    .how-work-capability__eyebrow {
+      color: #c79f00;
+    }
+
+
+    &:hover {
+
+      .how-work-capability__icon {
+        background: #fecd09;
+
+        color: #111827;
+      }
+    }
+  }
+
+
+  // =====================================================
+  // SUPPORTING LINE
+  // =====================================================
+
+  &__support {
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+    max-width: 1100px;
+
+    min-height: 68px;
+
+    margin: 25px auto 0;
+
+    padding: 18px 22px;
+
+    border: 1px solid #e4e9f1;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    box-shadow:
+      0 5px 20px rgba(17, 38, 74, 0.025);
+
+    box-sizing: border-box;
+  }
+
+
+  &__support-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    flex: 0 0 32px;
+
+    margin-right: 13px;
+
+    border-radius: 50%;
+
+    background: #1255e5;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    line-height: 1;
+  }
+
+
+  &__support-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+
+  &__support-content span {
+    display: block;
+
+    margin: 0 0 3px;
+
+    color: #1255e5;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 1.4px;
+    line-height: 1.4;
+  }
+
+
+  &__support-content p {
+    display: block;
+
+    margin: 0;
+
+    color: #697589;
+
+    font-size: 11px;
+    font-weight: 400;
+
+    line-height: 1.6;
+  }
+
+
+  // =====================================================
+  // TABLET
+  // =====================================================
+
+  @media (max-width: 991px) {
+
+    padding: 80px 0;
+
+
+    // Header
+
+    &__header {
+      margin-bottom: 45px;
+
+      text-align: center;
+    }
+
+
+    &__eyebrow {
+      margin: 0 auto 17px;
+    }
+
+
+    &__heading {
+      display: block;
+
+      width: 100%;
+
+      text-align: center;
+    }
+
+
+    &__heading h2 {
+      font-size: 36px;
+
+      line-height: 1.18;
+
+      text-align: center;
+    }
+
+
+    &__heading h2 strong {
+      display: block;
+
+      text-align: center;
+    }
+
+
+    &__heading p {
+      max-width: 550px;
+
+      margin: 16px auto 0;
+
+      font-size: 12px;
+
+      text-align: center;
+    }
+
+
+    // Cards
+
+    &__stack {
+      max-width: 700px;
+    }
+
+
+    .how-work-capability {
+      grid-template-columns: 75px minmax(0, 1fr) 100px;
+
+      gap: 22px;
+
+      padding: 25px;
+    }
+
+
+    .how-work-capability__number {
+      width: 60px;
+      height: 60px;
+
+      font-size: 22px;
+    }
+
+
+    .how-work-capability__number::after {
+      right: -4px;
+      bottom: -4px;
+
+      width: 14px;
+      height: 14px;
+    }
+
+
+    .how-work-capability__content h3 {
+      font-size: 21px;
+    }
+
+
+    .how-work-capability__content p {
+      font-size: 11px;
+    }
+
+
+    .how-work-capability__visual {
+      gap: 10px;
+    }
+
+
+    .how-work-capability__icon {
+      width: 50px;
+      height: 50px;
+
+      flex-basis: 50px;
+
+      font-size: 21px;
+    }
+
+
+    .how-work-capability__arrow {
+      font-size: 19px;
+    }
+
+
+    &__support {
+      max-width: 700px;
+    }
+  }
+
+
+  // =====================================================
+  // MOBILE
+  // =====================================================
+
+  @media (max-width: 767px) {
+
+    padding: 65px 0;
+
+
+    // Header
+
+    &__header {
+      width: 100%;
+
+      margin-bottom: 38px;
+
+      text-align: center;
+    }
+
+
+    &__eyebrow {
+      justify-content: center;
+
+      gap: 7px;
+
+      margin: 0 auto 14px;
+
+      font-size: 9px;
+
+      letter-spacing: 1.3px;
+    }
+
+
+&__eyebrow {
+  justify-content: center;
+  gap: 7px;
+
+  margin: 0 auto 14px;
+
+  font-size: 9px;
+  letter-spacing: 1.3px;
+
+  &::before,
+  &::after {
+    width: 18px;
+    height: 2px;
+    flex-basis: 18px;
+  }
+}
+
+
+    &__heading {
+      display: block;
+
+      width: 100%;
+
+      text-align: center;
+    }
+
+
+    &__heading h2 {
+      width: 100%;
+
+      margin: 0;
+
+      font-size: 29px;
+
+      line-height: 1.2;
+
+      letter-spacing: -0.5px;
+
+      text-align: center;
+    }
+
+
+    &__heading h2 strong {
+      display: block;
+
+      width: 100%;
+
+      text-align: center;
+    }
+
+
+    &__heading p {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+
+      margin: 13px auto 0;
+
+      font-size: 11px;
+
+      line-height: 1.7;
+
+      text-align: center;
+    }
+
+
+    // Cards
+
+    &__stack {
+      width: 100%;
+      max-width: none;
+    }
+
+
+    .how-work-capability,
+    .how-work-capability--yellow {
+      display: grid;
+
+      grid-template-columns: 50px minmax(0, 1fr) 25px;
+
+      align-items: start;
+
+      gap: 14px;
+
+      width: 100%;
+
+      min-height: 0;
+
+      padding: 20px;
+
+      margin-bottom: 12px;
+
+      border-radius: 7px;
+    }
+
+
+    .how-work-capability:hover {
+      transform: none;
+    }
+
+
+    .how-work-capability__number {
+      width: 43px;
+      height: 43px;
+
+      border-radius: 6px;
+
+      font-size: 16px;
+    }
+
+
+    .how-work-capability__number::after {
+      right: -4px;
+      bottom: -4px;
+
+      width: 10px;
+      height: 10px;
+
+      border-radius: 2px;
+    }
+
+
+    .how-work-capability__eyebrow {
+      margin-bottom: 6px;
+
+      font-size: 7px;
+
+      letter-spacing: 1.2px;
+    }
+
+
+    .how-work-capability__content h3 {
+      margin-bottom: 8px;
+
+      font-size: 18px;
+
+      line-height: 1.25;
+    }
+
+
+    .how-work-capability__content p {
+      max-width: none;
+
+      font-size: 10px;
+
+      line-height: 1.7;
+    }
+
+
+    .how-work-capability__visual {
+      align-items: flex-start;
+
+      justify-content: flex-end;
+
+      gap: 0;
+    }
+
+
+    .how-work-capability__icon {
+      width: 34px;
+      height: 34px;
+
+      flex-basis: 34px;
+
+      border-radius: 5px;
+
+      font-size: 15px;
+    }
+
+
+    .how-work-capability__arrow {
+      display: none;
+    }
+
+
+    // Support
+
+    &__support {
+      align-items: flex-start;
+
+      width: 100%;
+
+      min-height: 0;
+
+      margin-top: 15px;
+
+      padding: 15px;
+
+      border-radius: 7px;
+    }
+
+
+    &__support-icon {
+      width: 28px;
+      height: 28px;
+
+      flex-basis: 28px;
+
+      margin-right: 9px;
+
+      font-size: 10px;
+    }
+
+
+    &__support-content span {
+      margin-bottom: 3px;
+
+      font-size: 6px;
+
+      letter-spacing: 1px;
+    }
+
+
+    &__support-content p {
+      font-size: 9px;
+
+      line-height: 1.65;
+    }
+  }
+
+
+  // =====================================================
+  // SMALL MOBILE
+  // =====================================================
+
+  @media (max-width: 480px) {
+
+    padding: 55px 0;
+
+
+    &__header {
+      margin-bottom: 32px;
+    }
+
+
+    &__eyebrow {
+      font-size: 8px;
+
+      letter-spacing: 1.2px;
+    }
+
+
+    &__heading h2 {
+      font-size: 26px;
+
+      line-height: 1.2;
+
+      text-align: center;
+    }
+
+
+    &__heading p {
+      margin-top: 12px;
+
+      font-size: 10px;
+
+      line-height: 1.65;
+
+      text-align: center;
+    }
+
+
+    .how-work-capability,
+    .how-work-capability--yellow {
+      grid-template-columns: 45px minmax(0, 1fr) 20px;
+
+      gap: 11px;
+
+      padding: 17px;
+    }
+
+
+    .how-work-capability__number {
+      width: 39px;
+      height: 39px;
+
+      font-size: 14px;
+    }
+
+
+    .how-work-capability__content h3 {
+      font-size: 17px;
+    }
+
+
+    .how-work-capability__content p {
+      font-size: 9px;
+
+      line-height: 1.7;
+    }
+
+
+    .how-work-capability__icon {
+      width: 30px;
+      height: 30px;
+
+      flex-basis: 30px;
+
+      font-size: 13px;
+    }
+
+
+    &__support {
+      padding: 13px;
+    }
+
+
+    &__support-icon {
+      width: 26px;
+      height: 26px;
+
+      flex-basis: 26px;
+
+      margin-right: 8px;
+
+      font-size: 9px;
+    }
+
+
+    &__support-content span {
+      font-size: 6px;
+    }
+
+
+    &__support-content p {
+      font-size: 8.5px;
+    }
+  }
+
+
+  // =====================================================
+  // VERY SMALL DEVICES
+  // =====================================================
+
+  @media (max-width: 360px) {
+
+    padding: 50px 0;
+
+
+    &__heading h2 {
+      font-size: 24px;
+
+      text-align: center;
+    }
+
+
+    &__heading p {
+      font-size: 9.5px;
+
+      text-align: center;
+    }
+
+
+    .how-work-capability,
+    .how-work-capability--yellow {
+      grid-template-columns: 42px minmax(0, 1fr) 18px;
+
+      gap: 9px;
+
+      padding: 15px;
+    }
+
+
+    .how-work-capability__number {
+      width: 37px;
+      height: 37px;
+
+      font-size: 13px;
+    }
+
+
+    .how-work-capability__content h3 {
+      font-size: 16px;
+    }
+
+
+    .how-work-capability__content p {
+      font-size: 8.5px;
+    }
+
+
+    .how-work-capability__icon {
+      width: 28px;
+      height: 28px;
+
+      flex-basis: 28px;
+
+      font-size: 12px;
+    }
+  }
+
+
+  // =====================================================
+  // ACCESSIBILITY
+  // =====================================================
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .how-work-capability,
+    .how-work-capability__icon,
+    .how-work-capability__arrow {
+      transition: none;
+    }
+  }
+}
+
+/* =====================================================
+   DESKTOP FONT SIZE — MINIMUM 12PX
+   Applies only to desktop screens (992px and above)
+   ===================================================== */
+
+@media (min-width: 992px) {
+
+  .how-work-capabilities,
+  .how-work-capabilities * {
+    /* Keep inherited font sizes unless specifically overridden below */
+  }
+
+  /* Section eyebrow */
+  .how-work-capabilities__eyebrow {
+    font-size: 12px;
+  }
+
+  /* Main heading supporting paragraph */
+  .how-work-capabilities__heading p {
+    font-size: 12px;
+  }
+
+  /* Card eyebrow */
+  .how-work-capability__eyebrow {
+    font-size: 12px;
+  }
+
+  /* Card description */
+  .how-work-capability__content p {
+    font-size: 12px;
+  }
+
+  /* Supporting box label */
+  .how-work-capabilities__support-content span {
+    font-size: 12px;
+  }
+
+  /* Supporting box text */
+  .how-work-capabilities__support-content p {
+    font-size: 12px;
+  }
+
+  /* Keep icon / number text comfortably above 12px */
+  .how-work-capability__number {
+    font-size: 25px;
+  }
+
+  .how-work-capability__icon {
+    font-size: 25px;
+  }
+
+  .how-work-capability__arrow {
+    font-size: 22px;
+  }
+
+  .how-work-capabilities__support-icon {
+    font-size: 12px;
+  }
+}
+

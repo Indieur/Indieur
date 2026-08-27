@@ -1,0 +1,217 @@
+.testi-style1 {
+  background-color: #F8F8F9;
+  padding: 1px 40px 35px 40px;
+  margin: 15px 0 30px 0;
+  border-radius: 5px;
+  transition: all ease 0.4s;
+
+  &:hover {
+    background-color: $white-color;
+    box-shadow: 0px 10px 31px rgba(169, 177, 193, 0.17);
+  }
+  
+  .testi-icon {
+    padding: 10px;
+    width: fit-content;
+    background-color: $white-color;
+    border-radius: 5px;
+    margin: -25px 0 20px 0;
+    
+    i {
+      width: var(--icon-size, 60px);
+      height: var(--icon-size, 60px);
+      line-height: var(--icon-size, 60px);
+      color: $white-color;
+      font-size: 24px;
+      border-radius: inherit;
+      background-color: $theme-color;
+      text-align: center;
+      display: inline-block;
+    }
+  }
+
+  .testi-text {
+    margin: 0 0 22px 0;
+  }
+
+  .testi-name {
+    margin: 0;
+  }
+
+  .testi-degi {
+    font-size: 14px;
+    display: block;
+    color: $theme-color;
+  }
+}
+
+.testi-style2 {
+  background-color: $white-color;
+  box-shadow: 0px 10px 31px rgba(169, 177, 193, 0.17);
+  border-radius: 5px;
+  padding: 50px 50px 40px 50px;
+  margin: 0 0 30px 0;
+  
+  .testi-body {
+    display: flex;
+    margin: 0 0 12px 0;
+  }
+
+  .author-img {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    margin: 0 30px 0 0;
+    border-radius: 5px;
+  }
+
+  .testi-text {
+    font-family: $title-font;
+    line-height: 30px;
+    font-size: 16px;
+    font-style: italic;
+    margin-top: -0.4em;
+  }
+
+  .testi-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 2px 0;
+  }
+
+  .testi-degi {
+    font-size: 14px;
+    font-family: $title-font;
+    color: $theme-color;
+  }
+
+}
+
+.testi-style2-slide {
+  margin-top: -30px;
+
+  .testi-style2 {
+    box-shadow: 0px 10px 21px rgba(169, 177, 193, 0.15);    
+    margin-top: 30px;
+  }
+}
+
+.author-style1 {
+  display: flex;
+  border-radius: 15px;
+  position: relative;
+  padding: 30px;
+  margin: 0 0 30px 0;
+  transition: all ease 0.4s;
+  box-shadow: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 5px;
+    height: 20px;
+    background-color: $theme-color;
+    border-radius: 9999px;
+    margin: -10px 0 0 0;
+    transition: all ease 0.4s;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .media-label {
+    @extend .h6;
+    margin: 0;
+  }
+
+  .media-link {
+    color: $theme-color;
+    font-size: 14px;
+  }
+
+  .media-icon {
+    margin: 0 15px 0 0;
+    width: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+
+
+.slick-current .author-style1,
+.author-style1:hover {
+  background-color: $white-color;
+  box-shadow: 0px 17px 20px #EEEFF1;
+}
+
+.slick-current .author-style1 {
+  &::before {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+
+.testi-text-slide {
+  .testi-text {
+    font-size: 18px;
+    margin: 10px 0 30px 0;
+  }
+}
+
+.testimonial-arrow {
+  position: absolute;
+  right: -126px;
+  top: 50%;
+  transform: translateY(-50%);
+  
+  .icon-btn {
+    display: block;
+    margin: 0 0 20px 0;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@include ml {
+  .author-style1 {
+    padding: 20px;
+
+    .media-label {
+      margin: 0;
+      font-size: 18px;
+    }
+  }
+}
+
+@include lg {
+  .testi-style1 {
+    padding: 1px 25px 35px 25px;
+  }  
+
+  .testi-style2 {
+    padding: 40px 40px 30px 40px;
+    text-align: center;
+
+    .author-img {
+      margin: 0 auto 15px auto;
+    }
+
+    .testi-body {
+      display: flex;
+      margin: 0 0 0 0;
+      flex-direction: column-reverse;
+    }
+  }
+}
+
+@include md {
+  .testi-style2 {
+    padding: 30px;
+  }
+}

@@ -1,0 +1,77 @@
+
+
+.form-style1 {
+  background-color: $theme-color;
+  --bs-gutter-x: 20px;
+  padding: 70px 80px 80px 80px;
+
+  .form-title {
+    color: $white-color;
+    text-align: center;
+    margin: 0 0 27px 0;
+    padding: 0 0 17px 0;
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      // margin: 0 0 0 -50px;
+      height: 1px;
+      border-radius: 5px;
+      background-color: #0844BC;
+      background-color: $white-color;
+      opacity: 0.3;
+    }
+  }
+
+  .vs-btn {
+    width: 100%;
+  }
+
+  textarea,
+  input {
+    height: 55px;
+    background-color: $white-color;
+    font-size: 16px;
+    font-family: $body-font;
+    color: $body-color;
+    border-radius: 5px;
+  }
+
+  textarea {
+    min-height: 180px;
+    resize: none;
+  }
+}
+
+.form-style2 {
+  margin-bottom: 30px;
+  
+  textarea,
+  select,
+  input {
+    background-color: $smoke-color;
+    border: none;
+    font-size: 16px;
+    padding-left: 25px;
+  }
+}
+
+
+@include sm {
+  .form-style1 {
+    padding: 40px 20px 40px 20px;
+
+    select,
+    .form-control,
+    .form-select,
+    textarea,
+    input {
+      padding-left: 20px;
+      font-size: 14px;
+    }
+  }
+}

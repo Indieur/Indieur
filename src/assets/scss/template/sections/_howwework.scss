@@ -1,0 +1,586 @@
+.how-we-work-section {
+  position: relative;
+  padding: 100px 0;
+  background: #f7f9fc;
+  overflow: hidden;
+
+  // =========================
+  // HEADING
+  // =========================
+
+  .how-work-heading {
+    max-width: 760px;
+    margin: 0 auto 75px;
+    text-align: center;
+
+    .how-work-eyebrow {
+      display: inline-block;
+      margin-bottom: 15px;
+      color: #1255e5;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      color: #111827;
+      font-size: 46px;
+      line-height: 1.15;
+      font-weight: 700;
+
+      span {
+        color: #1255e5;
+      }
+    }
+
+    p {
+      max-width: 650px;
+      margin: 0 auto;
+      color: #6b7280;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+  }
+
+  // =========================
+  // PROCESS WRAPPER
+  // =========================
+
+  .process-wrapper {
+    position: relative;
+    width: 100%;
+  }
+
+  // =========================
+  // HORIZONTAL LINE
+  // =========================
+
+  .process-line {
+    position: absolute;
+    top: 34px;
+    left: 8.33%;
+    width: 83.34%;
+    height: 2px;
+    background: #dbe5f7;
+    z-index: 1;
+  }
+
+  // =========================
+  // PROCESS GRID
+  // =========================
+
+  .process-grid {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 20px;
+
+    /*
+      IMPORTANT:
+      All grid items stretch to the
+      height of the tallest item.
+    */
+    align-items: stretch;
+  }
+
+  // =========================
+  // PROCESS STEP
+  // =========================
+
+  .process-step {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    /*
+      Makes every step occupy the
+      complete grid-row height.
+    */
+    height: 100%;
+    min-width: 0;
+
+    // =========================
+    // NUMBER
+    // =========================
+
+    .process-number {
+      position: relative;
+      z-index: 2;
+
+      width: 68px;
+      height: 68px;
+
+      min-width: 68px;
+      min-height: 68px;
+
+      align-self: center;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 50%;
+      border: 7px solid #f7f9fc;
+
+      background: #1255e5;
+      color: #fff;
+
+      font-size: 17px;
+      font-weight: 700;
+
+      box-shadow: 0 8px 25px rgba(18, 85, 229, 0.18);
+    }
+
+    // =========================
+    // PROCESS CARD
+    // =========================
+
+    .process-card {
+      width: 100%;
+
+      /*
+        THIS IS THE MAIN FIX.
+
+        flex: 1 makes every card fill
+        the remaining height of its
+        process-step.
+
+        Since all process-steps are
+        stretched by the grid, all
+        cards become equal height.
+      */
+      flex: 1 1 auto;
+
+      height: auto;
+      min-height: 275px;
+
+      margin-top: 25px;
+
+      padding: 28px 28px;
+
+      box-sizing: border-box;
+
+      display: flex;
+      flex-direction: column;
+
+      background: #fff;
+
+      border: 1px solid #e8edf5;
+      border-radius: 10px;
+
+      box-shadow: 0 8px 30px rgba(18, 35, 70, 0.05);
+
+      transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        border-color 0.3s ease;
+
+      // =========================
+      // SMALL NUMBER
+      // =========================
+
+      .process-small-number {
+        display: block;
+
+        margin: 0 0 12px;
+
+        color: #1255e5;
+
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.4;
+
+        letter-spacing: 1px;
+      }
+
+      // =========================
+      // TITLE
+      // =========================
+
+      h3 {
+        margin: 0 0 16px;
+
+        color: #111827;
+
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.3;
+
+        overflow-wrap: break-word;
+        word-break: normal;
+      }
+
+      // =========================
+      // DESCRIPTION
+      // =========================
+
+      p {
+        margin: 0;
+
+        color: #687386;
+
+        font-size: 14px;
+        line-height: 1.8;
+
+        overflow-wrap: break-word;
+        word-break: normal;
+      }
+
+      // =========================
+      // HOVER
+      // =========================
+
+      &:hover {
+        transform: translateY(-7px);
+
+        border-color: #cddcff;
+
+        box-shadow: 0 15px 35px rgba(18, 85, 229, 0.1);
+      }
+    }
+  }
+
+  // =========================
+  // CTA
+  // =========================
+
+  .how-work-cta {
+    margin-top: 55px;
+    text-align: center;
+
+    .how-work-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 15px;
+
+      padding: 15px 25px;
+
+      border-radius: 5px;
+
+      background: #1255e5;
+      color: #fff;
+
+      font-size: 14px;
+      font-weight: 600;
+
+      text-decoration: none;
+
+      box-shadow: 0 8px 22px rgba(18, 85, 229, 0.2);
+
+      transition:
+        background 0.3s ease,
+        transform 0.3s ease;
+
+      span {
+        font-size: 20px;
+        line-height: 1;
+
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: #0b45c4;
+        color: #fff;
+
+        transform: translateY(-2px);
+
+        span {
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+
+  // =========================================================
+  // TABLET
+  // =========================================================
+
+  @media (max-width: 991px) {
+    padding: 80px 0;
+
+    // =========================
+    // HEADING
+    // =========================
+
+    .how-work-heading {
+      margin-bottom: 60px;
+
+      h2 {
+        font-size: 38px;
+      }
+    }
+
+    // =========================
+    // LINE
+    // =========================
+
+    .process-line {
+      display: none;
+    }
+
+    // =========================
+    // GRID
+    // =========================
+
+    .process-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 40px 20px;
+
+      align-items: stretch;
+    }
+
+    // =========================
+    // STEP
+    // =========================
+
+    .process-step {
+      height: 100%;
+
+      .process-card {
+        flex: 1 1 auto;
+
+        height: auto;
+        min-height: 250px;
+
+        padding: 25px 22px;
+      }
+    }
+  }
+
+  // =========================================================
+  // MOBILE
+  // =========================================================
+
+  @media (max-width: 767px) {
+    padding: 65px 0;
+
+    // =========================
+    // HEADING
+    // =========================
+
+    .how-work-heading {
+      margin-bottom: 50px;
+
+      text-align: left;
+
+      .how-work-eyebrow {
+        font-size: 11px;
+        letter-spacing: 1.2px;
+      }
+
+      h2 {
+        font-size: 31px;
+        line-height: 1.2;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.7;
+      }
+    }
+
+    // =========================
+    // MOBILE VERTICAL LINE
+    // =========================
+
+    .process-wrapper {
+      padding-left: 18px;
+
+      &::before {
+        content: "";
+
+        position: absolute;
+
+        top: 0;
+        bottom: 0;
+        left: 18px;
+
+        width: 2px;
+
+        background: #dbe5f7;
+      }
+    }
+
+    // =========================
+    // GRID
+    // =========================
+
+    .process-grid {
+      display: flex;
+      flex-direction: column;
+
+      gap: 0;
+    }
+
+    // =========================
+    // STEP
+    // =========================
+
+    .process-step {
+      display: grid;
+
+      grid-template-columns: 55px minmax(0, 1fr);
+
+      align-items: start;
+
+      height: auto;
+
+      margin-bottom: 30px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      // =========================
+      // NUMBER
+      // =========================
+
+      .process-number {
+        width: 52px;
+        height: 52px;
+
+        min-width: 52px;
+        min-height: 52px;
+
+        align-self: start;
+
+        border-width: 5px;
+
+        font-size: 13px;
+      }
+
+      // =========================
+      // CARD
+      // =========================
+
+      .process-card {
+        width: 100%;
+
+        flex: none;
+
+        height: auto;
+        min-height: 0;
+
+        margin-top: 0;
+        margin-left: 12px;
+
+        padding: 22px 20px;
+
+        .process-small-number {
+          margin-bottom: 10px;
+          font-size: 10px;
+        }
+
+        h3 {
+          margin-bottom: 10px;
+
+          font-size: 19px;
+          line-height: 1.35;
+        }
+
+        p {
+          font-size: 13px;
+          line-height: 1.7;
+        }
+      }
+    }
+
+    // =========================
+    // CTA
+    // =========================
+
+    .how-work-cta {
+      margin-top: 40px;
+
+      .how-work-btn {
+        width: 100%;
+
+        padding: 14px 20px;
+      }
+    }
+  }
+
+  // =========================================================
+  // SMALL MOBILE
+  // =========================================================
+
+  @media (max-width: 480px) {
+    // =========================
+    // HEADING
+    // =========================
+
+    .how-work-heading {
+      h2 {
+        font-size: 28px;
+      }
+    }
+
+    // =========================
+    // VERTICAL LINE
+    // =========================
+
+    .process-wrapper {
+      padding-left: 12px;
+
+      &::before {
+        left: 12px;
+      }
+    }
+
+    // =========================
+    // STEP
+    // =========================
+
+    .process-step {
+      grid-template-columns: 45px minmax(0, 1fr);
+
+      // =========================
+      // NUMBER
+      // =========================
+
+      .process-number {
+        width: 44px;
+        height: 44px;
+
+        min-width: 44px;
+        min-height: 44px;
+
+        border-width: 4px;
+
+        font-size: 12px;
+      }
+
+      // =========================
+      // CARD
+      // =========================
+
+      .process-card {
+        width: 100%;
+
+        height: auto;
+        min-height: 0;
+
+        margin-left: 10px;
+
+        padding: 20px 17px;
+
+        h3 {
+          font-size: 18px;
+          line-height: 1.35;
+        }
+
+        p {
+          font-size: 12.5px;
+          line-height: 1.7;
+        }
+      }
+    }
+  }
+}

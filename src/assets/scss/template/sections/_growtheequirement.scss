@@ -1,0 +1,331 @@
+.growth-requirement {
+  position: relative;
+
+  width: 100%;
+
+  padding: 65px 0;
+
+  overflow: hidden;
+
+  background: #1255e5;
+
+  color: #ffffff;
+
+
+  // =====================================================
+  // CONTENT
+  // =====================================================
+
+  &__content {
+    max-width: 850px;
+
+    margin: 0 auto;
+
+    text-align: center;
+  }
+
+
+  // =====================================================
+  // EYEBROW
+  // =====================================================
+
+  &__eyebrow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    width: fit-content;
+
+    margin: 0 auto 15px;
+
+    color: #fecd09;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+
+    line-height: 1;
+
+    text-transform: uppercase;
+
+
+    span {
+      display: block;
+
+      width: 22px;
+      height: 2px;
+
+      flex: 0 0 22px;
+
+      border-radius: 20px;
+
+      background: #fecd09;
+    }
+  }
+
+
+  // =====================================================
+  // HEADING
+  // =====================================================
+
+  h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 38px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.7px;
+  }
+
+
+  // =====================================================
+  // MAIN TEXT
+  // =====================================================
+
+  p {
+    max-width: 720px;
+
+    margin: 15px auto 0;
+
+    color: rgba(255, 255, 255, 0.82);
+
+    font-size: 12px;
+
+    font-weight: 400;
+
+    line-height: 1.75;
+  }
+
+
+  // =====================================================
+  // SUBTEXT
+  // =====================================================
+
+  &__subtext {
+    max-width: 600px;
+
+    margin-top: 7px !important;
+
+    color: rgba(255, 255, 255, 0.65) !important;
+
+    font-size: 11px !important;
+  }
+
+
+  // =====================================================
+  // BUTTON
+  // =====================================================
+
+  &__button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    min-height: 42px;
+
+    margin-top: 22px;
+
+    padding: 0 20px;
+
+    border: 0;
+
+    border-radius: 4px;
+
+    background: #ffffff;
+
+    color: #1255e5;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+      0 8px 20px rgba(0, 0, 0, 0.12);
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+
+
+    span {
+      font-size: 16px;
+
+      line-height: 1;
+
+      transition: transform 0.25s ease;
+    }
+
+
+    &:hover {
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.18);
+
+
+      span {
+        transform: translateX(4px);
+      }
+    }
+  }
+
+
+  // =====================================================
+  // TABLET
+  // =====================================================
+
+  @media (max-width: 991px) {
+
+    padding: 55px 0;
+
+
+    &__content {
+      max-width: 700px;
+    }
+
+
+    h2 {
+      font-size: 34px;
+    }
+
+
+    p {
+      max-width: 650px;
+
+      font-size: 11px;
+    }
+  }
+
+
+  // =====================================================
+  // MOBILE
+  // =====================================================
+
+  @media (max-width: 767px) {
+
+    padding: 48px 20px;
+
+
+    &__content {
+      max-width: 100%;
+    }
+
+
+    &__eyebrow {
+      gap: 7px;
+
+      margin-bottom: 13px;
+
+      font-size: 7px;
+
+      letter-spacing: 1.1px;
+
+
+      span {
+        width: 16px;
+
+        flex-basis: 16px;
+      }
+    }
+
+
+    h2 {
+      font-size: 27px;
+
+      line-height: 1.2;
+
+      letter-spacing: -0.4px;
+    }
+
+
+    p {
+      margin-top: 13px;
+
+      font-size: 10px;
+
+      line-height: 1.7;
+    }
+
+
+    &__subtext {
+      margin-top: 6px !important;
+
+      font-size: 9px !important;
+    }
+
+
+    &__button {
+      min-height: 40px;
+
+      margin-top: 18px;
+
+      padding: 0 17px;
+
+      font-size: 8px;
+    }
+  }
+
+
+  // =====================================================
+  // SMALL MOBILE
+  // =====================================================
+
+  @media (max-width: 480px) {
+
+    padding: 42px 17px;
+
+
+    &__eyebrow {
+      font-size: 6.5px;
+    }
+
+
+    h2 {
+      font-size: 24px;
+    }
+
+
+    p {
+      font-size: 9px;
+
+      line-height: 1.65;
+    }
+
+
+    &__subtext {
+      font-size: 8.5px !important;
+    }
+
+
+    &__button {
+      min-height: 38px;
+
+      margin-top: 16px;
+
+      padding: 0 15px;
+
+      font-size: 8px;
+    }
+  }
+}

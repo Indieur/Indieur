@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "image": "images/about/ab-5-1.jpg",
+    "icon": "fal fa-quote-right",
+    "avater": "images/testimonial/auth-4-1.jpg",
+    "name": "Indieur Growth Principle",
+    "designation": "Strategy Before Execution",
+    "text": "We recommend channels and activities based on the business objective, target audience, offer, operational capacity and available budget-not simply because a platform is popular."
+  },
+  {
+    "id": "2",
+    "image": "images/about/ab-5-2.jpg",
+    "icon": "fal fa-quote-right",
+    "avater": "images/testimonial/auth-4-2.jpg",
+    "name": "Indieur Growth Principle",
+    "designation": "Measurement Before Assumption",
+    "text": "We focus reporting on meaningful actions such as enquiries, calls, WhatsApp conversations, purchases and customer retention wherever reliable tracking is available."
+  }
+]

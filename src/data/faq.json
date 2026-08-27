@@ -1,0 +1,37 @@
+[
+  {
+    "questionId": "a",
+    "question": "Do you guarantee leads or sales?",
+    "answer": "No responsible marketing partner can guarantee a fixed number of leads, sales or ROAS without considering the market, offer, budget, competition, website, tracking, sales response and operational capacity.We commit to structured execution, measurement, optimisation and transparent reporting."
+  },
+  {
+    "questionId": "b",
+    "question": "Is advertising spend included in the service fee?",
+    "answer": "No. Meta Ads, Google Ads and other media budgets are paid directly by the client and are separate from our professional fee"
+  },
+  {
+    "questionId": "c",
+    "question": "Are creative-production costs included?",
+    "answer": "Ad copy and creative direction may be included in selected services. Graphic design, photography, video production, influencer collaborations and other production requirements are included only when specifically mentioned in the final scope."
+  },
+  {
+    "questionId": "d",
+    "question": "How long should we work together?",
+    "answer": "Recurring marketing services generally require a minimum 60-90-day engagement because campaign learning, tracking validation and optimisation need sufficient time and data"
+  },
+  {
+    "questionId": "e",
+    "question": "Can we start with only one service?",
+    "answer": "No. We do not provide email marketing services. We can, however, recommend trusted partners for email marketing."
+  },
+  {
+    "questionId": "f",
+    "question": "Do you work with businesses across India?",
+    "answer": "Yes. We work with suitable businesses across India, subject to service fit, communication requirements and operational readiness."
+  },
+  {
+    "questionId": "g",
+    "question": "Can you manage everything under one package?",
+    "answer": "A coordinated multi-service plan can be developed after reviewing the business requirements. “Full digital marketing” means managing agreed priorities within defined deliverables-it does not mean unlimited work across every marketing activity."
+  }
+]

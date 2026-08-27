@@ -1,0 +1,207 @@
+[
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Growth Strategy & Consulting",
+    "price": "$29.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "Business and digital presence review",
+      "Market and competitor research",
+      "Target-audience identification",
+      "Customer-persona development",
+      "Brand positioning support",
+      "Value-proposition development",
+      "Marketing-channel planning",
+      "Customer-journey analysis",
+      "Growth opportunity prioritisation"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Meta Ads Management",
+    "price": "$39.99",
+    "duration": "annually",
+    "path": "/contact",
+    "features": [
+      "Campaign strategy and setup",
+      "Audience research",
+      "Lead-generation campaigns",
+      "Website sales campaigns",
+      "WhatsApp campaigns",
+      "Retargeting",
+      "Lookalike audiences",
+      "Creative and message testing",
+      "Conversion review",
+      "Campaign monitoring and optimisation",
+      "Monthly performance reporting"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Google Ads Management",
+    "price": "$59.99",
+    "duration": "yearly",
+    "path": "/contact",
+    "features": [
+      "Google Search campaigns",
+      "Shopping campaigns",
+      "Performance Max campaigns",
+      "Display and remarketing campaigns",
+      "Keyword research",
+      "Search-term optimisation",
+      "Negative-keyword management",
+      "Location targeting",
+      "Landing-page recommendations",
+      "Conversion tracking",
+      "Campaign optimisation and reporting"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Search Engine Optimisation",
+    "price": "$29.99",
+    "duration": "lifetime",
+    "path": "/contact",
+    "features": [
+      "SEO audits",
+      "Keyword and search-intent research",
+      "Competitor keyword analysis",
+      "On-page SEO",
+      "Technical SEO",
+      "Local SEO",
+      "Ecommerce and product SEO",
+      "Google Search Console monitoring",
+      "Crawl and indexation management",
+      "Core Web Vitals review",
+      "Schema recommendations",
+      "Content and internal-linking strategy"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Social Media & Content Marketing",
+    "price": "$49.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "Social media strategy",
+      "Content pillars",
+      "Monthly content calendars",
+      "Social media copy",
+      "Ad copy",
+      "Website and landing-page copy",
+      "Reels and short-form content planning",
+      "Hashtag and keyword strategy",
+      "Publishing and scheduling",
+      "Community-management planning",
+      "Performance reporting",
+      "Content repurposing"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "WhatsApp Marketing & Automation",
+    "price": "$39.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "WhatsApp Business Platform/API onboarding",
+      "Official tool and number setup",
+      "Template-message assistance",
+      "Chatbot setup",
+      "Automated responses",
+      "Lead qualification",
+      "Enquiry routing",
+      "Customer segmentation",
+      "Bulk promotional campaigns",
+      "Product-launch campaigns",
+      "Follow-up sequences",
+      "Abandoned-cart recovery",
+      "Customer reactivation",
+      "Campaign analytics"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Email, SMS & Retention Marketing",
+    "price": "$29.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "Email campaign strategy",
+      "Welcome sequences",
+      "Promotional campaigns",
+      "Abandoned-cart journeys",
+      "Post-purchase communication",
+      "Cross-selling and upselling",
+      "Win-back campaigns",
+      "Customer segmentation",
+      "Loyalty and referral planning",
+      "Repeat-purchase campaigns",
+      "SMS campaign coordination",
+      "Customer-lifecycle optimisation"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Analytics, Tracking & Reporting",
+    "price": "$19.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "Google Analytics 4 setup",
+      "Google Tag Manager setup",
+      "Meta Pixel",
+      "Conversion API coordination",
+      "Google Ads conversion tracking",
+      "Ecommerce tracking",
+      "Form, call and WhatsApp-click tracking",
+      "Funnel analysis",
+      "Campaign attribution review",
+      "Marketing dashboards",
+      "ROAS, CAC and revenue reporting",
+      "Monthly performance reports"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Ecommerce Growth Management",
+    "price": "$49.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "Shopify and WooCommerce marketing support",
+      "Product and collection optimisation",
+      "Promotion and coupon planning",
+      "Conversion-rate optimisation",
+      "Checkout-journey review",
+      "Cross-selling and upselling",
+      "Product bundling",
+      "Customer-retention campaigns",
+      "Ecommerce analytics",
+      "Marketplace growth planning",
+      "Repeat-purchase strategy"
+    ]
+  },
+  {
+    "bgImage": "images/shape/price-bg-shape-1-1.png",
+    "title": "Lead Generation & Conversion Optimisation",
+    "price": "$39.99",
+    "duration": "monthly",
+    "path": "/contact",
+    "features": [
+      "Meta lead-generation campaigns",
+      "Google lead-generation campaigns",
+      "WhatsApp lead journeys",
+      "Landing-page strategy",
+      "Lead magnets",
+      "Form optimisation",
+      "CTA testing",
+      "Funnel analysis",
+      "Lead qualification planning",
+      "Conversion tracking",
+      "Lead follow-up recommendations"
+    ]
+  }
+]

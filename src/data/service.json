@@ -1,0 +1,122 @@
+[
+  {
+    "id": "1",
+    "slug": "growth-strategy-consulting",
+    "path": "/service-details/growth-strategy-consulting",
+    "image": "/images/service/sr-3-1.jpg",
+    "icon": "/images/icon/sr-icon-3-1.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Growth Strategy & Consulting",
+    "text": "Build a focused marketing direction based on your business stage, market, customers, competition and growth priorities.",
+    "buttonText": "Explore Growth Strategy"
+  },
+  {
+    "id": "2",
+    "slug": "meta-ads-management",
+    "path": "/service-details/meta-ads-management",
+    "image": "/images/service/sr-3-2.jpg",
+    "icon": "/images/icon/sr-icon-3-2.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Meta Ads Management",
+    "text": "Reach relevant audiences through structured Facebook and Instagram advertising campaigns focused on leads, sales and customer acquisition.",
+    "buttonText": "Explore Meta Ads"
+  },
+  {
+    "id": "3",
+    "slug": "google-ads-management",
+    "path": "/service-details/google-ads-management",
+    "image": "/images/service/sr-3-3.jpg",
+    "icon": "/images/icon/sr-icon-3-3.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Google Ads Management",
+    "text": "Capture high-intent customers who are actively searching for your products, services or business solutions.",
+    "buttonText": "Explore Google Ads"
+  },
+  {
+    "id": "4",
+    "slug": "search-engine-optimisation",
+    "path": "/service-details/search-engine-optimisation",
+    "image": "/images/service/sr-3-4.jpg",
+    "icon": "/images/icon/sr-icon-3-4.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Search Engine Optimisation",
+    "text": "Improve your website’s technical health, search relevance and organic visibility through structured SEO.",
+    "buttonText": "Explore SEO Services"
+  },
+  {
+    "id": "5",
+    "slug": "social-media-content-marketing",
+    "path": "/service-details/social-media-content-marketing",
+    "image": "/images/service/sr-3-5.jpg",
+    "icon": "/images/icon/sr-icon-3-5.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Social Media & Content Marketing",
+    "text": "Build a consistent and commercially useful presence through strategy, content planning, publishing and performance review.",
+    "buttonText": "Explore Social Media"
+  },
+  {
+    "id": "6",
+    "slug": "whatsapp-marketing-automation",
+    "path": "/service-details/whatsapp-marketing-automation",
+    "image": "/images/service/sr-3-6.jpg",
+    "icon": "/images/icon/sr-icon-3-6.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "WhatsApp Marketing & Automation",
+    "text": "Turn enquiries and customer data into organised campaigns, automated conversations and follow-up journeys.",
+    "buttonText": "Explore WhatsApp Solutions"
+  },
+  {
+    "id": "7",
+    "slug": "email-sms-retention-marketing",
+    "path": "/service-details/email-sms-retention-marketing",
+    "image": "/images/service/sr-3-1.jpg",
+    "icon": "/images/icon/sr-icon-3-1.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Email, SMS & Retention Marketing",
+    "text": "Strengthen customer relationships through targeted communication, reactivation and repeat-purchase campaigns.",
+    "buttonText": "Explore Retention Marketing"
+  },
+  {
+    "id": "8",
+    "slug": "analytics-tracking-reporting",
+    "path": "/service-details/analytics-tracking-reporting",
+    "image": "/images/service/sr-3-2.jpg",
+    "icon": "/images/icon/sr-icon-3-2.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Analytics, Tracking & Reporting",
+    "text": "Measure important customer actions and understand how your campaigns and channels contribute to business outcomes.",
+    "buttonText": "Explore Analytics"
+  },
+  {
+    "id": "9",
+    "slug": "ecommerce-growth-management",
+    "path": "/service-details/ecommerce-growth-management",
+    "image": "/images/service/sr-3-3.jpg",
+    "icon": "/images/icon/sr-icon-3-3.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Ecommerce Growth Management",
+    "text": "Improve how products are discovered, promoted, purchased and repurchased across your ecommerce journey.",
+    "buttonText": "Explore Ecommerce Growth"
+  },
+  {
+    "id": "10",
+    "slug": "lead-generation-conversion-optimisation",
+    "path": "/service-details/lead-generation-conversion-optimisation",
+    "image": "/images/service/sr-3-4.jpg",
+    "icon": "/images/icon/sr-icon-3-4.png",
+    "bgShape": "/images/bg/sr-box-bg-1.jpg",
+    "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+    "title": "Lead Generation & Conversion Optimisation",
+    "text": "Generate relevant enquiries and improve the journey between campaign clicks, landing pages, follow-ups and qualified leads.",
+    "buttonText": "Explore Lead Generation"
+  }
+]

@@ -1,0 +1,118 @@
+.price-style1 {
+  position: relative;
+  background-color: #F6F7FA;
+  padding: 50px 60px 60px 60px;
+  overflow: hidden;
+  border-radius: 5px;
+  margin: 0 0 30px 0;
+
+  .price-shape {
+    background-color: $theme-color;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    transition: all ease 0.4s;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1;
+    transform: scale(1.1);
+  }
+
+
+  .price-package {
+    margin: 0 0 3px 0;
+  }
+
+  .price-amount {
+    color: $theme-color;
+  }
+
+  .price-duration {
+    font-size: 16px;
+    color: $title-color;
+    font-weight: 500;
+  }
+
+  .price-features {
+    background-color: $white-color;
+    padding: 28px 30px 22px 30px;
+    margin: 0 0 30px 0;
+    border-radius: 5px;
+
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    li {
+      margin: 0 0 5px 0;
+    }
+
+    i {
+      color: $theme-color;
+      margin: 0 10px 0 0;
+    }
+  }
+
+  .vs-btn {
+    width: 100%;
+  }
+
+  
+  .vs-btn,
+  .price-features,
+  .price-duration,
+  .price-amount,
+  .price-package {
+    transition: all ease 0.4s;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+
+.slick-center .price-style1,
+.price-style1:hover {
+  .price-shape {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  .price-duration,
+  .price-amount,
+  .price-package {
+    color: $white-color;
+  }
+
+  .vs-btn {
+    background-color: $white-color;
+    color: $theme-color;
+
+    &:hover {
+      color: $white-color;
+    }
+  }
+}
+
+@include ml {
+  .price-style1 {
+    padding: 30px 20px 40px 20px;
+
+    .price-features {
+      padding: 28px 20px 22px 20px;
+
+      li {
+        font-size: 14px;
+      }
+    }
+
+    .price-amount.h1 {
+      font-size: 30px;
+    }
+  }
+}

@@ -1,0 +1,157 @@
+.widget-area {
+  padding-top: 48px;
+  padding-bottom: 10px;
+}
+
+.copyright-wrap {
+  text-align: center;  
+  padding: 29px 0;
+  background-color: #0B2048;
+}
+
+.copyright-text {
+  margin: 0;
+  font-size: 14px;
+}
+
+.footer-layout3,
+.footer-layout2,
+.footer-layout1 {
+  --body-color: #8A99B4;
+  --title-color: #fff;
+}
+
+.footer-layout1 {
+  background-color: #071A3E;
+
+  .footer-top {
+    border-bottom: 1px solid #152B54;
+  }
+}
+
+.footer-layout2 {
+  background-color: #051634;
+  overflow: hidden;
+
+  .footer-top {
+    border-bottom: 1px solid #14284F;
+    padding: 50px 0;
+  }
+
+  .footer-text {
+    max-width: 390px;
+    margin-bottom: 33px;
+  }
+
+  .widget-area {
+    padding: 50px 0 0px 0;
+  }
+
+  
+  @media (min-width: $ml) {
+    .footer-widget {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+    }
+
+    .widget-area {
+      padding: 0;
+
+      .row {
+        >div {
+          padding-top: 50px;
+          padding-bottom: 44px;
+
+          &:nth-child(2) {
+            text-align: center;
+            border-left: 1px solid #14284F;
+            border-right: 1px solid #14284F;
+            padding-left: 60px;
+            padding-right: 60px;
+          }
+
+          &:nth-child(3) {
+            padding-left: 60px;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.footer-layout3 {
+  background-color: #071A3E;
+  
+  .footer-top {
+    background-color: #0B2048;
+  }
+  
+  .copyright-wrap {
+    background-color: #0B1F44;
+  }
+}
+
+
+@include lg {
+  .footer-layout3,
+  .footer-layout1 {
+    .footer-top {
+      padding: 50px 0;
+
+      .row {
+        --bs-gutter-y: 40px;
+      }
+    }
+  }
+}
+
+@include md {
+  // .footer-layout1 {
+  //   text-align: center;
+
+  //   .footer-text {
+  //     margin-left: auto;
+  //     margin-right: auto;
+  //   }
+
+  //   .footer-map {
+  //     margin-left: auto;
+  //     margin-right: auto;
+  //   }
+  // }
+
+  .footer-layout2 {
+    .footer-text {
+      max-width: 100%;
+    }
+
+    .footer-top-logo {
+      text-align: center;
+    }
+
+    .widget-area {
+      padding: 50px 0 10px 0;
+    }
+
+    .footer-widget {
+      margin-bottom: 40px;
+    }
+    
+  }
+}
+
+
+@include sm {
+  .footer-layout2 {
+    .footer-social {
+      text-align: center;
+
+      .social-title {
+        display: block;
+        margin: 0 0 20px 0;
+      }
+    }
+  }
+}
