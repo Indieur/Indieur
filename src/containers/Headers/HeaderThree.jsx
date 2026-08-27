@@ -56,7 +56,7 @@ const HeaderThree = () => {
                       whiteSpace: 'nowrap'
                     }}
                   >
-                    +49 15562 461769 test
+                    +49 15562 461769
                   </a>
 
                   <span>|</span>
