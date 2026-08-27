@@ -12,7 +12,7 @@ const ServiceTwo = ({className})=> (
         <SecTitle className="h1 text-capitalize">INDIVIDUAL SERVICE PLANS</SecTitle>
       </TitleWrap>
       <div className="row">
-        {serviceData.slice(0, 9).map(item => (
+        {serviceData.slice(0, 10).map(item => (
           <div className="col-lg-6" key={item.id}>
             <ServiceBoxTwo path={item.path}
               number={'0' + item.id}
