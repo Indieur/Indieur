@@ -14,7 +14,7 @@ const BlogDetails = () => (
   <Fragment>
     <Seo title="Blog Details" />
     <HeaderThree />
-    <Breadcrumb pageName="Blog Details" bgImage="images/breadcumb/breadcumb-bg.jpg" />
+    {/* <Breadcrumb pageName="Blog Details" bgImage="images/breadcumb/breadcumb-bg.jpg" /> */}
     <BlogSingle className="space-top space-extra-bottom"/>
     <FooterTwo/>
     <ScrollTopBtn/>

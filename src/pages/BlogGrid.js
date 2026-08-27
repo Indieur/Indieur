@@ -4,9 +4,9 @@ import {HeaderOne,HeaderThree, BlogThree, FooterOne,FooterTwo} from '../containe
 
 const BlogGrid = () => (
   <Fragment>
-    <Seo title="Blog Grid" />
+    <Seo title="Blogs" />
     <HeaderThree />
-    <Breadcrumb pageName="Blog Grid" bgImage="images/breadcumb/breadcumb-bg.jpg" />
+    <Breadcrumb pageName="Blogs" bgImage="images/breadcumb/breadcumb-bg.jpg" />
     <BlogThree className="space-top space-extra-bottom"/>
     <FooterTwo/>
     <ScrollTopBtn/>

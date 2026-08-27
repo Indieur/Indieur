@@ -34,6 +34,9 @@ import Contact from '../pages/Contact';
 
 // Not Fouond Page
 import NotFound from '../pages/NotFound';
+import AdminBlogs from "../pages/Admin/AdminBlogs";
+import CreateBlog from "../pages/Admin/CreateBlog";
+import EditBlog from "../pages/Admin/EditBlog";
 
 
 const AppRouters = () => (
@@ -50,11 +53,25 @@ const AppRouters = () => (
       <Route path="/project-details" exact element={<ProjectDetails/>} />
       <Route path="/team" exact element={<Team/>} />
       <Route path="/team-details" exact element={<TeamDetails/>} />
-      <Route path="/blog" exact element={<Blog/>} />
-      <Route path="/blog-grid" exact element={<BlogGrid/>} />
-      <Route path="/blog-details" exact element={<BlogDetails/>} />
+      <Route path="/blog-page" exact element={<Blog/>} />
+      <Route path="/blogs" exact element={<BlogGrid/>} />
+      <Route  path="/blog/:slug" exact element={<BlogDetails/>} />
       <Route path="/contact" exact element={<Contact/>} />
       <Route path="*" element={<NotFound/>} />
+      <Route
+  path="/admin/blogs"
+  element={<AdminBlogs />}
+/>
+
+<Route
+  path="/admin/blogs/create"
+  element={<CreateBlog />}
+/>
+
+<Route
+  path="/admin/blogs/edit/:id"
+  element={<EditBlog />}
+/>
     </Routes>
   </Fragment>
 );

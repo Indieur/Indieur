@@ -11,6 +11,10 @@
     "name": "Services",
     "path": "/service"
   },
+    {
+    "name": "Blogs",
+    "path": "/blogs"
+  },
   {
     "name": "Contact",
     "path": "/contact"
