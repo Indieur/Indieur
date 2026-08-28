@@ -625,7 +625,7 @@ const BlogThree = ({
                         >
 
                           <span>
-                            Read Details
+                            Read More
                           </span>
 
                           <i className="far fa-arrow-right" />
