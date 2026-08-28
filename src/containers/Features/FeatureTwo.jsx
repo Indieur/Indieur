@@ -54,7 +54,7 @@ const FeatureTwo = ({className})=> {
               <FeatureBoxTwo 
                 title="WhatsApp Marketing"
                 image="images/icon/fe-2-2.png"
-                text="Turn enquiries and customer data into structured campaigns, automated responses, follow-ups and retention journeysss"
+                text="Turn enquiries and customer data into structured campaigns, automated responses, follow-ups and retention journeys."
                 path="/service"
               />
               <FeatureBoxTwo 

@@ -18,8 +18,8 @@ const HeroTwo = ()=> {
       btn2: { text: 'Explore Our Services', path: '/service'}
     },
     {
-      subTitle: 'CONVERY YOU BRAND ESSENCE',
-      title: 'Take Service from Expert IT Professinal',
+      subTitle: 'CONVEY YOUR BRAND ESSENCE',
+      title: 'Take Service from Expert IT Professionals',
       bgText: 'Support',
       image: 'images/hero/hero2.jpg',
       shape1: 'images/hero/hero-shape-2-1.png',
@@ -30,7 +30,7 @@ const HeroTwo = ()=> {
     },
     {
       subTitle: 'DEDICATED SUPPORT TEAM',
-      title: 'Take Free Consultaion For Your Brand',
+      title: 'Take Free Consultation For Your Brand',
       bgText: 'Motivate',
       image: 'images/hero/hero3.jpg',
       shape1: 'images/hero/hero-shape-2-1.png',

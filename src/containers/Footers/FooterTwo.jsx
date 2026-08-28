@@ -1033,7 +1033,7 @@ const FooterTwo = () => (
                     Indian businesses.
                   </AboutWidget.Text>
 
-                  <FormTwo />
+                  {/* <FormTwo /> */}
 
                 </AboutWidget>
 

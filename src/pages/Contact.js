@@ -8,7 +8,11 @@ import {
 
 const Contact = () => (
   <Fragment>
-    <Seo title="Contact Us" />
+    <Seo 
+  title="Contact Indieur | Digital Marketing Agency in India"
+  description="Get in touch with Indieur for SEO, Google Ads, Meta Ads, branding, social media marketing, WhatsApp marketing and digital growth solutions for your business."
+  keywords="contact Indieur, digital marketing agency contact India, digital marketing consultation India, SEO consultation India, digital marketing services India, Google Ads agency India, Meta Ads agency India, branding agency India, social media marketing agency India, business growth consultation India"
+/>
     <HeaderThree />
     <Breadcrumb pageName="Contact Us" bgImage="images/breadcumb/breadcumb-bg-new.jpg" />
     <GrowthRequirement />
