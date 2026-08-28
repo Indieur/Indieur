@@ -12,8 +12,8 @@ const AboutFour = ({...restProps})=> (
       <div className="row flex-row-reverse">
         <div className="col-lg-6 mb-30">
           <ImageBoxFour 
-            imageOne="images/about/ab-3-1.jpg"
-            imageTwo="images/about/ab-3-2.jpg"
+            imageOne="images/about/process-521x529.jpg"
+            imageTwo="images/about/delivery-process.jpg"
           />
         </div>
         <div className="col-lg-6 mb-30 pt-10 pt-lg-0 text-center text-md-start">

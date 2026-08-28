@@ -10,7 +10,7 @@ const Contact = () => (
   <Fragment>
     <Seo title="Contact Us" />
     <HeaderThree />
-    <Breadcrumb pageName="Contact Us" bgImage="images/breadcumb/breadcumb-bg.jpg" />
+    <Breadcrumb pageName="Contact Us" bgImage="images/breadcumb/breadcumb-bg-new.jpg" />
     <GrowthRequirement />
     <ContactTwo className="space-top space-extra-bottom" />
     <DirectContactCTA />

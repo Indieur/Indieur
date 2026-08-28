@@ -23,7 +23,7 @@ const AboutSeven = () => (
           <div className="col-lg-6 about-seven-image-col">
             <div className="about-seven-image-wrap">
               <img
-                src="images/about/ab-7-1.jpg"
+                src="images/about/about-content-945x706.jpg"
                 alt="Indieur digital marketing team"
                 className="about-seven-image"
               />

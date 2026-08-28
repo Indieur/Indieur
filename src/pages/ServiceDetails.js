@@ -44,7 +44,7 @@ const ServiceDetails = () => {
 
       <Breadcrumb
         pageName={data?.title || 'Services Details'}
-        bgImage="/images/breadcumb/breadcumb-bg.jpg"
+        bgImage="images/breadcumb/breadcumb-bg-new.jpg"
         serviceDetails={true}
       />
 

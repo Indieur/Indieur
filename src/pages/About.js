@@ -26,7 +26,7 @@ const About = () => (
       canonical="https://indieur.com/about"
     />
     <HeaderThree />
-    <Breadcrumb pageName="About Us" bgImage="images/breadcumb/breadcumb-bg.jpg" />
+    <Breadcrumb pageName="About Us" bgImage="images/breadcumb/breadcumb-bg-new.jpg" />
     {/* <ServiceFour className="space-top space-extra-bottom" /> */}
     <AboutSeven />
     <HowWeWorkCapabilities />

@@ -6,7 +6,7 @@ import {
 } from '../../components';
 
 const CtaOne = ({className})=> (
-  <div className={`z-index-common background-image ${className || ''}`} style={{ backgroundImage: 'url(images/bg/cta-bg-1-1.jpg'}}>
+  <div className={`z-index-common background-image ${className || ''}`} style={{ backgroundImage: 'url(images/bg/consulation.png'}}>
     <div className="container">
       <div className="row text-center text-lg-start align-items-center justify-content-between">
         <div className="col-lg-auto">

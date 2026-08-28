@@ -6,7 +6,7 @@ const Blog = () => (
   <Fragment>
     <Seo title="Blog List" />
     <HeaderThree />
-    <Breadcrumb pageName="Blog List" bgImage="images/breadcumb/breadcumb-bg.jpg" />
+    <Breadcrumb pageName="Blog List" bgImage="images/breadcumb/breadcumb-bg-new.jpg" />
     <BlogOne className="space-top space-extra-bottom"/>
     <FooterTwo/>
     <ScrollTopBtn/>

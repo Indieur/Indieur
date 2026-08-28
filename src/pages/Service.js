@@ -19,7 +19,7 @@ const Service = () => (
       canonical="https://indieur.com/services"
     />
     <HeaderThree />
-    <Breadcrumb pageName="Our Services" bgImage="images/breadcumb/breadcumb-bg.jpg" />
+    <Breadcrumb pageName="Our Services" bgImage="images/breadcumb/breadcumb-bg-new.jpg" />
     <ServicesIntroduction />
     <ServiceFive className="space-top space-extra-bottom" />
     {/* <CtaOne className="space"/>

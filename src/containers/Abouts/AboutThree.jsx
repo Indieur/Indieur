@@ -13,8 +13,8 @@ const AboutThree = () => (
       <div className="row gx-60">
         <div className="col-xl-6 mb-50 mb-xl-0">
           <ImageBoxThree 
-            imageOne="images/about/ab-2-1.jpg"
-            imageTwo="images/about/ab-2-2.jpg"
+            imageOne="images/about/approach-480x480.jpg"
+            imageTwo="images/about/approach-mobile-320x420.jpg"
             number="360°"
             title="GROWTH MARKETING"
             icon="fal fa-award"
