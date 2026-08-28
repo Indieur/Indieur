@@ -1,3 +1,11 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Keep admin pages out of search engines
+Disallow: /admin/
+Disallow: /admin/blogs
+Disallow: /admin/blogs/create
+Disallow: /admin/blogs/edit/
+
+# Sitemap
+Sitemap: https://www.indieur.com/sitemap.xml
