@@ -16,6 +16,8 @@ const ServiceTwo = ({className})=> (
           <div className="col-lg-6" key={item.id}>
             <ServiceBoxTwo path={item.path}
               number={'0' + item.id}
+              cardSmallImage={item.cardSmallImage}
+              cardSmallImageAlt={item.cardSmallImageAlt}
               bgImage={item.bgShape2}
               icon={item.icon}
               title={item.title}
