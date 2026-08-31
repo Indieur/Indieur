@@ -1,134 +1,546 @@
-.feature-style1 {
-  background-color: $white-color;
-  padding: 50px 40px;
-  box-shadow: 0px 18px 13px rgba(234, 240, 250, 0.5);
-  border-radius: 5px;
+/* =========================================================
+   FEATURE STYLE 2
+========================================================= */
+
+.feature-style2 {
   position: relative;
-  margin-bottom: 30px;
+  width: 100%;
+  box-sizing: border-box;
 
-  &:before {
-    content: '';
-    position: absolute;
-    left: 40px;
-    bottom: 0;
-    height: 3px;
-    width: calc(100% - 80px);
-    background-color: $theme-color;
-  }
+  background-color: $white-color;
+  border-radius: 5px;
 
-  .feature-icon {
-    margin: 0 0 15px 0;
-  }
+  box-shadow: 0px 10px 31px rgba(169, 177, 193, 0.17);
 
-  .feature-title {
-    margin: 0 0 13px 0;
-  }
+  margin: 0 0 30px 0;
 
-  .feature-text {
-    margin: 0 0 20px 0;
-  }
+  height: 420px !important;
+  min-height: 420px !important;
+  max-height: 420px !important;
 
-  &:hover {
-    .vs-btn {
-      background-color: $theme-color;
-      color: $white-color;
-    }
-  }
-  
+  padding: 40px 40px 80px;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 
+/* =========================================================
+   ICON
+========================================================= */
+
 .feature-style2 {
-  background-color: $white-color;
-  padding: 40px 40px 32px 40px;
-  border-radius: 5px;
-  box-shadow: 0px 10px 31px rgba(169, 177, 193, 0.17);
-  margin: 0 0 30px 0;
 
   .feature-icon {
     background-color: $secondary-color;
+
     width: 110px;
     height: 90px;
+
+    min-width: 110px;
+    min-height: 90px;
+
     line-height: 90px;
+
     text-align: center;
+
     border-radius: 5px;
+
     margin: 0 0 22px 0;
+
+    flex-shrink: 0;
+
     transition: all ease 0.4s;
 
     img {
+      max-width: 100%;
+      height: auto;
+      vertical-align: middle;
+
       transition: all ease 0.4s;
+
       filter: none;
     }
   }
 
+
+  /* =======================================================
+     TITLE
+  ======================================================= */
+
   .feature-title {
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
+
+    font-size: 22px;
+    line-height: 1.35;
+    font-weight: 700;
+
+    flex-shrink: 0;
+
+    word-break: normal;
+    overflow-wrap: break-word;
   }
 
+
+  /* =======================================================
+     DESCRIPTION
+  ======================================================= */
+
+  .feature-text {
+    margin: 0;
+
+    font-size: 14px !important;
+    line-height: 1.6;
+
+    color: #8b929f;
+
+    flex: none;
+
+    max-width: 100%;
+
+    overflow-wrap: break-word;
+  }
+
+
+  /* =======================================================
+     READ DETAILS
+  ======================================================= */
+
+  .link-btn {
+    position: absolute;
+
+    left: 40px;
+    bottom: 28px;
+
+    display: inline-flex;
+    align-items: center;
+
+    width: fit-content;
+
+    margin: 0;
+    padding: 0;
+
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 600;
+
+    color: $theme-color;
+
+    text-decoration: none;
+
+    z-index: 5;
+
+    transition: all ease 0.3s;
+
+    i {
+      margin-left: 8px;
+      transition: transform ease 0.3s;
+    }
+
+    &:hover {
+      i {
+        transform: translateX(5px);
+      }
+    }
+  }
+
+
+  /* =======================================================
+     HOVER
+  ======================================================= */
+
   &:hover {
+
     .feature-icon {
       background-color: $theme-color;
 
       img {
-        -webkit-filter: brightness(0) invert(1); /* Safari 6.0 - 9.0 */
+        -webkit-filter: brightness(0) invert(1);
         filter: brightness(0) invert(1);
       }
     }
   }
 }
 
+
+/* =========================================================
+   PARENT COLUMNS
+========================================================= */
+
+.feature-cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+}
+
+.feature-cards-row > [class*="col-"] {
+  display: flex;
+  min-width: 0;
+}
+
+.feature-cards-row > [class*="col-"] > .feature-style2 {
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================================================
+   SLICK SLIDER
+========================================================= */
+
 .feature-slide2 {
-  margin-top: -30px;
-  margin-bottom: -30px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  overflow: hidden;
+
+  .slick-list {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .slick-track {
+    display: flex !important;
+    align-items: stretch !important;
+  }
+
+  .slick-slide {
+    height: auto !important;
+
+    min-width: 0;
+
+    display: block !important;
+
+    > div {
+      width: 100%;
+      height: auto;
+    }
+  }
 
   .feature-style2 {
-    box-shadow: 0px 10px 21px rgba(169, 177, 193, 0.15);
-    margin: 30px 0 30px 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    height: 420px !important;
+    min-height: 420px !important;
+    max-height: 420px !important;
+
+    margin: 30px 0;
   }
 }
 
 
-@media (min-width: $lg) {
-  .feature-wrap1 {
-    &.space-top {
-      padding-top: 1px;
+/* =========================================================
+   LARGE DESKTOP
+========================================================= */
+
+@media (min-width: 1200px) {
+
+  .feature-style2 {
+    height: 420px !important;
+    min-height: 420px !important;
+    max-height: 420px !important;
+
+    padding: 40px 40px 80px;
+
+    .feature-title {
+      font-size: 22px;
     }
 
-    >.container {
-      position: relative;
-      z-index: 36;
-      margin-top: -75px;
+    .feature-text {
+      font-size: 17px;
+      line-height: 1.6;
     }
-  }
 
-  .feature-wrap2 {
-    z-index: 3;
-    position: relative;
-    margin-bottom: -30px;
+    .link-btn {
+      left: 40px;
+      bottom: 28px;
+      font-size: 16px;
+    }
   }
 }
 
-@include lg {
-  .feature-slide2 {
-    .feature-style2 {
-      box-shadow: 0px 10px 21px rgba(169, 177, 193, 0.15);
+
+/* =========================================================
+   LAPTOP
+========================================================= */
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+  .feature-style2 {
+    height: 400px !important;
+    min-height: 400px !important;
+    max-height: 400px !important;
+
+    padding: 32px 30px 75px;
+
+    .feature-icon {
+      width: 100px;
+      height: 82px;
+
+      min-width: 100px;
+      min-height: 82px;
+
+      line-height: 82px;
+
+      margin-bottom: 18px;
+    }
+
+    .feature-title {
+      font-size: 20px;
+    }
+
+    .feature-text {
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .link-btn {
+      left: 30px;
+      bottom: 26px;
+      font-size: 15px;
     }
   }
 }
+
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @include md {
-  .feature-style1 {
-    padding: 40px 30px;
+
+  .feature-style2 {
+    height: 370px !important;
+    min-height: 370px !important;
+    max-height: 370px !important;
+
+    padding: 30px 25px 70px;
+
+    .feature-icon {
+      width: 100px;
+      height: 82px;
+
+      min-width: 100px;
+      min-height: 82px;
+
+      line-height: 82px;
+
+      margin-bottom: 18px;
+    }
+
+    .feature-title {
+      font-size: 20px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .feature-text {
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .link-btn {
+      left: 25px;
+      bottom: 25px;
+      font-size: 14px;
+    }
   }
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @include sm {
-  .feature-style1 {
-    padding: 40px 20px;
+
+  .feature-slide2 {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+
+    .slick-list {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .slick-track {
+      display: flex !important;
+    }
+
+    .slick-slide {
+      display: block !important;
+      height: auto !important;
+      min-width: 0;
+
+      > div {
+        width: 100%;
+        height: auto;
+      }
+    }
+
+    .feature-style2 {
+      width: 100% !important;
+      max-width: 100% !important;
+
+      height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
+
+      padding: 30px 25px 30px;
+
+      margin: 0 0 20px 0;
+
+      overflow: hidden;
+    }
   }
 
 
   .feature-style2 {
-    padding: 40px 25px 32px 25px;
+
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+
+    width: 100%;
+    max-width: 100%;
+
+    padding: 30px 25px 30px;
+
+    margin-bottom: 20px;
+
+    box-sizing: border-box;
+
+
+    .feature-icon {
+      width: 100px;
+      height: 82px;
+
+      min-width: 100px;
+      min-height: 82px;
+
+      line-height: 82px;
+
+      margin-bottom: 20px;
+    }
+
+
+    .feature-title {
+      font-size: 19px;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+
+    .feature-text {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+
+      max-width: 100%;
+    }
+
+
+    .link-btn {
+      position: static;
+
+      display: inline-flex;
+
+      margin-top: 0;
+
+      font-size: 14px;
+    }
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .feature-slide2 {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+
+    .slick-list {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .slick-slide {
+      min-width: 0;
+    }
+
+    .feature-style2 {
+      width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box;
+
+      padding: 25px 20px 28px;
+    }
+  }
+
+
+  .feature-style2 {
+
+    padding: 25px 20px 28px;
+
+    .feature-icon {
+      width: 90px;
+      height: 75px;
+
+      min-width: 90px;
+      min-height: 75px;
+
+      line-height: 75px;
+
+      margin-bottom: 18px;
+    }
+
+    .feature-title {
+      font-size: 18px;
+    }
+
+    .feature-text {
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .link-btn {
+      font-size: 13px;
+    }
+  }
+}
+
+
+/* =========================================================
+   GLOBAL MOBILE OVERFLOW PROTECTION
+========================================================= */
+
+@media (max-width: 767px) {
+
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 }

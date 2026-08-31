@@ -72,7 +72,7 @@ const PricePlanOne = ({ ...restProps }) => {
 
         .price-slider-arrow {
           position: absolute;
-          top: 50%;
+          top: 37%;
           transform: translateY(-50%);
 
           width: 34px;
@@ -169,11 +169,11 @@ const PricePlanOne = ({ ...restProps }) => {
           }
 
           .price-slider-prev {
-            left: -5px;
+            left: 6px;
           }
 
           .price-slider-next {
-            right: -5px;
+            right: 15px;
           }
 
         }
@@ -191,11 +191,11 @@ const PricePlanOne = ({ ...restProps }) => {
           }
 
           .price-slider-prev {
-            left: -8px;
+            left: 6px;
           }
 
           .price-slider-next {
-            right: -8px;
+            right: 15px;
           }
 
         }
