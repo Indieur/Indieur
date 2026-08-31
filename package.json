@@ -12,6 +12,7 @@
     "@tiptap/extension-link": "^3.30.5",
     "@tiptap/react": "^3.30.5",
     "@tiptap/starter-kit": "^3.30.5",
+    "@vercel/analytics": "^2.0.1",
     "bootstrap": "^5.2.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.4.0",

@@ -12,7 +12,7 @@ import "slick-carousel/slick/slick.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/fontawesome.css";
 import "./assets/scss/style.scss";
-
+import { Analytics } from "@vercel/analytics/react"
 
 // Scroll to top whenever the page/route changes
 const ScrollToTop = () => {
@@ -36,7 +36,7 @@ function App() {
 
       {/* Automatically scroll every new page to top */}
       <ScrollToTop />
-
+      <Analytics/>
       <AppRouters />
 
     </BrowserRouter>
