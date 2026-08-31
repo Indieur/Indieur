@@ -7,17 +7,24 @@ const FormOne = ({ className, title, btnText }) => {
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
 
-  // ==========================================
-  // TODAY'S DATE
-  // YYYY-MM-DD
-  // ==========================================
+  // =========================================================
+  // GOOGLE APPS SCRIPT WEB APP URL
+  // APPOINTMENT FORM
+  // =========================================================
+ const GOOGLE_SCRIPT_URL =
+  'https://script.google.com/macros/s/AKfycbw_8XgvN1wYNCpSzo-2Ln3k4YeRD1pqjYm35GVVn7zvqiO__DF3Q2-XR51pAXQojp9fWQ/exec';
+  // =========================================================
+  // GET TODAY'S DATE
+  // =========================================================
   const getToday = () => {
     const date = new Date();
 
     const year = date.getFullYear();
+
     const month = String(
       date.getMonth() + 1
     ).padStart(2, '0');
+
     const day = String(
       date.getDate()
     ).padStart(2, '0');
@@ -27,36 +34,34 @@ const FormOne = ({ className, title, btnText }) => {
 
   const today = getToday();
 
-
-  // ==========================================
+  // =========================================================
   // VALIDATE FORM
-  // ==========================================
+  // =========================================================
   const validateForm = (form) => {
     const newErrors = {};
 
     const name =
-      form.elements['name']?.value.trim();
+      form.elements['name']?.value.trim() || '';
 
     const email =
-      form.elements['email']?.value.trim();
+      form.elements['email']?.value.trim() || '';
 
     const subject =
       form.elements[
         'appointment_subject'
-      ]?.value.trim();
+      ]?.value.trim() || '';
 
     const appointmentDate =
       form.elements[
         'appointment_date'
-      ]?.value;
+      ]?.value || '';
 
     const message =
-      form.elements['message']?.value.trim();
+      form.elements['message']?.value.trim() || '';
 
-
-    // ========================================
+    // =======================================================
     // FULL NAME
-    // ========================================
+    // =======================================================
     if (!name) {
       newErrors.name =
         'Please enter your full name.';
@@ -70,10 +75,9 @@ const FormOne = ({ className, title, btnText }) => {
         'Please enter a valid name.';
     }
 
-
-    // ========================================
+    // =======================================================
     // EMAIL
-    // ========================================
+    // =======================================================
     if (!email) {
       newErrors.email =
         'Please enter your email address.';
@@ -86,10 +90,9 @@ const FormOne = ({ className, title, btnText }) => {
         'Please enter a valid email address.';
     }
 
-
-    // ========================================
+    // =======================================================
     // APPOINTMENT SUBJECT
-    // ========================================
+    // =======================================================
     if (!subject) {
       newErrors.subject =
         'Please enter an appointment subject.';
@@ -98,10 +101,9 @@ const FormOne = ({ className, title, btnText }) => {
         'Subject must contain at least 3 characters.';
     }
 
-
-    // ========================================
+    // =======================================================
     // APPOINTMENT DATE
-    // ========================================
+    // =======================================================
     if (!appointmentDate) {
       newErrors.appointmentDate =
         'Please select an appointment date.';
@@ -110,10 +112,9 @@ const FormOne = ({ className, title, btnText }) => {
         'Please select today or a future date.';
     }
 
-
-    // ========================================
+    // =======================================================
     // MESSAGE
-    // ========================================
+    // =======================================================
     if (!message) {
       newErrors.message =
         'Please enter a message.';
@@ -125,14 +126,12 @@ const FormOne = ({ className, title, btnText }) => {
         'Message cannot exceed 2000 characters.';
     }
 
-
     return newErrors;
   };
 
-
-  // ==========================================
+  // =========================================================
   // CLEAR FIELD ERROR
-  // ==========================================
+  // =========================================================
   const clearError = (fieldName) => {
     if (errors[fieldName]) {
       setErrors((previousErrors) => {
@@ -151,24 +150,27 @@ const FormOne = ({ className, title, btnText }) => {
     }
   };
 
-
-  // ==========================================
-  // FORM SUBMIT
-  // ==========================================
-  const handleSubmit = async (e) => {
+  // =========================================================
+  // SUBMIT FORM
+  // =========================================================
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     setErrorMessage('');
 
     const form = e.target;
 
-    // Validate
+    // =======================================================
+    // VALIDATION
+    // =======================================================
     const validationErrors =
       validateForm(form);
 
     setErrors(validationErrors);
 
-    // Stop submission if validation fails
+    // =======================================================
+    // STOP IF VALIDATION FAILS
+    // =======================================================
     if (
       Object.keys(validationErrors).length > 0
     ) {
@@ -196,180 +198,439 @@ const FormOne = ({ className, title, btnText }) => {
       return;
     }
 
-
-    // ========================================
-    // SUBMIT
-    // ========================================
+    // =======================================================
+    // START SUBMITTING
+    // =======================================================
     setIsSubmitting(true);
 
-    const formData =
-      new FormData(form);
+    // =======================================================
+    // GET FORM VALUES
+    // =======================================================
+    const name =
+      form.elements['name']?.value.trim() || '';
 
+    const email =
+      form.elements['email']?.value.trim() || '';
+
+    const appointmentSubject =
+      form.elements[
+        'appointment_subject'
+      ]?.value.trim() || '';
+
+    const appointmentDate =
+      form.elements[
+        'appointment_date'
+      ]?.value || '';
+
+    const message =
+      form.elements['message']?.value.trim() || '';
+
+    // =======================================================
+    // CREATE UNIQUE HIDDEN IFRAME
+    // =======================================================
+    const iframeName =
+      `appointment_form_${Date.now()}`;
+
+    const iframe =
+      document.createElement('iframe');
+
+    iframe.name = iframeName;
+
+    iframe.id = iframeName;
+
+    iframe.style.display = 'none';
+
+    document.body.appendChild(iframe);
+
+    // =======================================================
+    // CREATE HIDDEN HTML FORM
+    // =======================================================
+    const googleForm =
+      document.createElement('form');
+
+    googleForm.method = 'POST';
+
+    googleForm.action =
+      GOOGLE_SCRIPT_URL;
+
+    googleForm.target =
+      iframeName;
+
+    googleForm.style.display = 'none';
+
+    // =======================================================
+    // HELPER TO ADD HIDDEN INPUT
+    // =======================================================
+    const addHiddenInput = (
+      name,
+      value
+    ) => {
+      const input =
+        document.createElement('input');
+
+      input.type = 'hidden';
+
+      input.name = name;
+
+      input.value = value || '';
+
+      googleForm.appendChild(input);
+    };
+
+    // =======================================================
+    // ADD DATA
+    // =======================================================
+    addHiddenInput(
+      'fullName',
+      name
+    );
+
+    addHiddenInput(
+      'email',
+      email
+    );
+
+    addHiddenInput(
+      'appointmentSubject',
+      appointmentSubject
+    );
+
+    addHiddenInput(
+      'appointmentDate',
+      appointmentDate
+    );
+
+    addHiddenInput(
+      'message',
+      message
+    );
+
+    // =======================================================
+    // ADD FORM TO DOCUMENT
+    // =======================================================
+    document.body.appendChild(
+      googleForm
+    );
+
+    // =======================================================
+    // SUBMIT
+    // =======================================================
     try {
-      const response = await fetch(
-        'https://api.web3forms.com/submit',
-        {
-          method: 'POST',
-          body: formData
-        }
-      );
-
-      const data =
-        await response.json();
-
-
-      // ======================================
-      // SUCCESS
-      // ======================================
-      if (data.success) {
-        setIsSuccess(true);
-        setErrors({});
-        form.reset();
-      }
-
-      // ======================================
-      // API ERROR
-      // ======================================
-      else {
-        setErrorMessage(
-          data.message ||
-            'Something went wrong. Please try again.'
-        );
-      }
+      googleForm.submit();
 
     } catch (error) {
+
       console.error(
-        'Form submission error:',
+        'Appointment submission error:',
         error
       );
+
+      setIsSubmitting(false);
 
       setErrorMessage(
         'Unable to submit your request. Please try again.'
       );
 
-    } finally {
-      setIsSubmitting(false);
+      googleForm.remove();
+
+      iframe.remove();
+
+      return;
     }
+
+    // =======================================================
+    // CLEANUP + SUCCESS SCREEN
+    //
+    // We intentionally don't read the Apps Script response.
+    // This avoids browser CORS problems.
+    // =======================================================
+    setTimeout(() => {
+
+      googleForm.remove();
+
+      iframe.remove();
+
+      setIsSubmitting(false);
+
+      setErrors({});
+
+      form.reset();
+
+      setIsSuccess(true);
+
+    }, 2000);
   };
 
-
-  // ==========================================
-  // SUCCESS MESSAGE
-  // ==========================================
+  // =========================================================
+  // SUCCESS SCREEN
+  // =========================================================
   if (isSuccess) {
     return (
       <>
         <style>{`
 
+          /* =================================================
+             SUCCESS WRAPPER
+          ================================================= */
+
           .form-one-success {
-            width: 100%;
-            min-height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 50px 20px;
-            background: #f5f7fb;
+            width: 100% !important;
+
+            min-height: 100% !important;
+
+            display: flex !important;
+
+            align-items: center !important;
+
+            justify-content: center !important;
+
+            padding: 50px 20px !important;
+
+            background: #f5f7fb !important;
+
+            box-sizing: border-box !important;
+
+            overflow: visible !important;
           }
+
+          /* =================================================
+             SUCCESS CARD
+          ================================================= */
 
           .form-one-success-card {
-            width: 100%;
-            max-width: 700px;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 55px 40px;
-            text-align: center;
+            width: 100% !important;
+
+            max-width: 700px !important;
+
+            background: #ffffff !important;
+
+            border-radius: 16px !important;
+
+            padding: 55px 40px !important;
+
+            text-align: center !important;
+
             box-shadow:
               0 15px 45px
-              rgba(15, 35, 70, 0.10);
-            border: 1px solid #e9edf5;
+              rgba(15, 35, 70, 0.10) !important;
+
+            border:
+              1px solid #e9edf5 !important;
+
+            box-sizing: border-box !important;
+
+            overflow: visible !important;
           }
+
+          /* =================================================
+             BLUE SUCCESS ICON
+          ================================================= */
 
           .form-one-success-icon {
-            width: 78px;
-            height: 78px;
-            margin: 0 auto 25px;
-            border-radius: 50%;
-            background: #1264ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 78px !important;
+
+            height: 78px !important;
+
+            min-width: 78px !important;
+
+            min-height: 78px !important;
+
+            margin: 0 auto 25px !important;
+
+            border-radius: 50% !important;
+
+            background: #1255E5 !important;
+
+            display: flex !important;
+
+            align-items: center !important;
+
+            justify-content: center !important;
+
             box-shadow:
               0 10px 25px
-              rgba(18, 100, 255, 0.25);
+              rgba(18, 85, 229, 0.25) !important;
+
+            box-sizing: border-box !important;
+
+            overflow: visible !important;
           }
+
+          /* =================================================
+             CHECK ICON
+          ================================================= */
 
           .form-one-success-icon i {
-            font-size: 42px;
-            color: #ffffff;
-            line-height: 1;
+            display: block !important;
+
+            width: auto !important;
+
+            height: auto !important;
+
+            font-size: 42px !important;
+
+            line-height: 1 !important;
+
+            color: #ffffff !important;
+
+            margin: 0 !important;
+
+            padding: 0 !important;
+
+            text-align: center !important;
           }
+
+          /* =================================================
+             SUCCESS HEADING
+          ================================================= */
 
           .form-one-success-card h2 {
-            margin: 0 0 15px;
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1.25;
-            color: #111827;
+            display: block !important;
+
+            width: 100% !important;
+
+            max-width: 100% !important;
+
+            margin: 0 auto 15px !important;
+
+            padding: 0 !important;
+
+            font-size: 32px !important;
+
+            font-weight: 700 !important;
+
+            line-height: 1.25 !important;
+
+            color: #111827 !important;
+
+            text-align: center !important;
+
+            white-space: normal !important;
+
+            overflow: visible !important;
+
+            box-sizing: border-box !important;
           }
 
+          /* =================================================
+             SUCCESS MESSAGE
+          ================================================= */
+
           .form-one-success-card p {
-            margin: 0 auto 30px;
-            max-width: 560px;
-            font-size: 16px;
-            line-height: 1.8;
-            color: #667085;
+            display: block !important;
+
+            width: 100% !important;
+
+            max-width: 560px !important;
+
+            margin: 0 auto 30px !important;
+
+            padding: 0 !important;
+
+            font-size: 16px !important;
+
+            line-height: 1.8 !important;
+
+            color: #667085 !important;
+
+            text-align: center !important;
+
+            white-space: normal !important;
+
+            overflow: visible !important;
+
+            box-sizing: border-box !important;
           }
+
+          /* =================================================
+             MOBILE SUCCESS SCREEN
+          ================================================= */
 
           @media (max-width: 767px) {
 
             .form-one-success {
-              padding: 30px 15px;
+              padding: 30px 15px !important;
             }
 
             .form-one-success-card {
-              padding: 40px 20px;
-              border-radius: 12px;
+              width: 100% !important;
+
+              max-width: 100% !important;
+
+              padding: 40px 20px !important;
+
+              border-radius: 12px !important;
+            }
+
+            .form-one-success-icon {
+              width: 68px !important;
+
+              height: 68px !important;
+
+              min-width: 68px !important;
+
+              min-height: 68px !important;
+
+              margin-bottom: 20px !important;
+            }
+
+            .form-one-success-icon i {
+              font-size: 36px !important;
             }
 
             .form-one-success-card h2 {
-              font-size: 25px;
+              font-size: 25px !important;
+
+              line-height: 1.3 !important;
+
+              margin-bottom: 14px !important;
             }
 
             .form-one-success-card p {
-              font-size: 14px;
+              font-size: 14px !important;
+
+              line-height: 1.7 !important;
+
+              margin-bottom: 25px !important;
             }
 
           }
 
         `}</style>
 
-
         <div className="form-one-success">
 
           <div className="form-one-success-card">
 
-            {/* Success Icon */}
+            {/* =================================================
+                SUCCESS ICON
+            ================================================= */}
+
             <div className="form-one-success-icon">
 
               <i className="fal fa-check" />
 
             </div>
 
+            {/* =================================================
+                SUCCESS TITLE
+            ================================================= */}
 
-            {/* Heading */}
             <h2>
               Thank You for Contacting Indieur
             </h2>
 
+            {/* =================================================
+                SUCCESS MESSAGE
+            ================================================= */}
 
-            {/* Message */}
             <p>
-              Your growth requirement has been
-              received successfully. Our team will
-              review the information and contact you
+              Your appointment request has
+              been received successfully.
+              Our team will review the
+              information and contact you
               using the details provided.
             </p>
-
 
           </div>
 
@@ -378,69 +639,58 @@ const FormOne = ({ className, title, btnText }) => {
     );
   }
 
-
-  // ==========================================
+  // =========================================================
   // MAIN FORM
-  // ==========================================
+  // =========================================================
   return (
     <>
-      {/* ======================================
-          FORM CSS
-      ======================================= */}
       <style>{`
 
-        /* ====================================
+        /* =================================================
            FORM WRAPPER
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper {
           width: 100%;
         }
 
-
-        /* ====================================
+        /* =================================================
            FORM GROUP
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper .form-group {
           position: relative;
+
           margin-bottom: 20px;
         }
 
-
-        /* ====================================
-           REQUIRED STAR
-        ==================================== */
-
-        .form-one-wrapper .required-star {
-          color: #dc3545;
-          font-weight: 700;
-          margin-left: 2px;
-        }
-
-
-        /* ====================================
-           VALIDATION ERROR
-        ==================================== */
+        /* =================================================
+           ERROR MESSAGE
+        ================================================= */
 
         .form-one-wrapper .form-error {
           display: block;
+
           width: 100%;
+
           margin-top: 6px;
+
           padding-left: 2px;
 
           color: #dc3545;
 
           font-size: 13px;
+
           line-height: 1.4;
 
           font-weight: 500;
+
+          box-sizing: border-box;
         }
 
-
-        /* ====================================
+        /* =================================================
            INVALID INPUT
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper
         input.input-error,
@@ -450,29 +700,28 @@ const FormOne = ({ className, title, btnText }) => {
           border-color: #dc3545 !important;
         }
 
-
-        /* ====================================
+        /* =================================================
            INVALID INPUT FOCUS
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper
         input.input-error:focus,
 
         .form-one-wrapper
         textarea.input-error:focus {
+
           border-color: #dc3545 !important;
 
           box-shadow:
             0 0 0 2px
-            rgba(220, 53, 69, 0.08);
+            rgba(220, 53, 69, 0.08) !important;
 
-          outline: none;
+          outline: none !important;
         }
 
-
-        /* ====================================
+        /* =================================================
            NORMAL FOCUS
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper
         input:focus,
@@ -482,22 +731,34 @@ const FormOne = ({ className, title, btnText }) => {
           outline: none;
         }
 
+        /* =================================================
+           DATE INPUT
+        ================================================= */
 
-        /* ====================================
+        .form-one-wrapper
+        input[type="date"] {
+          width: 100%;
+
+          box-sizing: border-box;
+        }
+
+        /* =================================================
            TEXTAREA
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper textarea {
           min-height: 130px;
+
           resize: vertical;
         }
 
+        /* =================================================
+           GENERAL ERROR
+        ================================================= */
 
-        /* ====================================
-           GENERAL API ERROR
-        ==================================== */
+        .form-one-wrapper
+        .general-error {
 
-        .form-one-wrapper .general-error {
           width: 100%;
 
           padding: 10px 14px;
@@ -514,23 +775,25 @@ const FormOne = ({ className, title, btnText }) => {
           font-size: 14px;
 
           line-height: 1.5;
+
+          box-sizing: border-box;
         }
 
-
-        /* ====================================
+        /* =================================================
            DISABLED BUTTON
-        ==================================== */
+        ================================================= */
 
         .form-one-wrapper
         button:disabled {
+
           opacity: 0.65;
+
           cursor: not-allowed;
         }
 
-
-        /* ====================================
+        /* =================================================
            MOBILE
-        ==================================== */
+        ================================================= */
 
         @media (max-width: 767px) {
 
@@ -548,75 +811,25 @@ const FormOne = ({ className, title, btnText }) => {
 
       `}</style>
 
-
       <div className="form-one-wrapper">
 
         <form
           className={`form-style1 ${className || ''}`}
-          action="https://api.web3forms.com/submit"
-          method="POST"
           onSubmit={handleSubmit}
           noValidate
         >
 
-          {/* ==================================
-              WEB3FORMS ACCESS KEY
-          =================================== */}
-
-          <input
-            type="hidden"
-            name="access_key"
-            value="9015df3b-8397-41eb-849c-ab499f677b46"
-          />
-
-
-          {/* ==================================
-              EMAIL SUBJECT
-          =================================== */}
-
-          <input
-            type="hidden"
-            name="subject"
-            value="New Growth Requirement Enquiry – Indieur"
-          />
-
-
-          {/* ==================================
-              SENDER NAME
-          =================================== */}
-
-          <input
-            type="hidden"
-            name="from_name"
-            value="Indieur Website – Growth Requirement Form"
-          />
-
-
-          {/* ==================================
-              SPAM PROTECTION
-          =================================== */}
-
-          <input
-            type="checkbox"
-            name="botcheck"
-            style={{
-              display: 'none'
-            }}
-          />
-
-
-          {/* ==================================
-              FORM TITLE
-          =================================== */}
+          {/* =================================================
+              TITLE
+          ================================================= */}
 
           <h2 className="form-title h4">
             {title}
           </h2>
 
-
-          {/* ==================================
+          {/* =================================================
               FULL NAME
-          =================================== */}
+          ================================================= */}
 
           <div className="form-group">
 
@@ -627,9 +840,11 @@ const FormOne = ({ className, title, btnText }) => {
               required
               autoComplete="name"
               maxLength="100"
+
               onChange={() =>
                 clearError('name')
               }
+
               className={
                 errors.name
                   ? 'input-error'
@@ -645,10 +860,9 @@ const FormOne = ({ className, title, btnText }) => {
 
           </div>
 
-
-          {/* ==================================
+          {/* =================================================
               EMAIL
-          =================================== */}
+          ================================================= */}
 
           <div className="form-group">
 
@@ -659,9 +873,11 @@ const FormOne = ({ className, title, btnText }) => {
               required
               autoComplete="email"
               maxLength="150"
+
               onChange={() =>
                 clearError('email')
               }
+
               className={
                 errors.email
                   ? 'input-error'
@@ -677,10 +893,9 @@ const FormOne = ({ className, title, btnText }) => {
 
           </div>
 
-
-          {/* ==================================
+          {/* =================================================
               APPOINTMENT SUBJECT
-          =================================== */}
+          ================================================= */}
 
           <div className="form-group">
 
@@ -690,9 +905,11 @@ const FormOne = ({ className, title, btnText }) => {
               placeholder="Appointment Subject *"
               required
               maxLength="150"
+
               onChange={() =>
                 clearError('subject')
               }
+
               className={
                 errors.subject
                   ? 'input-error'
@@ -708,10 +925,9 @@ const FormOne = ({ className, title, btnText }) => {
 
           </div>
 
-
-          {/* ==================================
+          {/* =================================================
               APPOINTMENT DATE
-          =================================== */}
+          ================================================= */}
 
           <div className="form-group">
 
@@ -720,16 +936,19 @@ const FormOne = ({ className, title, btnText }) => {
               name="appointment_date"
               min={today}
               required
+
               onChange={() =>
                 clearError(
                   'appointmentDate'
                 )
               }
+
               className={
                 errors.appointmentDate
                   ? 'input-error'
                   : ''
               }
+
               style={{
                 width: '100%'
               }}
@@ -743,10 +962,9 @@ const FormOne = ({ className, title, btnText }) => {
 
           </div>
 
-
-          {/* ==================================
+          {/* =================================================
               MESSAGE
-          =================================== */}
+          ================================================= */}
 
           <div className="form-group">
 
@@ -756,9 +974,11 @@ const FormOne = ({ className, title, btnText }) => {
               required
               minLength="10"
               maxLength="2000"
+
               onChange={() =>
                 clearError('message')
               }
+
               className={
                 errors.message
                   ? 'input-error'
@@ -774,10 +994,9 @@ const FormOne = ({ className, title, btnText }) => {
 
           </div>
 
-
-          {/* ==================================
+          {/* =================================================
               GENERAL ERROR
-          =================================== */}
+          ================================================= */}
 
           {errorMessage && (
 
@@ -791,10 +1010,9 @@ const FormOne = ({ className, title, btnText }) => {
 
           )}
 
-
-          {/* ==================================
+          {/* =================================================
               SUBMIT BUTTON
-          =================================== */}
+          ================================================= */}
 
           <div className="form-btn">
 

@@ -8,9 +8,15 @@ const FormFive = () => {
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // ==========================================
+  // =========================================================
+  // GOOGLE APPS SCRIPT WEB APP URL
+  // =========================================================
+  const GOOGLE_SCRIPT_URL =
+    'https://script.google.com/macros/s/AKfycbwzIZxxuBrk6a3mswnynX5jhNV3zhQM7lU3WGIW5-_bVgk56qdBNq8GjyotGNUdnST8/exec';
+
+  // =========================================================
   // VALIDATE FORM
-  // ==========================================
+  // =========================================================
   const validateForm = (form) => {
     const newErrors = {};
 
@@ -41,9 +47,9 @@ const FormFive = () => {
     const message =
       form.elements['Message']?.value.trim();
 
-    // ==========================================
+    // =========================================================
     // FULL NAME
-    // ==========================================
+    // =========================================================
     if (!fullName) {
       newErrors.fullName =
         'Please enter your full name.';
@@ -57,9 +63,9 @@ const FormFive = () => {
         'Please enter a valid name.';
     }
 
-    // ==========================================
+    // =========================================================
     // BUSINESS NAME
-    // ==========================================
+    // =========================================================
     if (!businessName) {
       newErrors.businessName =
         'Please enter your business name.';
@@ -68,9 +74,9 @@ const FormFive = () => {
         'Business name must contain at least 2 characters.';
     }
 
-    // ==========================================
+    // =========================================================
     // EMAIL
-    // ==========================================
+    // =========================================================
     if (!email) {
       newErrors.email =
         'Please enter your email address.';
@@ -83,9 +89,9 @@ const FormFive = () => {
         'Please enter a valid email address.';
     }
 
-    // ==========================================
+    // =========================================================
     // PHONE
-    // ==========================================
+    // =========================================================
     if (!phone) {
       newErrors.phone =
         'Please enter your Mobile number.';
@@ -99,14 +105,14 @@ const FormFive = () => {
       }
     }
 
-    // ==========================================
+    // =========================================================
     // WEBSITE / SOCIAL PROFILE
     // OPTIONAL
-    // ==========================================
+    // =========================================================
     if (website) {
       const websiteValue =
         website.startsWith('http://') ||
-        website.startsWith('https://')
+          website.startsWith('https://')
           ? website
           : `https://${website}`;
 
@@ -118,33 +124,33 @@ const FormFive = () => {
       }
     }
 
-    // ==========================================
+    // =========================================================
     // BUSINESS CATEGORY
-    // ==========================================
+    // =========================================================
     if (!businessCategory) {
       newErrors.businessCategory =
         'Please select your business category.';
     }
 
-    // ==========================================
+    // =========================================================
     // PRIMARY REQUIREMENT
-    // ==========================================
+    // =========================================================
     if (!primaryRequirement) {
       newErrors.primaryRequirement =
         'Please select a service.';
     }
 
-    // ==========================================
+    // =========================================================
     // MARKETING STATUS
-    // ==========================================
+    // =========================================================
     if (!marketingStatus) {
       newErrors.marketingStatus =
         'Please select the closest option.';
     }
 
-    // ==========================================
+    // =========================================================
     // MESSAGE
-    // ==========================================
+    // =========================================================
     if (!message) {
       newErrors.message =
         'Please tell us about your business and requirement.';
@@ -156,9 +162,9 @@ const FormFive = () => {
         'Message cannot exceed 2000 characters.';
     }
 
-    // ==========================================
+    // =========================================================
     // CONSENT
-    // ==========================================
+    // =========================================================
     if (!consent) {
       newErrors.consent =
         'Please agree to the consent statement before submitting the form.';
@@ -167,9 +173,9 @@ const FormFive = () => {
     return newErrors;
   };
 
-  // ==========================================
+  // =========================================================
   // FORM SUBMIT
-  // ==========================================
+  // =========================================================
   const formHandle = async (event) => {
     event.preventDefault();
 
@@ -177,13 +183,17 @@ const FormFive = () => {
 
     const form = event.target;
 
-    // Run validation
+    // =========================================================
+    // VALIDATION
+    // =========================================================
     const validationErrors =
       validateForm(form);
 
     setErrors(validationErrors);
 
-    // Stop if validation errors exist
+    // =========================================================
+    // STOP IF ERRORS
+    // =========================================================
     if (
       Object.keys(validationErrors).length > 0
     ) {
@@ -216,29 +226,70 @@ const FormFive = () => {
       return;
     }
 
-    // ==========================================
+    // =========================================================
     // START SUBMITTING
-    // ==========================================
+    // =========================================================
     setIsSubmitting(true);
 
-    const formData =
-      new FormData(form);
+    // =========================================================
+    // PREPARE DATA
+    // =========================================================
+    const formData = {
+      fullName:
+        form.elements['Full Name']?.value.trim() || '',
 
+      businessName:
+        form.elements['Business Name']?.value.trim() || '',
+
+      email:
+        form.elements['Email Address']?.value.trim() || '',
+
+      phone:
+        form.elements['Mobile Number']?.value.trim() || '',
+
+      website:
+        form.elements['Website or Social Profile']?.value.trim() || '',
+
+      businessCategory:
+        form.elements['Business Category']?.value || '',
+
+      primaryRequirement:
+        form.elements['Primary Requirement']?.value || '',
+
+      marketingStatus:
+        form.elements['Current Marketing Status']?.value || '',
+
+      message:
+        form.elements['Message']?.value.trim() || '',
+
+      consent:
+        consent ? 'Agreed' : ''
+    };
+
+    // =========================================================
+    // SEND TO GOOGLE APPS SCRIPT
+    // =========================================================
     try {
       const response = await fetch(
-        'https://api.web3forms.com/submit',
+        GOOGLE_SCRIPT_URL,
         {
           method: 'POST',
-          body: formData,
+
+          headers: {
+            'Content-Type':
+              'text/plain;charset=utf-8'
+          },
+
+          body: JSON.stringify(formData)
         }
       );
 
       const data =
         await response.json();
 
-      // ========================================
+      // =======================================================
       // SUCCESS
-      // ========================================
+      // =======================================================
       if (data.success) {
         setIsSuccess(true);
         setConsent(false);
@@ -246,27 +297,35 @@ const FormFive = () => {
         form.reset();
       }
 
-      // ========================================
-      // API ERROR
-      // ========================================
+      // =======================================================
+      // GOOGLE SCRIPT ERROR
+      // =======================================================
       else {
         setErrorMessage(
           data.message ||
-            'Something went wrong. Please try again.'
+          'Something went wrong. Please try again.'
         );
       }
+
     } catch (error) {
+
+      console.error(
+        'Google Apps Script Error:',
+        error
+      );
+
       setErrorMessage(
         'Unable to send your enquiry. Please try again.'
       );
+
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // ==========================================
+  // =========================================================
   // CLEAR FIELD ERROR
-  // ==========================================
+  // =========================================================
   const clearError = (fieldName) => {
     if (errors[fieldName]) {
       setErrors((previousErrors) => {
@@ -285,34 +344,166 @@ const FormFive = () => {
     }
   };
 
-  // ==========================================
+  // =========================================================
   // SUCCESS SCREEN
-  // ==========================================
+  // =========================================================
   if (isSuccess) {
     return (
       <>
         <style>{`
+
+          /* =================================================
+             SUCCESS WRAPPER
+          ================================================= */
+
           .form-five-success {
-            width: 100%;
-            text-align: center;
+            width: 100% !important;
+            max-width: 100% !important;
+            text-align: center !important;
+            overflow: visible !important;
+            box-sizing: border-box !important;
+            padding: 20px !important;
           }
+
+          /* =================================================
+             SUCCESS ICON
+          ================================================= */
 
           .form-five-success-icon {
-            display: block;
-            font-size: 50px;
-            margin-bottom: 20px;
+            display: block !important;
+
+            width: 100% !important;
+            height: auto !important;
+
+            font-size: 50px !important;
+            line-height: 1 !important;
+
+            margin: 0 auto 20px !important;
+
+            text-align: center !important;
+
+            color: inherit !important;
           }
+
+          /* =================================================
+             SUCCESS HEADING
+          ================================================= */
 
           .form-five-success h3 {
-            margin-bottom: 15px;
+            display: block !important;
+
+            width: 100% !important;
+            max-width: 100% !important;
+
+            margin: 0 auto 15px !important;
+
+            padding: 0 !important;
+
+            text-align: center !important;
+
+            white-space: normal !important;
+            overflow: visible !important;
+
+            line-height: 1.3 !important;
+
+            box-sizing: border-box !important;
           }
 
+          /* =================================================
+             SUCCESS TEXT
+          ================================================= */
+
           .form-five-success p {
-            margin-bottom: 25px;
+            display: block !important;
+
+            width: 100% !important;
+            max-width: 100% !important;
+
+            margin: 0 auto 25px !important;
+
+            padding: 0 !important;
+
+            text-align: center !important;
+
+            white-space: normal !important;
+            overflow: visible !important;
+
+            line-height: 1.6 !important;
+
+            box-sizing: border-box !important;
           }
+
+          /* =================================================
+             SUCCESS BUTTON
+          ================================================= */
+
+          .form-five-success button {
+            display: inline-flex !important;
+
+            align-items: center !important;
+            justify-content: center !important;
+
+            margin: 0 auto !important;
+          }
+
+          /* =================================================
+             MOBILE SUCCESS SCREEN
+          ================================================= */
+
+          @media (max-width: 767px) {
+
+            .form-five-success {
+              width: 100% !important;
+              max-width: 100% !important;
+
+              padding: 20px 15px !important;
+
+              box-sizing: border-box !important;
+
+              text-align: center !important;
+            }
+
+            .form-five-success-icon {
+              font-size: 45px !important;
+
+              margin-bottom: 18px !important;
+            }
+
+            .form-five-success h3 {
+              font-size: 24px !important;
+              line-height: 1.3 !important;
+
+              margin-bottom: 14px !important;
+            }
+
+            .form-five-success-icon {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+
+  font-size: 50px !important;
+  line-height: 1 !important;
+
+  margin: 0 auto 20px !important;
+
+  text-align: center !important;
+
+  color: #1255E5 !important;
+}
+
+            .form-five-success p {
+              font-size: 15px !important;
+              line-height: 1.6 !important;
+
+              margin-bottom: 22px !important;
+            }
+
+          }
+
         `}</style>
 
         <div className="vs-contact-form">
+
           <div className="row gx-20">
 
             <div className="col-12 form-five-success">
@@ -349,24 +540,22 @@ const FormFive = () => {
             </div>
 
           </div>
+
         </div>
       </>
     );
   }
 
-  // ==========================================
+  // =========================================================
   // MAIN FORM
-  // ==========================================
+  // =========================================================
   return (
     <>
-      {/* ======================================
-          ALL FORM CSS
-      ======================================= */}
       <style>{`
 
-        /* ====================================
+        /* =================================================
            MAIN FORM
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper {
           width: 100%;
@@ -377,10 +566,9 @@ const FormFive = () => {
           margin-bottom: 20px;
         }
 
-
-        /* ====================================
+        /* =================================================
            REQUIRED STAR
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper .required-star {
           color: #dc3545;
@@ -388,28 +576,31 @@ const FormFive = () => {
           margin-left: 2px;
         }
 
-
-        /* ====================================
+        /* =================================================
            ERROR MESSAGE
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper .form-error {
           display: block;
+
           width: 100%;
+
           margin-top: 6px;
+
           padding-left: 2px;
 
           color: #dc3545;
 
           font-size: 13px;
+
           line-height: 1.4;
+
           font-weight: 500;
         }
 
-
-        /* ====================================
+        /* =================================================
            INVALID INPUT
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper
         input.input-error,
@@ -422,10 +613,9 @@ const FormFive = () => {
           border-color: #dc3545 !important;
         }
 
-
-        /* ====================================
+        /* =================================================
            INVALID INPUT FOCUS
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper
         input.input-error:focus,
@@ -435,6 +625,7 @@ const FormFive = () => {
 
         .form-five-wrapper
         textarea.input-error:focus {
+
           border-color: #dc3545 !important;
 
           box-shadow:
@@ -444,10 +635,9 @@ const FormFive = () => {
           outline: none;
         }
 
-
-        /* ====================================
+        /* =================================================
            NORMAL INPUT FOCUS
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper
         input:focus,
@@ -460,31 +650,33 @@ const FormFive = () => {
           outline: none;
         }
 
-
-        /* ====================================
+        /* =================================================
            TEXTAREA
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper textarea {
           min-height: 130px;
+
           resize: vertical;
         }
 
-
-        /* ====================================
+        /* =================================================
            CONSENT
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper
         .consent-wrapper {
+
           margin-top: 2px;
+
           margin-bottom: 20px;
         }
 
-
         .form-five-wrapper
         .consent-label {
+
           display: flex;
+
           align-items: flex-start;
 
           gap: 8px;
@@ -494,13 +686,15 @@ const FormFive = () => {
           line-height: 1.6;
         }
 
-
         .form-five-wrapper
         .consent-checkbox {
+
           appearance: auto;
+
           -webkit-appearance: checkbox;
 
           width: 18px;
+
           height: 18px;
 
           min-width: 18px;
@@ -510,6 +704,7 @@ const FormFive = () => {
           padding: 0;
 
           opacity: 1;
+
           visibility: visible;
 
           position: static;
@@ -519,20 +714,21 @@ const FormFive = () => {
           cursor: pointer;
         }
 
-
         .form-five-wrapper
         .consent-error {
+
           margin-top: 8px;
+
           padding-left: 26px;
         }
 
-
-        /* ====================================
-           GENERAL API ERROR
-        ==================================== */
+        /* =================================================
+           GENERAL ERROR
+        ================================================= */
 
         .form-five-wrapper
         .general-error {
+
           width: 100%;
 
           padding: 10px 14px;
@@ -549,39 +745,43 @@ const FormFive = () => {
           font-size: 14px;
 
           line-height: 1.5;
+
+          box-sizing: border-box;
         }
 
-
-        /* ====================================
+        /* =================================================
            DISABLED BUTTON
-        ==================================== */
+        ================================================= */
 
         .form-five-wrapper
         button:disabled {
+
           opacity: 0.65;
 
           cursor: not-allowed;
         }
 
-
-        /* ====================================
+        /* =================================================
            MOBILE
-        ==================================== */
+        ================================================= */
 
         @media (max-width: 767px) {
 
           .form-five-wrapper
           .form-group {
+
             margin-bottom: 18px;
           }
 
           .form-five-wrapper
           .form-error {
+
             font-size: 12px;
           }
 
           .form-five-wrapper
           .consent-label {
+
             font-size: 13px;
           }
 
@@ -589,46 +789,19 @@ const FormFive = () => {
 
       `}</style>
 
-
       <div className="form-five-wrapper">
 
         <form
           className="vs-contact-form"
-          action="https://api.web3forms.com/submit"
-          method="POST"
           onSubmit={formHandle}
           noValidate
         >
 
-          {/* ==================================
-              WEB3FORMS ACCESS KEY
-          =================================== */}
-
-          <input
-            type="hidden"
-            name="access_key"
-            value="9015df3b-8397-41eb-849c-ab499f677b46"
-          />
-
-          <input
-            type="hidden"
-            name="subject"
-            value="New Enquiry - Indieur Website"
-          />
-
-          <input
-            type="hidden"
-            name="from_name"
-            value="Indieur Website Contact Form"
-          />
-
-
           <div className="row gx-20">
 
-
-            {/* =================================
+            {/* =================================================
                 FULL NAME
-            ================================== */}
+            ================================================= */}
 
             <div className="col-md-6 form-group">
 
@@ -638,9 +811,11 @@ const FormFive = () => {
                 placeholder="Full name *"
                 required
                 autoComplete="name"
+
                 onChange={() =>
                   clearError('fullName')
                 }
+
                 className={
                   errors.fullName
                     ? 'input-error'
@@ -658,10 +833,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 BUSINESS NAME
-            ================================== */}
+            ================================================= */}
 
             <div className="col-md-6 form-group">
 
@@ -671,9 +845,11 @@ const FormFive = () => {
                 placeholder="Business name *"
                 required
                 autoComplete="organization"
+
                 onChange={() =>
                   clearError('businessName')
                 }
+
                 className={
                   errors.businessName
                     ? 'input-error'
@@ -691,10 +867,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 EMAIL
-            ================================== */}
+            ================================================= */}
 
             <div className="col-md-6 form-group">
 
@@ -704,9 +879,11 @@ const FormFive = () => {
                 placeholder="Email address *"
                 required
                 autoComplete="email"
+
                 onChange={() =>
                   clearError('email')
                 }
+
                 className={
                   errors.email
                     ? 'input-error'
@@ -724,10 +901,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 PHONE
-            ================================== */}
+            ================================================= */}
 
             <div className="col-md-6 form-group">
 
@@ -737,9 +913,11 @@ const FormFive = () => {
                 placeholder="Mobile Number *"
                 required
                 autoComplete="tel"
+
                 onChange={() =>
                   clearError('phone')
                 }
+
                 className={
                   errors.phone
                     ? 'input-error'
@@ -757,11 +935,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
-                WEBSITE / SOCIAL
-                OPTIONAL
-            ================================== */}
+            {/* =================================================
+                WEBSITE / SOCIAL PROFILE
+            ================================================= */}
 
             <div className="col-12 form-group">
 
@@ -769,9 +945,11 @@ const FormFive = () => {
                 type="text"
                 name="Website or Social Profile"
                 placeholder="Website or social media link"
+
                 onChange={() =>
                   clearError('website')
                 }
+
                 className={
                   errors.website
                     ? 'input-error'
@@ -789,10 +967,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 BUSINESS CATEGORY
-            ================================== */}
+            ================================================= */}
 
             <div className="col-md-6 form-group">
 
@@ -800,11 +977,13 @@ const FormFive = () => {
                 name="Business Category"
                 defaultValue=""
                 required
+
                 onChange={() =>
                   clearError(
                     'businessCategory'
                   )
                 }
+
                 className={
                   errors.businessCategory
                     ? 'input-error'
@@ -861,10 +1040,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 PRIMARY REQUIREMENT
-            ================================== */}
+            ================================================= */}
 
             <div className="col-md-6 form-group">
 
@@ -872,11 +1050,13 @@ const FormFive = () => {
                 name="Primary Requirement"
                 defaultValue=""
                 required
+
                 onChange={() =>
                   clearError(
                     'primaryRequirement'
                   )
                 }
+
                 className={
                   errors.primaryRequirement
                     ? 'input-error'
@@ -945,10 +1125,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 CURRENT MARKETING STATUS
-            ================================== */}
+            ================================================= */}
 
             <div className="col-12 form-group">
 
@@ -956,11 +1135,13 @@ const FormFive = () => {
                 name="Current Marketing Status"
                 defaultValue=""
                 required
+
                 onChange={() =>
                   clearError(
                     'marketingStatus'
                   )
                 }
+
                 className={
                   errors.marketingStatus
                     ? 'input-error'
@@ -1009,21 +1190,25 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 MESSAGE
-            ================================== */}
+            ================================================= */}
 
             <div className="col-12 form-group">
 
               <textarea
                 name="Message"
+
                 placeholder="Tell us about your business, current marketing activities, biggest challenge and what you would like to improve. *"
+
                 required
+
                 maxLength="2000"
+
                 onChange={() =>
                   clearError('message')
                 }
+
                 className={
                   errors.message
                     ? 'input-error'
@@ -1039,10 +1224,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 CONSENT
-            ================================== */}
+            ================================================= */}
 
             <div className="col-12 form-group consent-wrapper">
 
@@ -1053,10 +1237,15 @@ const FormFive = () => {
 
                 <input
                   id="form-consent"
+
                   type="checkbox"
+
                   name="Form Consent"
+
                   value="Agreed"
+
                   checked={consent}
+
                   onChange={(e) => {
 
                     setConsent(
@@ -1068,6 +1257,7 @@ const FormFive = () => {
                     }
 
                   }}
+
                   className="consent-checkbox"
                 />
 
@@ -1090,7 +1280,6 @@ const FormFive = () => {
 
               </label>
 
-
               {errors.consent && (
                 <div className="form-error consent-error">
                   {errors.consent}
@@ -1099,10 +1288,9 @@ const FormFive = () => {
 
             </div>
 
-
-            {/* =================================
+            {/* =================================================
                 GENERAL ERROR
-            ================================== */}
+            ================================================= */}
 
             {errorMessage && (
 
@@ -1116,10 +1304,9 @@ const FormFive = () => {
 
             )}
 
-
-            {/* =================================
+            {/* =================================================
                 SUBMIT BUTTON
-            ================================== */}
+            ================================================= */}
 
             <div className="col-12">
 
