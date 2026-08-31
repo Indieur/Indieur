@@ -13,7 +13,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/css/fontawesome.css";
 import "./assets/scss/style.scss";
 import { Analytics } from "@vercel/analytics/react"
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 // Scroll to top whenever the page/route changes
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -37,6 +37,7 @@ function App() {
       {/* Automatically scroll every new page to top */}
       <ScrollToTop />
       <Analytics/>
+      <SpeedInsights/>
       <AppRouters />
 
     </BrowserRouter>
