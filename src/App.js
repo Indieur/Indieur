@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+
 import {
   BrowserRouter,
   useLocation
@@ -8,107 +9,177 @@ import AppRouters from "./routes/AppRouters";
 
 import "./assets/fonts/exo/exo.css";
 import "./assets/fonts/fira-sans/fira-sans.css";
+
 import "slick-carousel/slick/slick.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import "./assets/css/fontawesome.css";
 import "./assets/scss/style.scss";
 
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/react";
 
-import ReactGA from "react-ga4";
+// Vercel
+import {
+  Analytics
+} from "@vercel/analytics/react";
+
+import {
+  SpeedInsights
+} from "@vercel/speed-insights/react";
 
 
-// =====================================================
-// GOOGLE ANALYTICS TRACKER
-// =====================================================
+// Analytics
+import {
+  initGoogleAnalytics,
+  trackGooglePageView,
+  initPostHog,
+  trackPostHogPageView
+} from "./analytics";
 
-const GoogleAnalyticsTracker = () => {
+
+
+/*
+=========================================================
+ANALYTICS TRACKER
+=========================================================
+*/
+
+const AnalyticsTracker = () => {
+
   const location = useLocation();
 
-  // Initialize Google Analytics
+
+  /*
+  -------------------------------------------------------
+  INITIALIZE ANALYTICS
+  -------------------------------------------------------
+  */
+
   useEffect(() => {
-    const measurementId =
-      process.env.REACT_APP_GA_MEASUREMENT_ID;
 
-    if (!measurementId) {
-      console.warn(
-        "Google Analytics Measurement ID is missing."
-      );
-      return;
-    }
+    initGoogleAnalytics();
 
-    ReactGA.initialize(measurementId);
+    initPostHog();
+
   }, []);
 
 
-  // Track every React Router page change
+  /*
+  -------------------------------------------------------
+  TRACK ROUTE CHANGES
+  -------------------------------------------------------
+  */
+
   useEffect(() => {
-    const measurementId =
-      process.env.REACT_APP_GA_MEASUREMENT_ID;
 
-    if (!measurementId) return;
+    const pathname =
+      location.pathname;
 
-    ReactGA.send({
-      hitType: "pageview",
-      page:
-        location.pathname +
-        location.search
-    });
+    const search =
+      location.search;
+
+
+    // Google Analytics
+    trackGooglePageView(
+      pathname,
+      search
+    );
+
+
+    // PostHog
+    trackPostHogPageView(
+      pathname
+    );
 
   }, [
     location.pathname,
     location.search
   ]);
 
+
   return null;
 };
 
 
-// =====================================================
-// SCROLL TO TOP
-// =====================================================
+
+/*
+=========================================================
+SCROLL TO TOP
+=========================================================
+*/
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+
+  const {
+    pathname
+  } = useLocation();
+
 
   useEffect(() => {
+
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: "smooth"
     });
+
   }, [pathname]);
+
 
   return null;
 };
 
 
-// =====================================================
-// APP
-// =====================================================
+
+/*
+=========================================================
+MAIN APP
+=========================================================
+*/
 
 function App() {
+
   return (
+
     <BrowserRouter>
 
-      {/* Google Analytics */}
-      <GoogleAnalyticsTracker />
+      {/* =========================================
+          GOOGLE ANALYTICS + POSTHOG
+      ========================================= */}
 
-      {/* Vercel Analytics */}
+      <AnalyticsTracker />
+
+
+      {/* =========================================
+          VERCEL ANALYTICS
+      ========================================= */}
+
       <Analytics />
 
-      {/* Vercel Speed Insights */}
+
+      {/* =========================================
+          VERCEL SPEED INSIGHTS
+      ========================================= */}
+
       <SpeedInsights />
 
-      {/* Scroll to top */}
+
+      {/* =========================================
+          SCROLL TO TOP
+      ========================================= */}
+
       <ScrollToTop />
 
-      {/* App Routes */}
+
+      {/* =========================================
+          APPLICATION ROUTES
+      ========================================= */}
+
       <AppRouters />
 
     </BrowserRouter>
+
   );
 }
+
 
 export default App;
