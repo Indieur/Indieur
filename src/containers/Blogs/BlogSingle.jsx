@@ -25,9 +25,150 @@ import {
 } from "../../services/blogService";
 
 
-const BlogSingle = ({ className }) => {
+/* =========================================================
+   BLOG CONTENT HEADING NORMALIZATION
 
-  const { slug } = useParams();
+   FINAL SEO STRUCTURE:
+
+   H1
+   └── Main Blog Title
+
+   H2
+   ├── Main Article Section
+   ├── Main Article Section
+   └── Main Article Section
+
+   H3
+   ├── Sub Section
+   ├── Sub Section
+   └── Sub Section
+
+
+   CMS CONTENT CONVERSION:
+
+   CMS H1  →  H2
+   CMS H2  →  H3
+   CMS H3  →  H3
+   CMS H4  →  H3
+   CMS H5  →  H3
+   CMS H6  →  H3
+
+   This guarantees that the blog title is the
+   ONLY H1 on the page.
+========================================================= */
+
+const normalizeBlogContentHeadings = (
+  html = ""
+) => {
+
+  if (!html) {
+    return "";
+  }
+
+
+  let content =
+    String(html);
+
+
+  /*
+   * Convert H1 inside blog content
+   * into H2.
+   *
+   * Example:
+   *
+   * <h1>What Is Brand Positioning?</h1>
+   *
+   * becomes:
+   *
+   * <h2>What Is Brand Positioning?</h2>
+   */
+
+  content =
+    content.replace(
+      /<h1(\s[^>]*)?>/gi,
+      "<h2>"
+    );
+
+  content =
+    content.replace(
+      /<\/h1>/gi,
+      "</h2>"
+    );
+
+
+  /*
+   * Convert H2 inside blog content
+   * into H3.
+   *
+   * Example:
+   *
+   * <h2>Brand Strategy Is the Foundation</h2>
+   *
+   * becomes:
+   *
+   * <h3>Brand Strategy Is the Foundation</h3>
+   */
+
+  content =
+    content.replace(
+      /<h2(\s[^>]*)?>/gi,
+      "<h3>"
+    );
+
+  content =
+    content.replace(
+      /<\/h2>/gi,
+      "</h3>"
+    );
+
+
+  /*
+   * Keep H3 as H3.
+   */
+
+  content =
+    content.replace(
+      /<h3(\s[^>]*)?>/gi,
+      "<h3>"
+    );
+
+  content =
+    content.replace(
+      /<\/h3>/gi,
+      "</h3>"
+    );
+
+
+  /*
+   * Convert H4/H5/H6 to H3.
+   *
+   * This keeps the article hierarchy
+   * simple and SEO-friendly.
+   */
+
+  content =
+    content.replace(
+      /<h[4-6](\s[^>]*)?>/gi,
+      "<h3>"
+    );
+
+  content =
+    content.replace(
+      /<\/h[4-6]>/gi,
+      "</h3>"
+    );
+
+
+  return content;
+};
+
+
+const BlogSingle = ({
+  className,
+}) => {
+
+  const { slug } =
+    useParams();
 
 
   /* =========================================================
@@ -51,8 +192,10 @@ const BlogSingle = ({ className }) => {
      READ MORE / READ LESS
   ========================================================= */
 
-  const [isContentExpanded, setIsContentExpanded] =
-    useState(false);
+  const [
+    isContentExpanded,
+    setIsContentExpanded,
+  ] = useState(false);
 
 
   /* =========================================================
@@ -62,14 +205,20 @@ const BlogSingle = ({ className }) => {
   const [comments, setComments] =
     useState([]);
 
-  const [commentsLoading, setCommentsLoading] =
-    useState(true);
+  const [
+    commentsLoading,
+    setCommentsLoading,
+  ] = useState(true);
 
-  const [submittingComment, setSubmittingComment] =
-    useState(false);
+  const [
+    submittingComment,
+    setSubmittingComment,
+  ] = useState(false);
 
-  const [commentMessage, setCommentMessage] =
-    useState("");
+  const [
+    commentMessage,
+    setCommentMessage,
+  ] = useState("");
 
 
   /* =========================================================
@@ -110,10 +259,14 @@ const BlogSingle = ({ className }) => {
       try {
 
         setLoading(true);
+
         setError("");
 
+
         const blogData =
-          await getBlogBySlug(slug);
+          await getBlogBySlug(
+            slug
+          );
 
 
         if (!blogData) {
@@ -123,17 +276,22 @@ const BlogSingle = ({ className }) => {
           );
 
           return;
-
         }
 
 
-        setBlog(blogData);
+        setBlog(
+          blogData
+        );
+
 
         /*
-         * Every time user opens another blog,
-         * start in collapsed mode.
+         * Reset Read More whenever
+         * another blog is opened.
          */
-        setIsContentExpanded(false);
+
+        setIsContentExpanded(
+          false
+        );
 
 
         const blogs =
@@ -153,6 +311,7 @@ const BlogSingle = ({ className }) => {
           "Blog loading error:",
           err
         );
+
 
         setError(
           "Unable to load this blog."
@@ -183,49 +342,54 @@ const BlogSingle = ({ className }) => {
 
   useEffect(() => {
 
-    const loadComments = async () => {
+    const loadComments =
+      async () => {
 
-      if (!blog?.id) {
+        if (!blog?.id) {
 
-        return;
-
-      }
-
-
-      try {
-
-        setCommentsLoading(true);
+          return;
+        }
 
 
-        const data =
-          await getBlogComments(
-            blog.id
+        try {
+
+          setCommentsLoading(
+            true
           );
 
 
-        setComments(
-          Array.isArray(data)
-            ? data
-            : []
-        );
+          const data =
+            await getBlogComments(
+              blog.id
+            );
 
 
-      } catch (err) {
+          setComments(
+            Array.isArray(data)
+              ? data
+              : []
+          );
 
-        console.error(
-          "Comments loading error:",
-          err
-        );
 
-        setComments([]);
+        } catch (err) {
 
-      } finally {
+          console.error(
+            "Comments loading error:",
+            err
+          );
 
-        setCommentsLoading(false);
 
-      }
+          setComments([]);
 
-    };
+        } finally {
+
+          setCommentsLoading(
+            false
+          );
+
+        }
+
+      };
 
 
     loadComments();
@@ -240,10 +404,11 @@ const BlogSingle = ({ className }) => {
   const formattedDate =
     useMemo(() => {
 
-      if (!blog?.published_date) {
+      if (
+        !blog?.published_date
+      ) {
 
         return "";
-
       }
 
 
@@ -260,7 +425,6 @@ const BlogSingle = ({ className }) => {
       ) {
 
         return "";
-
       }
 
 
@@ -281,7 +445,9 @@ const BlogSingle = ({ className }) => {
   ========================================================= */
 
   const tags =
-    Array.isArray(blog?.tags)
+    Array.isArray(
+      blog?.tags
+    )
       ? blog.tags
       : [];
 
@@ -334,7 +500,6 @@ const BlogSingle = ({ className }) => {
       if (!blog) {
 
         return [];
-
       }
 
 
@@ -380,19 +545,25 @@ const BlogSingle = ({ className }) => {
        * Matching tags first.
        */
 
-      if (tags.length > 0) {
+      if (
+        tags.length > 0
+      ) {
 
         related.sort(
           (a, b) => {
 
             const aTags =
-              Array.isArray(a.tags)
+              Array.isArray(
+                a.tags
+              )
                 ? a.tags
                 : [];
 
 
             const bTags =
-              Array.isArray(b.tags)
+              Array.isArray(
+                b.tags
+              )
                 ? b.tags
                 : [];
 
@@ -400,14 +571,18 @@ const BlogSingle = ({ className }) => {
             const aMatches =
               tags.filter(
                 (tag) =>
-                  aTags.includes(tag)
+                  aTags.includes(
+                    tag
+                  )
               ).length;
 
 
             const bMatches =
               tags.filter(
                 (tag) =>
-                  bTags.includes(tag)
+                  bTags.includes(
+                    tag
+                  )
               ).length;
 
 
@@ -501,15 +676,18 @@ const BlogSingle = ({ className }) => {
         );
 
         return;
-
       }
 
 
       try {
 
-        setSubmittingComment(true);
+        setSubmittingComment(
+          true
+        );
 
-        setCommentMessage("");
+        setCommentMessage(
+          ""
+        );
 
 
         await addBlogComment({
@@ -559,7 +737,9 @@ const BlogSingle = ({ className }) => {
 
       } finally {
 
-        setSubmittingComment(false);
+        setSubmittingComment(
+          false
+        );
 
       }
 
@@ -586,13 +766,14 @@ const BlogSingle = ({ className }) => {
       ) {
 
         return;
-
       }
 
 
       try {
 
-        setSubmittingComment(true);
+        setSubmittingComment(
+          true
+        );
 
 
         await addBlogComment({
@@ -624,7 +805,9 @@ const BlogSingle = ({ className }) => {
         });
 
 
-        setReplyTo(null);
+        setReplyTo(
+          null
+        );
 
 
         setCommentMessage(
@@ -648,7 +831,9 @@ const BlogSingle = ({ className }) => {
 
       } finally {
 
-        setSubmittingComment(false);
+        setSubmittingComment(
+          false
+        );
 
       }
 
@@ -712,7 +897,6 @@ const BlogSingle = ({ className }) => {
 
           <div className="dynamic-comment-body">
 
-
             <div className="dynamic-comment-top">
 
               <div>
@@ -770,11 +954,8 @@ const BlogSingle = ({ className }) => {
             </p>
 
 
-            {/* =================================================
-                REPLY FORM
-            ================================================= */}
-
-            {replyTo === comment.id && (
+            {replyTo ===
+              comment.id && (
 
               <form
                 className="dynamic-reply-form"
@@ -866,11 +1047,8 @@ const BlogSingle = ({ className }) => {
             )}
 
 
-            {/* =================================================
-                REPLIES
-            ================================================= */}
-
-            {replies.length > 0 && (
+            {replies.length >
+              0 && (
 
               <div className="dynamic-comment-replies">
 
@@ -1024,7 +1202,7 @@ const BlogSingle = ({ className }) => {
 
 
   /* =========================================================
-     MAIN
+     MAIN BLOG
   ========================================================= */
 
   return (
@@ -1053,7 +1231,9 @@ const BlogSingle = ({ className }) => {
 
             <div className="col-lg-8">
 
-              <Blog className="blog-single">
+              <Blog
+                className="blog-single"
+              >
 
 
                 {/* =================================================
@@ -1134,18 +1314,28 @@ const BlogSingle = ({ className }) => {
 
 
                   {/* =================================================
-                      TITLE
+                      MAIN BLOG TITLE
+
+                      ONLY H1 ON THE PAGE
                   ================================================= */}
 
-                  <Blog.Title>
+                  <h1 className="blog-title">
 
                     {blog.title}
 
-                  </Blog.Title>
+                  </h1>
 
 
                   {/* =================================================
                       BLOG CONTENT
+
+                      CMS:
+                      H1 -> H2
+                      H2 -> H3
+                      H3 -> H3
+                      H4 -> H3
+                      H5 -> H3
+                      H6 -> H3
                   ================================================= */}
 
                   <div
@@ -1156,14 +1346,16 @@ const BlogSingle = ({ className }) => {
                     }`}
                     dangerouslySetInnerHTML={{
                       __html:
-                        blog.content ||
-                        "",
+                        normalizeBlogContentHeadings(
+                          blog.content ||
+                          ""
+                        ),
                     }}
                   />
 
 
                   {/* =================================================
-                      ALWAYS VISIBLE READ MORE
+                      READ MORE
                   ================================================= */}
 
                   <div className="blog-read-more-wrapper">
@@ -1210,8 +1402,8 @@ const BlogSingle = ({ className }) => {
 
                   <Blog.Bottom>
 
-
-                    {tags.length > 0 && (
+                    {tags.length >
+                      0 && (
 
                       <Blog.BottomColumn
                         columnTitle="Tags"
@@ -1286,7 +1478,6 @@ const BlogSingle = ({ className }) => {
                   ================================================= */}
 
                   <div className="dynamic-post-navigation">
-
 
                     {previousBlog ? (
 
@@ -1437,7 +1628,8 @@ const BlogSingle = ({ className }) => {
                       RELATED POSTS
                   ================================================= */}
 
-                  {relatedBlogs.length > 0 && (
+                  {relatedBlogs.length >
+                    0 && (
 
                     <div className="dynamic-related-posts">
 
@@ -1556,7 +1748,8 @@ const BlogSingle = ({ className }) => {
 
                       </p>
 
-                    ) : rootComments.length > 0 ? (
+                    ) : rootComments.length >
+                      0 ? (
 
                       <div>
 
@@ -1718,7 +1911,6 @@ const BlogSingle = ({ className }) => {
 
                   </div>
 
-
                 </Blog.Body>
 
               </Blog>
@@ -1735,7 +1927,6 @@ const BlogSingle = ({ className }) => {
               <SidebarOne />
 
             </div>
-
 
           </div>
 
@@ -1842,24 +2033,31 @@ const blogDetailCSS = `
 .dynamic-blog-details .blog-meta {
   margin-top: 0;
   margin-bottom: 10px;
+
   line-height: 1.5;
 }
 
 
 .dynamic-blog-details .blog-meta a {
   display: inline-flex;
+
   align-items: center;
+
   gap: 5px;
 }
 
 
 /* =========================================================
-   TITLE
+   MAIN BLOG TITLE
+
+   THIS IS THE ONLY H1
 ========================================================= */
 
 .dynamic-blog-details .blog-title {
   margin-top: 0;
+
   margin-bottom: 15px;
+
   line-height: 1.3;
 }
 
@@ -1885,6 +2083,66 @@ const blogDetailCSS = `
 
 
 /* =========================================================
+   ARTICLE H2
+
+   Main article sections
+========================================================= */
+
+.blog-dynamic-content h2 {
+  margin-top: 35px;
+
+  margin-bottom: 16px;
+
+  font-size: 34px;
+
+  line-height: 1.3;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   ARTICLE H3
+
+   Article sub-sections
+========================================================= */
+
+.blog-dynamic-content h3 {
+  margin-top: 28px;
+
+  margin-bottom: 13px;
+
+  font-size: 23px;
+
+  line-height: 1.4;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   H4/H5/H6
+
+   Normally these are converted to H3 by JS.
+   These styles are kept as a fallback.
+========================================================= */
+
+.blog-dynamic-content h4,
+.blog-dynamic-content h5,
+.blog-dynamic-content h6 {
+  margin-top: 23px;
+
+  margin-bottom: 11px;
+
+  font-size: 19px;
+
+  line-height: 1.4;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
    COLLAPSED
 ========================================================= */
 
@@ -1902,23 +2160,27 @@ const blogDetailCSS = `
 ========================================================= */
 
 .blog-dynamic-content.blog-content-collapsed::after {
+
   content: "";
 
   position: absolute;
 
   left: 0;
+
   right: 0;
+
   bottom: 0;
 
   height: 80px;
 
   pointer-events: none;
 
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0),
-    #fff
-  );
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0),
+      #fff
+    );
 }
 
 
@@ -1934,144 +2196,13 @@ const blogDetailCSS = `
 
 
 /* =========================================================
-   READ MORE WRAPPER
-========================================================= */
-
-.blog-read-more-wrapper {
-  display: flex;
-
-  width: 100%;
-
-  align-items: center;
-
-  justify-content: center;
-
-  margin-top: 18px;
-
-  margin-bottom: 30px;
-}
-
-
-/* =========================================================
-   READ MORE BUTTON
-========================================================= */
-
-.blog-read-more-btn {
-  display: inline-flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 9px;
-
-  min-width: 130px;
-
-  min-height: 44px;
-
-  padding: 12px 23px;
-
-  border: 0;
-
-  border-radius: 5px;
-
-  background: #222;
-
-  color: #fff;
-
-  cursor: pointer;
-
-  outline: none;
-
-  font-family: inherit;
-
-  font-size: 13px;
-
-  font-weight: 600;
-
-  line-height: 1;
-
-  transition:
-    transform .3s ease,
-    background .3s ease,
-    box-shadow .3s ease;
-}
-
-
-.blog-read-more-btn:hover {
-  background: #111;
-
-  transform:
-    translateY(-3px);
-
-  box-shadow:
-    0 8px 22px
-    rgba(0,0,0,.16);
-}
-
-
-.blog-read-more-btn:active {
-  transform:
-    translateY(-1px);
-}
-
-
-.blog-read-more-btn i {
-  font-size: 10px;
-
-  transition:
-    transform .3s ease;
-}
-
-
-.blog-read-more-btn:hover i {
-  transform:
-    translateY(3px);
-}
-
-
-/* =========================================================
-   CONTENT
+   PARAGRAPHS
 ========================================================= */
 
 .blog-dynamic-content p {
   margin-top: 0;
+
   margin-bottom: 17px;
-}
-
-
-.blog-dynamic-content h1 {
-  margin-top: 35px;
-  margin-bottom: 16px;
-
-  font-size: 34px;
-  line-height: 1.3;
-}
-
-
-.blog-dynamic-content h2 {
-  margin-top: 32px;
-  margin-bottom: 15px;
-
-  font-size: 28px;
-  line-height: 1.35;
-}
-
-
-.blog-dynamic-content h3 {
-  margin-top: 28px;
-  margin-bottom: 13px;
-
-  font-size: 23px;
-  line-height: 1.4;
-}
-
-
-.blog-dynamic-content h4 {
-  margin-top: 23px;
-  margin-bottom: 11px;
-
-  font-size: 19px;
 }
 
 
@@ -2082,12 +2213,14 @@ const blogDetailCSS = `
 .blog-dynamic-content ul,
 .blog-dynamic-content ol {
   margin: 18px 0;
+
   padding-left: 25px;
 }
 
 
 .blog-dynamic-content li {
   margin-bottom: 7px;
+
   line-height: 1.7;
 }
 
@@ -2108,11 +2241,12 @@ const blogDetailCSS = `
 
 
 /* =========================================================
-   BLOG CONTENT IMAGES
+   IMAGES
 ========================================================= */
 
 .blog-dynamic-content
 p:has(> img:only-child) {
+
   display: inline-block;
 
   width:
@@ -2137,6 +2271,7 @@ p:has(> img:only-child):nth-of-type(even) {
 
 .blog-dynamic-content
 p:has(> img:only-child) img {
+
   display: block;
 
   width: 100%;
@@ -2152,6 +2287,7 @@ p:has(> img:only-child) img {
 
 
 .blog-dynamic-content > img {
+
   display: inline-block;
 
   width:
@@ -2196,6 +2332,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .blog-dynamic-content blockquote {
+
   margin: 28px 0;
 
   padding: 25px 28px;
@@ -2212,10 +2349,110 @@ p:has(> img:only-child) img {
 
 
 /* =========================================================
+   READ MORE
+========================================================= */
+
+.blog-read-more-wrapper {
+
+  display: flex;
+
+  width: 100%;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-top: 18px;
+
+  margin-bottom: 30px;
+}
+
+
+.blog-read-more-btn {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 9px;
+
+  min-width: 130px;
+
+  min-height: 44px;
+
+  padding: 12px 23px;
+
+  border: 0;
+
+  border-radius: 5px;
+
+  background: #222;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  outline: none;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  line-height: 1;
+
+  transition:
+    transform .3s ease,
+    background .3s ease,
+    box-shadow .3s ease;
+}
+
+
+.blog-read-more-btn:hover {
+
+  background: #111;
+
+  transform:
+    translateY(-3px);
+
+  box-shadow:
+    0 8px 22px
+    rgba(0,0,0,.16);
+}
+
+
+.blog-read-more-btn:active {
+
+  transform:
+    translateY(-1px);
+}
+
+
+.blog-read-more-btn i {
+
+  font-size: 10px;
+
+  transition:
+    transform .3s ease;
+}
+
+
+.blog-read-more-btn:hover i {
+
+  transform:
+    translateY(3px);
+}
+
+
+/* =========================================================
    POST NAVIGATION
 ========================================================= */
 
 .dynamic-post-navigation {
+
   display: grid;
 
   grid-template-columns:
@@ -2238,6 +2475,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-nav {
+
   display: flex;
 
   min-width: 0;
@@ -2253,6 +2491,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-nav.next {
+
   justify-content: flex-end;
 
   text-align: right;
@@ -2260,6 +2499,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-nav img {
+
   width: 70px;
 
   height: 58px;
@@ -2274,6 +2514,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-nav span {
+
   display: block;
 
   margin-bottom: 4px;
@@ -2289,6 +2530,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-nav strong {
+
   display: -webkit-box;
 
   overflow: hidden;
@@ -2304,6 +2546,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-grid {
+
   display: flex;
 
   width: 44px;
@@ -2329,6 +2572,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-post-grid:hover {
+
   transform:
     translateY(-2px);
 }
@@ -2339,6 +2583,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-author-box {
+
   display: flex;
 
   align-items: center;
@@ -2354,6 +2599,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-author-avatar {
+
   display: flex;
 
   width: 75px;
@@ -2378,6 +2624,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-author-box span {
+
   display: block;
 
   margin-bottom: 4px;
@@ -2395,6 +2642,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-author-box h3 {
+
   margin: 0 0 5px;
 
   font-size: 20px;
@@ -2402,6 +2650,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-author-box p {
+
   margin: 0;
 
   color: #777;
@@ -2415,11 +2664,13 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-section-heading {
+
   margin-bottom: 22px;
 }
 
 
 .dynamic-section-heading span {
+
   display: block;
 
   margin-bottom: 5px;
@@ -2433,6 +2684,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-section-heading h2 {
+
   margin: 0;
 
   font-size: 27px;
@@ -2442,6 +2694,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-section-heading h2 small {
+
   color: #888;
 
   font-size: 14px;
@@ -2455,11 +2708,13 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-related-posts {
+
   margin-top: 52px;
 }
 
 
 .dynamic-related-card {
+
   display: block;
 
   height: 100%;
@@ -2471,6 +2726,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-related-image {
+
   width: 100%;
 
   height: 170px;
@@ -2484,6 +2740,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-related-image img {
+
   display: block;
 
   width: 100%;
@@ -2499,17 +2756,20 @@ p:has(> img:only-child) img {
 
 .dynamic-related-card:hover
 .dynamic-related-image img {
+
   transform:
     scale(1.05);
 }
 
 
 .dynamic-related-content {
+
   padding-top: 11px;
 }
 
 
 .dynamic-related-content span {
+
   font-size: 10px;
 
   text-transform: uppercase;
@@ -2517,6 +2777,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-related-content h3 {
+
   display: -webkit-box;
 
   overflow: hidden;
@@ -2538,6 +2799,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-comments {
+
   margin-top: 52px;
 
   padding-top: 32px;
@@ -2548,6 +2810,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comments-loading {
+
   color: #777;
 
   font-size: 13px;
@@ -2555,6 +2818,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment {
+
   display: flex;
 
   gap: 15px;
@@ -2567,6 +2831,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-reply {
+
   margin-top: 14px;
 
   padding: 15px;
@@ -2578,6 +2843,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-avatar {
+
   display: flex;
 
   width: 48px;
@@ -2604,6 +2870,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-body {
+
   flex: 1;
 
   min-width: 0;
@@ -2611,6 +2878,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-top {
+
   display: flex;
 
   align-items: flex-start;
@@ -2622,6 +2890,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-top h4 {
+
   margin: 0 0 3px;
 
   font-size: 15px;
@@ -2629,6 +2898,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-top span {
+
   color: #999;
 
   font-size: 11px;
@@ -2636,6 +2906,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-body > p {
+
   margin: 9px 0 0;
 
   color: #666;
@@ -2647,6 +2918,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-reply-btn {
+
   padding: 0;
 
   border: 0;
@@ -2664,11 +2936,13 @@ p:has(> img:only-child) img {
 
 
 .dynamic-reply-btn:hover {
+
   text-decoration: underline;
 }
 
 
 .dynamic-comment-replies {
+
   margin-top: 5px;
 
   margin-left: 20px;
@@ -2685,6 +2959,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-reply-form {
+
   margin-top: 15px;
 
   padding: 18px;
@@ -2695,6 +2970,7 @@ p:has(> img:only-child) img {
 
 .dynamic-reply-form input,
 .dynamic-reply-form textarea {
+
   width: 100%;
 
   margin-bottom: 12px;
@@ -2716,11 +2992,13 @@ p:has(> img:only-child) img {
 
 .dynamic-reply-form input:focus,
 .dynamic-reply-form textarea:focus {
+
   border-color: #999;
 }
 
 
 .dynamic-reply-form button {
+
   min-height: 40px;
 
   padding: 0 17px;
@@ -2742,6 +3020,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-reply-form button:disabled {
+
   opacity: .5;
 
   cursor: not-allowed;
@@ -2753,6 +3032,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-no-comments {
+
   padding: 28px;
 
   background: #f7f7f7;
@@ -2762,6 +3042,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-no-comments i {
+
   display: block;
 
   margin-bottom: 9px;
@@ -2771,6 +3052,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-no-comments p {
+
   margin: 0;
 
   color: #777;
@@ -2784,6 +3066,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-comment-form {
+
   margin-top: 42px;
 
   padding: 28px;
@@ -2793,6 +3076,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-note {
+
   margin-bottom: 20px;
 
   color: #777;
@@ -2802,6 +3086,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-message {
+
   margin-bottom: 18px;
 
   padding: 12px 14px;
@@ -2820,6 +3105,7 @@ p:has(> img:only-child) img {
 
 .dynamic-comment-form input,
 .dynamic-comment-form textarea {
+
   width: 100%;
 
   margin-bottom: 14px;
@@ -2841,16 +3127,19 @@ p:has(> img:only-child) img {
 
 .dynamic-comment-form input:focus,
 .dynamic-comment-form textarea:focus {
+
   border-color: #999;
 }
 
 
 .dynamic-comment-form textarea {
+
   resize: vertical;
 }
 
 
 .dynamic-comment-submit {
+
   display: inline-flex;
 
   min-height: 46px;
@@ -2880,12 +3169,14 @@ p:has(> img:only-child) img {
 
 
 .dynamic-comment-submit:hover {
+
   transform:
     translateY(-1px);
 }
 
 
 .dynamic-comment-submit:disabled {
+
   opacity: .5;
 
   cursor: not-allowed;
@@ -2899,6 +3190,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-blog-loading {
+
   display: flex;
 
   min-height: 400px;
@@ -2912,6 +3204,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-blog-loading p {
+
   margin: 0;
 
   color: #777;
@@ -2921,6 +3214,7 @@ p:has(> img:only-child) img {
 
 
 .dynamic-blog-spinner {
+
   width: 35px;
 
   height: 35px;
@@ -2946,8 +3240,10 @@ p:has(> img:only-child) img {
 @keyframes dynamicBlogSpin {
 
   to {
+
     transform:
       rotate(360deg);
+
   }
 
 }
@@ -2958,6 +3254,7 @@ p:has(> img:only-child) img {
 ========================================================= */
 
 .dynamic-blog-not-found {
+
   padding: 100px 20px;
 
   text-align: center;
@@ -2965,11 +3262,13 @@ p:has(> img:only-child) img {
 
 
 .dynamic-blog-not-found h2 {
+
   margin-bottom: 10px;
 }
 
 
 .dynamic-blog-not-found p {
+
   margin-bottom: 25px;
 
   color: #777;
@@ -2988,6 +3287,7 @@ and (
 ) {
 
   .dynamic-featured-image {
+
     width: 100%;
 
     height: auto;
@@ -3000,6 +3300,7 @@ and (
 
 
   .dynamic-featured-image img {
+
     width: 100%;
 
     height: 100%;
@@ -3009,6 +3310,7 @@ and (
 
 
   .blog-dynamic-content {
+
     font-size: 14px;
 
     line-height: 1.8;
@@ -3044,6 +3346,7 @@ and (
 
 
   .dynamic-related-image {
+
     height: 150px;
   }
 
@@ -3057,6 +3360,7 @@ and (
 @media (max-width: 767px) {
 
   .dynamic-featured-image {
+
     width: 100%;
 
     height: auto;
@@ -3069,6 +3373,7 @@ and (
 
 
   .dynamic-featured-image img {
+
     width: 100%;
 
     height: 100%;
@@ -3088,12 +3393,14 @@ and (
 
   .dynamic-blog-details
   .blog-meta {
+
     margin-bottom: 9px;
   }
 
 
   .dynamic-blog-details
   .blog-title {
+
     margin-bottom: 13px;
 
     font-size: 25px;
@@ -3103,50 +3410,48 @@ and (
 
 
   .blog-dynamic-content {
+
     font-size: 14px;
 
     line-height: 1.75;
   }
 
 
-  /* ================================================
-     FIXED 250PX ON MOBILE
-  ================================================ */
-
   .blog-dynamic-content.blog-content-collapsed {
+
     max-height: 250px;
   }
 
 
   .blog-dynamic-content p {
+
     margin-bottom: 16px;
   }
 
 
-  .blog-dynamic-content h1 {
-    margin-top: 28px;
-
-    font-size: 29px;
-  }
-
+  /* H2 = main article sections */
 
   .blog-dynamic-content h2 {
-    margin-top: 27px;
 
-    font-size: 24px;
+    margin-top: 28px;
+
+    font-size: 26px;
+
+    line-height: 1.35;
   }
 
 
+  /* H3 = article sub-sections */
+
   .blog-dynamic-content h3 {
+
     margin-top: 24px;
 
     font-size: 21px;
+
+    line-height: 1.4;
   }
 
-
-  /* ================================================
-     MOBILE IMAGES
-  ================================================ */
 
   .blog-dynamic-content
   p:has(> img:only-child) {
@@ -3190,10 +3495,6 @@ and (
   }
 
 
-  /* ================================================
-     READ MORE
-  ================================================ */
-
   .blog-read-more-wrapper {
 
     width: 100%;
@@ -3223,10 +3524,6 @@ and (
   }
 
 
-  /* ================================================
-     POST NAVIGATION
-  ================================================ */
-
   .dynamic-post-navigation {
 
     grid-template-columns:
@@ -3237,31 +3534,27 @@ and (
 
 
   .dynamic-post-nav img {
+
     display: none;
   }
 
 
   .dynamic-post-nav strong {
+
     font-size: 11px;
   }
 
 
-  /* ================================================
-     AUTHOR
-  ================================================ */
-
   .dynamic-author-box {
+
     align-items: flex-start;
 
     padding: 20px;
   }
 
 
-  /* ================================================
-     COMMENTS
-  ================================================ */
-
   .dynamic-comment {
+
     gap: 10px;
   }
 
@@ -3284,25 +3577,20 @@ and (
   }
 
 
-  /* ================================================
-     COMMENT FORM
-  ================================================ */
-
   .dynamic-comment-form {
+
     padding: 20px;
   }
 
 
-  /* ================================================
-     RELATED
-  ================================================ */
-
   .dynamic-related-posts {
+
     margin-top: 42px;
   }
 
 
   .dynamic-related-image {
+
     height: 210px;
   }
 
@@ -3316,6 +3604,7 @@ and (
 @media (max-width: 480px) {
 
   .dynamic-featured-image {
+
     width: 100%;
 
     height: auto;
@@ -3328,6 +3617,7 @@ and (
 
 
   .dynamic-featured-image img {
+
     width: 100%;
 
     height: 100%;
@@ -3338,23 +3628,39 @@ and (
 
   .dynamic-blog-details
   .blog-title {
+
     font-size: 22px;
   }
 
 
   .blog-dynamic-content {
+
     font-size: 13px;
 
     line-height: 1.75;
   }
 
 
+  .blog-dynamic-content h2 {
+
+    font-size: 23px;
+  }
+
+
+  .blog-dynamic-content h3 {
+
+    font-size: 20px;
+  }
+
+
   .dynamic-author-box {
+
     gap: 13px;
   }
 
 
   .dynamic-author-avatar {
+
     width: 60px;
 
     height: 60px;
@@ -3366,11 +3672,13 @@ and (
 
 
   .dynamic-section-heading h2 {
+
     font-size: 23px;
   }
 
 
   .dynamic-comment-form {
+
     padding: 18px;
   }
 
