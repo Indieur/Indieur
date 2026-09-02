@@ -21,9 +21,8 @@ const FormFive = () => {
   // =========================================================
   // GOOGLE APPS SCRIPT WEB APP URL
   // =========================================================
-  const GOOGLE_SCRIPT_URL =
-    'https://script.google.com/macros/s/AKfycbxWk7N4oYDZzyB7dLQlmwUwciRFwN6TLS20Sxa4BhCs2bh7LHJBvLuSRNqBMqEkv7Fl/exec';
-
+ const ENQUIRY_API_URL =
+  '/api/enquiry';
   // =========================================================
   // VALIDATE FORM
   // =========================================================
@@ -303,18 +302,18 @@ const FormFive = () => {
     // =========================================================
     try {
       const response = await fetch(
-        GOOGLE_SCRIPT_URL,
-        {
-          method: 'POST',
+  ENQUIRY_API_URL,
+  {
+    method: 'POST',
 
-          headers: {
-            'Content-Type':
-              'text/plain;charset=utf-8'
-          },
+    headers: {
+      'Content-Type':
+        'application/json'
+    },
 
-          body: JSON.stringify(formData)
-        }
-      );
+    body: JSON.stringify(formData)
+  }
+);
 
       const data =
         await response.json();
