@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '../';
 
 const FormFive = () => {
@@ -7,6 +7,16 @@ const FormFive = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState({});
+
+  // =========================================================
+  // ANTI-SPAM PROTECTION
+  // =========================================================
+  // Genuine users normally need a few seconds to complete the form.
+  // Bots that submit immediately are rejected.
+  const formOpenedAt = useRef(Date.now());
+
+  // Honeypot field: real users never see or fill this field.
+  const [honeypot, setHoneypot] = useState('');
 
   // =========================================================
   // GOOGLE APPS SCRIPT WEB APP URL
@@ -112,7 +122,7 @@ const FormFive = () => {
     if (website) {
       const websiteValue =
         website.startsWith('http://') ||
-          website.startsWith('https://')
+        website.startsWith('https://')
           ? website
           : `https://${website}`;
 
@@ -180,6 +190,28 @@ const FormFive = () => {
     event.preventDefault();
 
     setErrorMessage('');
+
+    // =========================================================
+    // ANTI-SPAM CHECK 1: HONEYPOT
+    // =========================================================
+    // If a bot fills the hidden field, silently reject the request.
+    if (honeypot.trim() !== '') {
+      console.warn('Spam submission blocked by honeypot.');
+      return;
+    }
+
+    // =========================================================
+    // ANTI-SPAM CHECK 2: MINIMUM FORM TIME
+    // =========================================================
+    // Reject submissions made in less than 5 seconds.
+    const timeSpent = Date.now() - formOpenedAt.current;
+
+    if (timeSpent < 5000) {
+      setErrorMessage(
+        'Please take a moment to complete the form and try again.'
+      );
+      return;
+    }
 
     const form = event.target;
 
@@ -294,6 +326,8 @@ const FormFive = () => {
         setIsSuccess(true);
         setConsent(false);
         setErrors({});
+        setHoneypot('');
+        formOpenedAt.current = Date.now();
         form.reset();
       }
 
@@ -477,19 +511,19 @@ const FormFive = () => {
             }
 
             .form-five-success-icon {
-  display: block !important;
-  width: 100% !important;
-  height: auto !important;
+              display: block !important;
+              width: 100% !important;
+              height: auto !important;
 
-  font-size: 50px !important;
-  line-height: 1 !important;
+              font-size: 50px !important;
+              line-height: 1 !important;
 
-  margin: 0 auto 20px !important;
+              margin: 0 auto 20px !important;
 
-  text-align: center !important;
+              text-align: center !important;
 
-  color: #1255E5 !important;
-}
+              color: #1255E5 !important;
+            }
 
             .form-five-success p {
               font-size: 15px !important;
@@ -796,6 +830,37 @@ const FormFive = () => {
           onSubmit={formHandle}
           noValidate
         >
+
+          {/* =================================================
+              ANTI-SPAM HONEYPOT
+              Hidden from genuine users; bots may fill it.
+          ================================================= */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '-9999px',
+              width: '1px',
+              height: '1px',
+              overflow: 'hidden',
+              opacity: 0,
+              pointerEvents: 'none'
+            }}
+            aria-hidden="true"
+          >
+            <label htmlFor="website-confirmation">
+              Leave this field empty
+            </label>
+
+            <input
+              id="website-confirmation"
+              type="text"
+              name="Website Confirmation"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              tabIndex="-1"
+              autoComplete="off"
+            />
+          </div>
 
           <div className="row gx-20">
 
