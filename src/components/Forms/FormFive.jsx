@@ -185,176 +185,277 @@ const FormFive = () => {
   // =========================================================
   // FORM SUBMIT
   // =========================================================
-  const formHandle = async (event) => {
-    event.preventDefault();
+ const formHandle = async (event) => {
+  event.preventDefault();
 
-    setErrorMessage('');
+  setErrorMessage('');
 
-    // =========================================================
-    // ANTI-SPAM CHECK 1: HONEYPOT
-    // =========================================================
-    // If a bot fills the hidden field, silently reject the request.
-    if (honeypot.trim() !== '') {
-      console.warn('Spam submission blocked by honeypot.');
-      return;
-    }
+  // =========================================================
+  // ANTI-SPAM CHECK 1: HONEYPOT
+  // =========================================================
 
-    // =========================================================
-    // ANTI-SPAM CHECK 2: MINIMUM FORM TIME
-    // =========================================================
-    // Reject submissions made in less than 5 seconds.
-    const timeSpent = Date.now() - formOpenedAt.current;
+  if (honeypot.trim() !== '') {
+    console.warn(
+      'Spam submission blocked by honeypot.'
+    );
+    return;
+  }
 
-    if (timeSpent < 5000) {
-      setErrorMessage(
-        'Please take a moment to complete the form and try again.'
-      );
-      return;
-    }
 
-    const form = event.target;
+  // =========================================================
+  // ANTI-SPAM CHECK 2: MINIMUM FORM TIME
+  // =========================================================
 
-    // =========================================================
-    // VALIDATION
-    // =========================================================
-    const validationErrors =
-      validateForm(form);
+  const timeSpent =
+    Date.now() - formOpenedAt.current;
 
-    setErrors(validationErrors);
+  if (timeSpent < 5000) {
+    setErrorMessage(
+      'Please take a moment to complete the form and try again.'
+    );
+    return;
+  }
 
-    // =========================================================
-    // STOP IF ERRORS
-    // =========================================================
-    if (
-      Object.keys(validationErrors).length > 0
-    ) {
-      const firstErrorField =
-        Object.keys(validationErrors)[0];
 
-      const fieldMap = {
-        fullName: 'Full Name',
-        businessName: 'Business Name',
-        email: 'Email Address',
-        phone: 'Mobile Number',
-        website: 'Website or Social Profile',
-        businessCategory: 'Business Category',
-        primaryRequirement: 'Primary Requirement',
-        marketingStatus:
-          'Current Marketing Status',
-        message: 'Message',
-      };
+  const form = event.target;
 
-      const fieldName =
-        fieldMap[firstErrorField];
 
-      if (
-        fieldName &&
-        form.elements[fieldName]
-      ) {
-        form.elements[fieldName].focus();
-      }
+  // =========================================================
+  // VALIDATION
+  // =========================================================
 
-      return;
-    }
+  const validationErrors =
+    validateForm(form);
 
-    // =========================================================
-    // START SUBMITTING
-    // =========================================================
-    setIsSubmitting(true);
+  setErrors(validationErrors);
 
-    // =========================================================
-    // PREPARE DATA
-    // =========================================================
-    const formData = {
-      fullName:
-        form.elements['Full Name']?.value.trim() || '',
 
-      businessName:
-        form.elements['Business Name']?.value.trim() || '',
+  // =========================================================
+  // STOP IF ERRORS
+  // =========================================================
 
-      email:
-        form.elements['Email Address']?.value.trim() || '',
+  if (
+    Object.keys(validationErrors).length > 0
+  ) {
 
-      phone:
-        form.elements['Mobile Number']?.value.trim() || '',
+    const firstErrorField =
+      Object.keys(validationErrors)[0];
 
-      website:
-        form.elements['Website or Social Profile']?.value.trim() || '',
-
-      businessCategory:
-        form.elements['Business Category']?.value || '',
-
-      primaryRequirement:
-        form.elements['Primary Requirement']?.value || '',
-
+    const fieldMap = {
+      fullName: 'Full Name',
+      businessName: 'Business Name',
+      email: 'Email Address',
+      phone: 'Mobile Number',
+      website: 'Website or Social Profile',
+      businessCategory: 'Business Category',
+      primaryRequirement: 'Primary Requirement',
       marketingStatus:
-        form.elements['Current Marketing Status']?.value || '',
-
-      message:
-        form.elements['Message']?.value.trim() || '',
-
-      consent:
-        consent ? 'Agreed' : ''
+        'Current Marketing Status',
+      message: 'Message',
     };
 
-    // =========================================================
-    // SEND TO GOOGLE APPS SCRIPT
-    // =========================================================
-    try {
-      const response = await fetch(
-  ENQUIRY_API_URL,
-  {
-    method: 'POST',
 
-    headers: {
-      'Content-Type':
-        'application/json'
-    },
+    const fieldName =
+      fieldMap[firstErrorField];
 
-    body: JSON.stringify(formData)
+
+    if (
+      fieldName &&
+      form.elements[fieldName]
+    ) {
+      form.elements[fieldName].focus();
+    }
+
+    return;
   }
-);
 
-      const data =
-        await response.json();
 
-      // =======================================================
-      // SUCCESS
-      // =======================================================
-      if (data.success) {
-        setIsSuccess(true);
-        setConsent(false);
-        setErrors({});
-        setHoneypot('');
-        formOpenedAt.current = Date.now();
-        form.reset();
+  // =========================================================
+  // START SUBMITTING
+  // =========================================================
+
+  setIsSubmitting(true);
+
+
+  // =========================================================
+  // PREPARE DATA
+  // =========================================================
+
+  const formData = {
+
+    fullName:
+      form.elements['Full Name']?.value.trim() || '',
+
+    businessName:
+      form.elements['Business Name']?.value.trim() || '',
+
+    email:
+      form.elements['Email Address']?.value.trim() || '',
+
+    phone:
+      form.elements['Mobile Number']?.value.trim() || '',
+
+    website:
+      form.elements[
+        'Website or Social Profile'
+      ]?.value.trim() || '',
+
+    businessCategory:
+      form.elements[
+        'Business Category'
+      ]?.value || '',
+
+    primaryRequirement:
+      form.elements[
+        'Primary Requirement'
+      ]?.value || '',
+
+    marketingStatus:
+      form.elements[
+        'Current Marketing Status'
+      ]?.value || '',
+
+    message:
+      form.elements['Message']?.value.trim() || '',
+
+    consent:
+      consent ? 'Agreed' : ''
+
+  };
+
+
+  // =========================================================
+  // SEND TO VERCEL API
+  // =========================================================
+
+  try {
+
+    const response = await fetch(
+      ENQUIRY_API_URL,
+      {
+        method: 'POST',
+
+        headers: {
+          'Content-Type':
+            'application/json'
+        },
+
+        body:
+          JSON.stringify(formData)
       }
+    );
 
-      // =======================================================
-      // GOOGLE SCRIPT ERROR
-      // =======================================================
-      else {
-        setErrorMessage(
-          data.message ||
-          'Something went wrong. Please try again.'
-        );
-      }
 
-    } catch (error) {
+    // =======================================================
+    // READ RESPONSE AS TEXT FIRST
+    // =======================================================
+
+    const responseText =
+      await response.text();
+
+
+    // =======================================================
+    // PARSE JSON SAFELY
+    // =======================================================
+
+    let data = {};
+
+    try {
+
+      data =
+        responseText
+          ? JSON.parse(responseText)
+          : {};
+
+    } catch (jsonError) {
 
       console.error(
-        'Google Apps Script Error:',
-        error
+        'Invalid API response:',
+        responseText
+      );
+
+      throw new Error(
+        `Server returned an invalid response (${response.status}).`
+      );
+
+    }
+
+
+    // =======================================================
+    // HTTP ERROR
+    // =======================================================
+
+    if (!response.ok) {
+
+      console.error(
+        'Enquiry API Error:',
+        response.status,
+        data
       );
 
       setErrorMessage(
-        'Unable to send your enquiry. Please try again.'
+        data.message ||
+        `Unable to submit enquiry. Server error (${response.status}).`
       );
 
-    } finally {
-      setIsSubmitting(false);
+      return;
     }
-  };
+
+
+    // =======================================================
+    // APPLICATION ERROR
+    // =======================================================
+
+    if (!data.success) {
+
+      setErrorMessage(
+        data.message ||
+        'Something went wrong. Please try again.'
+      );
+
+      return;
+    }
+
+
+    // =======================================================
+    // SUCCESS
+    // =======================================================
+
+    setIsSuccess(true);
+
+    setConsent(false);
+
+    setErrors({});
+
+    setHoneypot('');
+
+    formOpenedAt.current =
+      Date.now();
+
+    form.reset();
+
+
+  } catch (error) {
+
+    console.error(
+      'Enquiry API Error:',
+      error
+    );
+
+
+    setErrorMessage(
+      error.message ||
+      'Unable to send your enquiry. Please try again.'
+    );
+
+
+  } finally {
+
+    setIsSubmitting(false);
+
+  }
+
+};
 
   // =========================================================
   // CLEAR FIELD ERROR
