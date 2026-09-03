@@ -92,7 +92,7 @@ const SidebarOne = () => {
     }
 
     navigate(
-      `/blog?search=${encodeURIComponent(value)}`
+      `/blogs?search=${encodeURIComponent(value)}`
     );
   };
 
