@@ -238,7 +238,7 @@ const ContactOne = () => (
                   path="https://calendar.app.google/FHDxrBZecPB5XVfB6"
                   className="contact-booking__button"
                 >
-                  Book a Growth Consultation
+                  Book a FREE Consultation
                   <i className="far fa-arrow-right" />
                 </Button>
 
