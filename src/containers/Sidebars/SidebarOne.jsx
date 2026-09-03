@@ -271,7 +271,7 @@ const SidebarOne = () => {
                 <li key={category.name}>
 
                   <Link
-                    to={`/blog?category=${encodeURIComponent(
+                    to={`/blogs?category=${encodeURIComponent(
                       category.name
                     )}`}
                   >
@@ -322,7 +322,7 @@ const SidebarOne = () => {
 
                 <Link
                   key={tag.name}
-                  to={`/blog?tag=${encodeURIComponent(
+                  to={`/blogs?tag=${encodeURIComponent(
                     tag.name
                   )}`}
                   className="dynamic-blog-tag"

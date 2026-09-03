@@ -246,26 +246,48 @@ export const getBlogsByCategory = async (category) => {
 |--------------------------------------------------------------------------
 */
 
+/*
+|--------------------------------------------------------------------------
+| GET BLOGS BY TAG
+|--------------------------------------------------------------------------
+*/
 export const getBlogsByTag = async (tag) => {
+  const cleanTag = String(tag || "")
+    .trim()
+    .toLowerCase();
+
+  if (!cleanTag) {
+    return [];
+  }
+
   const { data, error } = await supabase
     .from("blogs")
     .select("*")
     .eq("status", "published")
-    .contains("tags", [tag])
     .order("published_date", {
       ascending: false,
     });
 
   if (error) {
-    console.error(
-      "Tag blogs error:",
-      error
-    );
-
+    console.error("Tag blogs error:", error);
     throw error;
   }
 
-  return data || [];
+  const filteredBlogs = (data || []).filter((blog) => {
+    if (!Array.isArray(blog.tags)) {
+      return false;
+    }
+
+    return blog.tags.some((blogTag) => {
+      return (
+        String(blogTag || "")
+          .trim()
+          .toLowerCase() === cleanTag
+      );
+    });
+  });
+
+  return filteredBlogs;
 };
 
 

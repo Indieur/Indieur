@@ -349,7 +349,7 @@ const BlogThree = ({
             </p>
 
             <Link
-              to="/blog"
+              to="/blogs"
               className="vs-btn"
             >
               View All Blogs
@@ -429,7 +429,7 @@ const BlogThree = ({
 
 
             <Link
-              to="/blog"
+              to="/blogs"
               className="blog-filter-reset"
             >
               View All Blogs
@@ -552,7 +552,7 @@ const BlogThree = ({
                         {post.category && (
 
                           <Link
-                            to={`/blog?category=${encodeURIComponent(
+                            to={`/blogs?category=${encodeURIComponent(
                               post.category
                             )}`}
                           >
@@ -669,7 +669,7 @@ const BlogThree = ({
 
 
                 <Link
-                  to="/blog"
+                  to="/blogs"
                   className="vs-btn"
                 >
                   View All Blogs

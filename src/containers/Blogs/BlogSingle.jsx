@@ -471,8 +471,8 @@ const BlogSingle = ({
   const previousBlog =
     currentIndex > 0
       ? allBlogs[
-          currentIndex - 1
-        ]
+      currentIndex - 1
+      ]
       : null;
 
 
@@ -482,11 +482,11 @@ const BlogSingle = ({
 
   const nextBlog =
     currentIndex !== -1 &&
-    currentIndex <
+      currentIndex <
       allBlogs.length - 1
       ? allBlogs[
-          currentIndex + 1
-        ]
+      currentIndex + 1
+      ]
       : null;
 
 
@@ -957,112 +957,112 @@ const BlogSingle = ({
             {replyTo ===
               comment.id && (
 
-              <form
-                className="dynamic-reply-form"
-                onSubmit={(e) =>
-                  handleReplySubmit(
-                    e,
-                    comment.id
-                  )
-                }
-              >
+                <form
+                  className="dynamic-reply-form"
+                  onSubmit={(e) =>
+                    handleReplySubmit(
+                      e,
+                      comment.id
+                    )
+                  }
+                >
 
-                <div className="row">
+                  <div className="row">
 
-                  <div className="col-md-6">
+                    <div className="col-md-6">
 
-                    <input
-                      type="text"
-                      name="name"
-                      value={
-                        replyForm.name
-                      }
-                      onChange={
-                        handleReplyChange
-                      }
-                      placeholder="Your Name *"
-                      required
-                    />
+                      <input
+                        type="text"
+                        name="name"
+                        value={
+                          replyForm.name
+                        }
+                        onChange={
+                          handleReplyChange
+                        }
+                        placeholder="Your Name *"
+                        required
+                      />
+
+                    </div>
+
+
+                    <div className="col-md-6">
+
+                      <input
+                        type="email"
+                        name="email"
+                        value={
+                          replyForm.email
+                        }
+                        onChange={
+                          handleReplyChange
+                        }
+                        placeholder="Your Email *"
+                        required
+                      />
+
+                    </div>
+
+
+                    <div className="col-12">
+
+                      <textarea
+                        name="comment"
+                        value={
+                          replyForm.comment
+                        }
+                        onChange={
+                          handleReplyChange
+                        }
+                        placeholder="Your Reply *"
+                        rows="4"
+                        required
+                      />
+
+                    </div>
+
+
+                    <div className="col-12">
+
+                      <button
+                        type="submit"
+                        disabled={
+                          submittingComment
+                        }
+                      >
+
+                        {submittingComment
+                          ? "Submitting..."
+                          : "Submit Reply"}
+
+                      </button>
+
+                    </div>
 
                   </div>
 
+                </form>
 
-                  <div className="col-md-6">
-
-                    <input
-                      type="email"
-                      name="email"
-                      value={
-                        replyForm.email
-                      }
-                      onChange={
-                        handleReplyChange
-                      }
-                      placeholder="Your Email *"
-                      required
-                    />
-
-                  </div>
-
-
-                  <div className="col-12">
-
-                    <textarea
-                      name="comment"
-                      value={
-                        replyForm.comment
-                      }
-                      onChange={
-                        handleReplyChange
-                      }
-                      placeholder="Your Reply *"
-                      rows="4"
-                      required
-                    />
-
-                  </div>
-
-
-                  <div className="col-12">
-
-                    <button
-                      type="submit"
-                      disabled={
-                        submittingComment
-                      }
-                    >
-
-                      {submittingComment
-                        ? "Submitting..."
-                        : "Submit Reply"}
-
-                    </button>
-
-                  </div>
-
-                </div>
-
-              </form>
-
-            )}
+              )}
 
 
             {replies.length >
               0 && (
 
-              <div className="dynamic-comment-replies">
+                <div className="dynamic-comment-replies">
 
-                {replies.map(
-                  (reply) =>
-                    renderComment(
-                      reply,
-                      true
-                    )
-                )}
+                  {replies.map(
+                    (reply) =>
+                      renderComment(
+                        reply,
+                        true
+                      )
+                  )}
 
-              </div>
+                </div>
 
-            )}
+              )}
 
           </div>
 
@@ -1093,9 +1093,8 @@ const BlogSingle = ({
     return (
 
       <section
-        className={`vs-blog-wrapper blog-details ${
-          className || ""
-        }`}
+        className={`vs-blog-wrapper blog-details ${className || ""
+          }`}
       >
 
         <style>
@@ -1136,9 +1135,8 @@ const BlogSingle = ({
     return (
 
       <section
-        className={`vs-blog-wrapper blog-details ${
-          className || ""
-        }`}
+        className={`vs-blog-wrapper blog-details ${className || ""
+          }`}
       >
 
         <style>
@@ -1162,7 +1160,7 @@ const BlogSingle = ({
 
 
             <Link
-              to="/blog"
+              to="/blogs"
               className="vs-btn"
             >
 
@@ -1215,9 +1213,8 @@ const BlogSingle = ({
 
 
       <section
-        className={`vs-blog-wrapper blog-details dynamic-blog-details ${
-          className || ""
-        }`}
+        className={`vs-blog-wrapper blog-details dynamic-blog-details ${className || ""
+          }`}
       >
 
         <div className="container">
@@ -1271,7 +1268,7 @@ const BlogSingle = ({
 
                     {formattedDate && (
 
-                      <Link to="/blog">
+                      <Link to="/blogs">
 
                         <i className="far fa-calendar" />
 
@@ -1282,7 +1279,7 @@ const BlogSingle = ({
                     )}
 
 
-                    <Link to="/blog">
+                    <Link to="/blogs">
 
                       <i className="fal fa-user" />
 
@@ -1297,15 +1294,12 @@ const BlogSingle = ({
                     {blog.category && (
 
                       <Link
-                        to={`/blog?category=${encodeURIComponent(
+                        to={`/blogs?category=${encodeURIComponent(
                           blog.category
                         )}`}
                       >
-
                         <i className="far fa-folder" />
-
                         {blog.category}
-
                       </Link>
 
                     )}
@@ -1339,11 +1333,10 @@ const BlogSingle = ({
                   ================================================= */}
 
                   <div
-                    className={`blog-dynamic-content ${
-                      isContentExpanded
-                        ? "blog-content-expanded"
-                        : "blog-content-collapsed"
-                    }`}
+                    className={`blog-dynamic-content ${isContentExpanded
+                      ? "blog-content-expanded"
+                      : "blog-content-collapsed"
+                      }`}
                     dangerouslySetInnerHTML={{
                       __html:
                         normalizeBlogContentHeadings(
@@ -1405,34 +1398,30 @@ const BlogSingle = ({
                     {tags.length >
                       0 && (
 
-                      <Blog.BottomColumn
-                        columnTitle="Tags"
-                      >
+                        <Blog.BottomColumn
+                          columnTitle="Tags"
+                        >
 
-                        <TagWidget>
+                          <TagWidget>
 
-                          {tags.map(
-                            (tag) => (
+                            {tags.map(
+                              (tag) => (
 
-                              <TagWidget.Item
-                                key={tag}
-                                path={`/blog?tag=${encodeURIComponent(
-                                  tag
-                                )}`}
-                              >
+                               <TagWidget.Item
+  key={tag}
+  path={`/blogs?tag=${encodeURIComponent(tag)}`}
+>
+  {tag}
+</TagWidget.Item>
 
-                                {tag}
+                              )
+                            )}
 
-                              </TagWidget.Item>
+                          </TagWidget>
 
-                            )
-                          )}
+                        </Blog.BottomColumn>
 
-                        </TagWidget>
-
-                      </Blog.BottomColumn>
-
-                    )}
+                      )}
 
 
                     <Blog.BottomColumn
@@ -1631,87 +1620,87 @@ const BlogSingle = ({
                   {relatedBlogs.length >
                     0 && (
 
-                    <div className="dynamic-related-posts">
+                      <div className="dynamic-related-posts">
 
-                      <div className="dynamic-section-heading">
+                        <div className="dynamic-section-heading">
 
-                        <span>
-                          RELATED CONTENT
-                        </span>
-
-
-                        <h2>
-                          Related Posts
-                        </h2>
-
-                      </div>
+                          <span>
+                            RELATED CONTENT
+                          </span>
 
 
-                      <div className="row">
+                          <h2>
+                            Related Posts
+                          </h2>
 
-                        {relatedBlogs.map(
-                          (related) => (
+                        </div>
 
-                            <div
-                              className="col-md-4"
-                              key={related.id}
-                            >
 
-                              <Link
-                                to={`/blog/${related.slug}`}
-                                className="dynamic-related-card"
+                        <div className="row">
+
+                          {relatedBlogs.map(
+                            (related) => (
+
+                              <div
+                                className="col-md-4"
+                                key={related.id}
                               >
 
-                                {related.featured_image && (
+                                <Link
+                                  to={`/blog/${related.slug}`}
+                                  className="dynamic-related-card"
+                                >
 
-                                  <div className="dynamic-related-image">
+                                  {related.featured_image && (
 
-                                    <img
-                                      src={
-                                        related.featured_image
+                                    <div className="dynamic-related-image">
+
+                                      <img
+                                        src={
+                                          related.featured_image
+                                        }
+                                        alt={
+                                          related.featured_image_alt ||
+                                          related.title
+                                        }
+                                        loading="lazy"
+                                      />
+
+                                    </div>
+
+                                  )}
+
+
+                                  <div className="dynamic-related-content">
+
+                                    <span>
+                                      {
+                                        related.category ||
+                                        "Blog"
                                       }
-                                      alt={
-                                        related.featured_image_alt ||
+                                    </span>
+
+
+                                    <h3>
+                                      {
                                         related.title
                                       }
-                                      loading="lazy"
-                                    />
+                                    </h3>
 
                                   </div>
 
-                                )}
+                                </Link>
 
+                              </div>
 
-                                <div className="dynamic-related-content">
+                            )
+                          )}
 
-                                  <span>
-                                    {
-                                      related.category ||
-                                      "Blog"
-                                    }
-                                  </span>
-
-
-                                  <h3>
-                                    {
-                                      related.title
-                                    }
-                                  </h3>
-
-                                </div>
-
-                              </Link>
-
-                            </div>
-
-                          )
-                        )}
+                        </div>
 
                       </div>
 
-                    </div>
-
-                  )}
+                    )}
 
 
                   {/* =================================================
