@@ -9,8 +9,22 @@ const FormFive = () => {
   const [errors, setErrors] = useState({});
 
   // =========================================================
+  // SUBMISSION / TRACKING GUARDS
+  // =========================================================
+
+  // Prevent rapid duplicate submissions synchronously.
+  // useState alone is not enough because multiple clicks can
+  // happen before React re-renders.
+  const isSubmittingRef = useRef(false);
+
+  // Prevent the success event from being pushed more than once
+  // for this accepted submission/component instance.
+  const hasTrackedSuccessRef = useRef(false);
+
+  // =========================================================
   // ANTI-SPAM PROTECTION
   // =========================================================
+
   // Genuine users normally need a few seconds to complete the form.
   // Bots that submit immediately are rejected.
   const formOpenedAt = useRef(Date.now());
@@ -19,13 +33,15 @@ const FormFive = () => {
   const [honeypot, setHoneypot] = useState('');
 
   // =========================================================
-  // GOOGLE APPS SCRIPT WEB APP URL
+  // GOOGLE APPS SCRIPT / VERCEL API URL
   // =========================================================
- const ENQUIRY_API_URL =
-  '/api/enquiry';
+
+  const ENQUIRY_API_URL = '/api/enquiry';
+
   // =========================================================
   // VALIDATE FORM
   // =========================================================
+
   const validateForm = (form) => {
     const newErrors = {};
 
@@ -59,6 +75,7 @@ const FormFive = () => {
     // =========================================================
     // FULL NAME
     // =========================================================
+
     if (!fullName) {
       newErrors.fullName =
         'Please enter your full name.';
@@ -75,6 +92,7 @@ const FormFive = () => {
     // =========================================================
     // BUSINESS NAME
     // =========================================================
+
     if (!businessName) {
       newErrors.businessName =
         'Please enter your business name.';
@@ -86,6 +104,7 @@ const FormFive = () => {
     // =========================================================
     // EMAIL
     // =========================================================
+
     if (!email) {
       newErrors.email =
         'Please enter your email address.';
@@ -101,6 +120,7 @@ const FormFive = () => {
     // =========================================================
     // PHONE
     // =========================================================
+
     if (!phone) {
       newErrors.phone =
         'Please enter your Mobile number.';
@@ -118,6 +138,7 @@ const FormFive = () => {
     // WEBSITE / SOCIAL PROFILE
     // OPTIONAL
     // =========================================================
+
     if (website) {
       const websiteValue =
         website.startsWith('http://') ||
@@ -136,6 +157,7 @@ const FormFive = () => {
     // =========================================================
     // BUSINESS CATEGORY
     // =========================================================
+
     if (!businessCategory) {
       newErrors.businessCategory =
         'Please select your business category.';
@@ -144,6 +166,7 @@ const FormFive = () => {
     // =========================================================
     // PRIMARY REQUIREMENT
     // =========================================================
+
     if (!primaryRequirement) {
       newErrors.primaryRequirement =
         'Please select a service.';
@@ -152,6 +175,7 @@ const FormFive = () => {
     // =========================================================
     // MARKETING STATUS
     // =========================================================
+
     if (!marketingStatus) {
       newErrors.marketingStatus =
         'Please select the closest option.';
@@ -160,6 +184,7 @@ const FormFive = () => {
     // =========================================================
     // MESSAGE
     // =========================================================
+
     if (!message) {
       newErrors.message =
         'Please tell us about your business and requirement.';
@@ -174,6 +199,7 @@ const FormFive = () => {
     // =========================================================
     // CONSENT
     // =========================================================
+
     if (!consent) {
       newErrors.consent =
         'Please agree to the consent statement before submitting the form.';
@@ -185,281 +211,318 @@ const FormFive = () => {
   // =========================================================
   // FORM SUBMIT
   // =========================================================
- const formHandle = async (event) => {
-  event.preventDefault();
 
-  setErrorMessage('');
+  const formHandle = async (event) => {
+    event.preventDefault();
 
-  // =========================================================
-  // ANTI-SPAM CHECK 1: HONEYPOT
-  // =========================================================
+    // =========================================================
+    // DUPLICATE SUBMISSION GUARD
+    // =========================================================
+    // This happens BEFORE validation/network request.
+    // useRef makes the lock synchronous and prevents rapid
+    // repeated clicks from creating multiple requests.
 
-  if (honeypot.trim() !== '') {
-    console.warn(
-      'Spam submission blocked by honeypot.'
-    );
-    return;
-  }
+    if (isSubmittingRef.current) {
+      return;
+    }
 
+    setErrorMessage('');
 
-  // =========================================================
-  // ANTI-SPAM CHECK 2: MINIMUM FORM TIME
-  // =========================================================
+    // =========================================================
+    // ANTI-SPAM CHECK 1: HONEYPOT
+    // =========================================================
 
-  const timeSpent =
-    Date.now() - formOpenedAt.current;
+    if (honeypot.trim() !== '') {
+      console.warn(
+        'Spam submission blocked by honeypot.'
+      );
+      return;
+    }
 
-  if (timeSpent < 5000) {
-    setErrorMessage(
-      'Please take a moment to complete the form and try again.'
-    );
-    return;
-  }
+    // =========================================================
+    // ANTI-SPAM CHECK 2: MINIMUM FORM TIME
+    // =========================================================
 
+    const timeSpent =
+      Date.now() - formOpenedAt.current;
 
-  const form = event.target;
+    if (timeSpent < 5000) {
+      setErrorMessage(
+        'Please take a moment to complete the form and try again.'
+      );
+      return;
+    }
 
+    const form = event.target;
 
-  // =========================================================
-  // VALIDATION
-  // =========================================================
+    // =========================================================
+    // VALIDATION
+    // =========================================================
 
-  const validationErrors =
-    validateForm(form);
+    const validationErrors =
+      validateForm(form);
 
-  setErrors(validationErrors);
+    setErrors(validationErrors);
 
-
-  // =========================================================
-  // STOP IF ERRORS
-  // =========================================================
-
-  if (
-    Object.keys(validationErrors).length > 0
-  ) {
-
-    const firstErrorField =
-      Object.keys(validationErrors)[0];
-
-    const fieldMap = {
-      fullName: 'Full Name',
-      businessName: 'Business Name',
-      email: 'Email Address',
-      phone: 'Mobile Number',
-      website: 'Website or Social Profile',
-      businessCategory: 'Business Category',
-      primaryRequirement: 'Primary Requirement',
-      marketingStatus:
-        'Current Marketing Status',
-      message: 'Message',
-    };
-
-
-    const fieldName =
-      fieldMap[firstErrorField];
-
+    // =========================================================
+    // STOP IF ERRORS
+    // =========================================================
 
     if (
-      fieldName &&
-      form.elements[fieldName]
+      Object.keys(validationErrors).length > 0
     ) {
-      form.elements[fieldName].focus();
+      const firstErrorField =
+        Object.keys(validationErrors)[0];
+
+      const fieldMap = {
+        fullName: 'Full Name',
+        businessName: 'Business Name',
+        email: 'Email Address',
+        phone: 'Mobile Number',
+        website: 'Website or Social Profile',
+        businessCategory: 'Business Category',
+        primaryRequirement: 'Primary Requirement',
+        marketingStatus:
+          'Current Marketing Status',
+        message: 'Message',
+      };
+
+      const fieldName =
+        fieldMap[firstErrorField];
+
+      if (
+        fieldName &&
+        form.elements[fieldName]
+      ) {
+        form.elements[fieldName].focus();
+      }
+
+      return;
     }
 
-    return;
-  }
+    // =========================================================
+    // START SUBMITTING
+    // =========================================================
 
+    // Lock immediately, before any async operation.
+    isSubmittingRef.current = true;
 
-  // =========================================================
-  // START SUBMITTING
-  // =========================================================
+    setIsSubmitting(true);
 
-  setIsSubmitting(true);
+    // =========================================================
+    // PREPARE DATA
+    // =========================================================
 
+    const formData = {
+      fullName:
+        form.elements['Full Name']?.value.trim() || '',
 
-  // =========================================================
-  // PREPARE DATA
-  // =========================================================
+      businessName:
+        form.elements['Business Name']?.value.trim() || '',
 
-  const formData = {
+      email:
+        form.elements['Email Address']?.value.trim() || '',
 
-    fullName:
-      form.elements['Full Name']?.value.trim() || '',
+      phone:
+        form.elements['Mobile Number']?.value.trim() || '',
 
-    businessName:
-      form.elements['Business Name']?.value.trim() || '',
+      website:
+        form.elements[
+          'Website or Social Profile'
+        ]?.value.trim() || '',
 
-    email:
-      form.elements['Email Address']?.value.trim() || '',
+      businessCategory:
+        form.elements[
+          'Business Category'
+        ]?.value || '',
 
-    phone:
-      form.elements['Mobile Number']?.value.trim() || '',
+      primaryRequirement:
+        form.elements[
+          'Primary Requirement'
+        ]?.value || '',
 
-    website:
-      form.elements[
-        'Website or Social Profile'
-      ]?.value.trim() || '',
+      marketingStatus:
+        form.elements[
+          'Current Marketing Status'
+        ]?.value || '',
 
-    businessCategory:
-      form.elements[
-        'Business Category'
-      ]?.value || '',
+      message:
+        form.elements['Message']?.value.trim() || '',
 
-    primaryRequirement:
-      form.elements[
-        'Primary Requirement'
-      ]?.value || '',
+      consent:
+        consent ? 'Agreed' : ''
+    };
 
-    marketingStatus:
-      form.elements[
-        'Current Marketing Status'
-      ]?.value || '',
-
-    message:
-      form.elements['Message']?.value.trim() || '',
-
-    consent:
-      consent ? 'Agreed' : ''
-
-  };
-
-
-  // =========================================================
-  // SEND TO VERCEL API
-  // =========================================================
-
-  try {
-
-    const response = await fetch(
-      ENQUIRY_API_URL,
-      {
-        method: 'POST',
-
-        headers: {
-          'Content-Type':
-            'application/json'
-        },
-
-        body:
-          JSON.stringify(formData)
-      }
-    );
-
-
-    // =======================================================
-    // READ RESPONSE AS TEXT FIRST
-    // =======================================================
-
-    const responseText =
-      await response.text();
-
-
-    // =======================================================
-    // PARSE JSON SAFELY
-    // =======================================================
-
-    let data = {};
+    // =========================================================
+    // SEND TO VERCEL API
+    // =========================================================
 
     try {
+      const response = await fetch(
+        ENQUIRY_API_URL,
+        {
+          method: 'POST',
 
-      data =
-        responseText
-          ? JSON.parse(responseText)
-          : {};
+          headers: {
+            'Content-Type':
+              'application/json'
+          },
 
-    } catch (jsonError) {
-
-      console.error(
-        'Invalid API response:',
-        responseText
+          body:
+            JSON.stringify(formData)
+        }
       );
 
-      throw new Error(
-        `Server returned an invalid response (${response.status}).`
-      );
+      // =======================================================
+      // READ RESPONSE AS TEXT FIRST
+      // =======================================================
 
-    }
+      const responseText =
+        await response.text();
 
+      // =======================================================
+      // PARSE JSON SAFELY
+      // =======================================================
 
-    // =======================================================
-    // HTTP ERROR
-    // =======================================================
+      let data = {};
 
-    if (!response.ok) {
+      try {
+        data =
+          responseText
+            ? JSON.parse(responseText)
+            : {};
+      } catch (jsonError) {
+        console.error(
+          'Invalid API response:',
+          responseText
+        );
+
+        throw new Error(
+          `Server returned an invalid response (${response.status}).`
+        );
+      }
+
+      // =======================================================
+      // HTTP ERROR
+      // =======================================================
+
+      if (!response.ok) {
+        console.error(
+          'Enquiry API Error:',
+          response.status,
+          data
+        );
+
+        setErrorMessage(
+          data.message ||
+          `Unable to submit enquiry. Server error (${response.status}).`
+        );
+
+        return;
+      }
+
+      // =======================================================
+      // APPLICATION ERROR
+      // =======================================================
+      // IMPORTANT:
+      // A HTTP response alone is NOT treated as a successful lead.
+      // The backend must explicitly return:
+      //
+      // {
+      //   success: true
+      // }
+      //
+      // Otherwise NO dataLayer event is fired.
+
+      if (data.success !== true) {
+        setErrorMessage(
+          data.message ||
+          'Something went wrong. Please try again.'
+        );
+
+        return;
+      }
+
+      // =======================================================
+      // ACCEPTED ENQUIRY
+      // =======================================================
+      // The backend has confirmed acceptance at this point.
+      //
+      // ONLY NOW do we push the GTM/GA4 event.
+      //
+      // No PII is included.
+      // Only service_interest is sent.
+
+      if (!hasTrackedSuccessRef.current) {
+        const selectedPrimaryRequirement =
+          form.elements['Primary Requirement']?.value || '';
+
+        if (typeof window !== 'undefined') {
+          window.dataLayer =
+            window.dataLayer || [];
+
+          window.dataLayer.push({
+            event: 'indieur_lead_success',
+            form_name: 'growth_enquiry',
+            service_interest:
+              selectedPrimaryRequirement || 'not_set'
+          });
+        }
+
+        // Mark immediately so this component instance
+        // cannot push the same success event again.
+        hasTrackedSuccessRef.current = true;
+      }
+
+      // =======================================================
+      // SUCCESS UI
+      // =======================================================
+
+      setIsSuccess(true);
+
+      setConsent(false);
+
+      setErrors({});
+
+      setHoneypot('');
+
+      formOpenedAt.current =
+        Date.now();
+
+      form.reset();
+
+    } catch (error) {
+      // =======================================================
+      // NETWORK / REQUEST ERROR
+      // =======================================================
+      // IMPORTANT:
+      // No dataLayer push occurs here.
 
       console.error(
         'Enquiry API Error:',
-        response.status,
-        data
+        error
       );
 
       setErrorMessage(
-        data.message ||
-        `Unable to submit enquiry. Server error (${response.status}).`
+        error.message ||
+        'Unable to send your enquiry. Please try again.'
       );
 
-      return;
+    } finally {
+      // Unlock the form after the request has finished.
+      // If it succeeded, the success screen replaces the form.
+      // If it failed, the user can try again.
+
+      isSubmittingRef.current = false;
+
+      setIsSubmitting(false);
     }
-
-
-    // =======================================================
-    // APPLICATION ERROR
-    // =======================================================
-
-    if (!data.success) {
-
-      setErrorMessage(
-        data.message ||
-        'Something went wrong. Please try again.'
-      );
-
-      return;
-    }
-
-
-    // =======================================================
-    // SUCCESS
-    // =======================================================
-
-    setIsSuccess(true);
-
-    setConsent(false);
-
-    setErrors({});
-
-    setHoneypot('');
-
-    formOpenedAt.current =
-      Date.now();
-
-    form.reset();
-
-
-  } catch (error) {
-
-    console.error(
-      'Enquiry API Error:',
-      error
-    );
-
-
-    setErrorMessage(
-      error.message ||
-      'Unable to send your enquiry. Please try again.'
-    );
-
-
-  } finally {
-
-    setIsSubmitting(false);
-
-  }
-
-};
+  };
 
   // =========================================================
   // CLEAR FIELD ERROR
   // =========================================================
+
   const clearError = (fieldName) => {
     if (errors[fieldName]) {
       setErrors((previousErrors) => {
@@ -481,6 +544,7 @@ const FormFive = () => {
   // =========================================================
   // SUCCESS SCREEN
   // =========================================================
+
   if (isSuccess) {
     return (
       <>
@@ -683,6 +747,7 @@ const FormFive = () => {
   // =========================================================
   // MAIN FORM
   // =========================================================
+
   return (
     <>
       <style>{`
@@ -935,6 +1000,7 @@ const FormFive = () => {
               ANTI-SPAM HONEYPOT
               Hidden from genuine users; bots may fill it.
           ================================================= */}
+
           <div
             style={{
               position: 'absolute',
@@ -956,7 +1022,9 @@ const FormFive = () => {
               type="text"
               name="Website Confirmation"
               value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
+              onChange={(e) =>
+                setHoneypot(e.target.value)
+              }
               tabIndex="-1"
               autoComplete="off"
             />
