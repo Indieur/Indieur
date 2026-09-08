@@ -179,8 +179,10 @@ const StartHere = () => {
                     {/* CTA */}
 
                     <Link
-                        to="/contact"
+                        to="https://calendar.app.google/FHDxrBZecPB5XVfB6"
                         className="start-here__cta"
+                        target="_blank"
+                        rel="noopener noreferrer"
                     >
                         <span>
                             Book a Consultation
