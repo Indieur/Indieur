@@ -1,0 +1,1037 @@
+// ============================================================
+// START HERE
+// ============================================================
+
+.start-here {
+  position: relative;
+
+  width: 100%;
+
+  padding: 80px 0 75px;
+
+//   background: #f7faff;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+
+  // ==========================================================
+  // CONTAINER
+  // ==========================================================
+
+  &__container {
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    padding: 0 55px;
+
+    box-sizing: border-box;
+  }
+
+
+  // ==========================================================
+  // DECORATIVE DOTS
+  // ==========================================================
+
+  &__dots {
+    position: absolute;
+
+    z-index: 1;
+
+    display: grid;
+
+    grid-template-columns: repeat(6, 5px);
+
+    gap: 13px 14px;
+
+    pointer-events: none;
+
+    opacity: 0.45;
+
+    span {
+      width: 4px;
+      height: 4px;
+
+      display: block;
+
+      border-radius: 50%;
+
+      background: #8eb2ef;
+    }
+
+    &--top {
+      top: 25px;
+      left: 70px;
+    }
+
+    &--bottom {
+      right: 65px;
+      bottom: 30px;
+    }
+  }
+
+
+  // ==========================================================
+  // HEADER
+  // ==========================================================
+
+  &__header {
+    width: 100%;
+
+    max-width: 900px;
+
+    margin: 0 auto 32px;
+
+    text-align: center;
+  }
+
+
+  // ==========================================================
+  // EYEBROW
+  // ==========================================================
+
+  &__eyebrow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 28px;
+
+    margin-bottom: 17px;
+
+    color: #f28b18;
+
+    font-size: 14px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing: 1.6px;
+
+    text-transform: uppercase;
+  }
+
+
+  &__eyebrow-line {
+    width: 58px;
+
+    height: 2px;
+
+    flex-shrink: 0;
+
+    background: #6e9de9;
+
+    border-radius: 10px;
+  }
+
+
+  // ==========================================================
+  // TITLE
+  // ==========================================================
+
+  &__title {
+    margin: 0;
+
+    color: #07154f;
+
+    font-size: 54px;
+
+    line-height: 1.08;
+
+    font-weight: 800;
+
+    letter-spacing: -1.8px;
+  }
+
+
+  // ==========================================================
+  // DESCRIPTION
+  // ==========================================================
+
+  &__description {
+    width: 100%;
+
+    max-width: 790px;
+
+    margin: 14px auto 0;
+
+    color: #4d5c82;
+
+    font-size: 18px;
+
+    line-height: 1.45;
+
+    font-weight: 400;
+  }
+
+
+  // ==========================================================
+  // SERVICES
+  // ==========================================================
+
+  &__services {
+    display: grid;
+
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+
+    width: 100%;
+
+    margin-top: 28px;
+  }
+
+
+  // ==========================================================
+  // CARD
+  // ==========================================================
+
+  &__card {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    min-width: 0;
+
+    min-height: 440px;
+
+    padding: 32px 28px 30px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e1e8f4;
+
+    border-radius: 12px;
+
+    text-align: center;
+
+    text-decoration: none;
+
+    box-shadow: 0 3px 12px rgba(17, 46, 96, 0.03);
+
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+
+      border-color: #cddbf4;
+
+      box-shadow: 0 15px 35px rgba(17, 46, 96, 0.09);
+
+      .start-here__icon {
+        transform: scale(1.04);
+      }
+
+      .start-here__card-link {
+        color: #0d4ed5;
+      }
+
+      .start-here__card-link-arrow {
+        transform: translateX(5px);
+      }
+    }
+  }
+
+
+  // ==========================================================
+  // ICON
+  // ==========================================================
+
+  &__icon-wrapper {
+    width: 185px;
+
+    height: 185px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    margin-bottom: 18px;
+
+    border-radius: 50%;
+
+    background: #eef5ff;
+
+    overflow: hidden;
+  }
+
+
+  &__icon {
+    width: 175px;
+
+    height: 175px;
+
+    max-width: 100%;
+
+    max-height: 100%;
+
+    display: block;
+
+    object-fit: contain;
+
+    transition: transform 0.3s ease;
+  }
+
+
+  // ==========================================================
+  // CARD TITLE
+  // ==========================================================
+
+  &__card-title {
+    width: 100%;
+
+    margin: 0;
+
+    color: #07154f;
+
+    font-size: 28px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    letter-spacing: -0.8px;
+  }
+
+
+  // ==========================================================
+  // CARD DESCRIPTION
+  // ==========================================================
+
+  &__card-description {
+    width: 100%;
+
+    max-width: 390px;
+
+    margin: 13px auto 0;
+
+    color: #526183;
+
+    font-size: 17px;
+
+    line-height: 1.45;
+
+    font-weight: 400;
+  }
+
+
+  // ==========================================================
+  // CARD LINK
+  // ==========================================================
+
+  &__card-link {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 13px;
+
+    margin-top: auto;
+
+    padding-top: 24px;
+
+    color: #1260e8;
+
+    font-size: 17px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition: color 0.25s ease;
+  }
+
+
+  &__card-link-arrow {
+    font-size: 28px;
+
+    line-height: 1;
+
+    font-weight: 400;
+
+    transition: transform 0.25s ease;
+  }
+
+
+  // ==========================================================
+  // BOTTOM
+  // ==========================================================
+
+  &__bottom {
+    display: flex;
+
+    align-items: stretch;
+
+    justify-content: center;
+
+    gap: 16px;
+
+    width: 100%;
+
+    margin-top: 40px;
+  }
+
+
+  // ==========================================================
+  // LANGUAGE BOX
+  // ==========================================================
+
+  &__language {
+    display: flex;
+
+    align-items: center;
+
+    flex: 1;
+
+    max-width: 720px;
+
+    min-width: 0;
+
+    min-height: 72px;
+
+    padding: 12px 32px;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    background: #eaf2ff;
+
+    p {
+      margin: 0;
+
+      color: #1f315f;
+
+      font-size: 16px;
+
+      line-height: 1.4;
+
+      font-weight: 400;
+
+      text-align: left;
+
+      strong {
+        font-weight: 500;
+      }
+    }
+  }
+
+
+  // ==========================================================
+  // LANGUAGE ICON
+  // ==========================================================
+
+  &__language-icon {
+    width: 45px;
+
+    height: 45px;
+
+    flex: 0 0 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-right: 15px;
+
+    color: #1260e8;
+
+    font-size: 37px;
+
+    line-height: 1;
+
+    font-weight: 300;
+  }
+
+
+  // ==========================================================
+  // CTA
+  // ==========================================================
+
+  &__cta {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 20px;
+
+    width: 325px;
+
+    min-height: 72px;
+
+    padding: 0 25px;
+
+    box-sizing: border-box;
+
+    border-radius: 8px;
+
+    background: #1260e8;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 17px;
+
+    line-height: 1.2;
+
+    font-weight: 800;
+
+    transition:
+      background 0.25s ease,
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+
+    &:hover {
+      background: #0d4ed5;
+
+      transform: translateY(-2px);
+
+      box-shadow: 0 10px 25px rgba(18, 96, 232, 0.22);
+    }
+  }
+
+
+  &__cta-arrow {
+    font-size: 29px;
+
+    font-weight: 300;
+
+    line-height: 1;
+
+    transition: transform 0.25s ease;
+  }
+
+
+  &__cta:hover &__cta-arrow {
+    transform: translateX(5px);
+  }
+}
+
+
+// ============================================================
+// LARGE DESKTOP
+// ============================================================
+
+@media (max-width: 1200px) {
+
+  .start-here {
+
+    &__container {
+      padding: 0 35px;
+    }
+
+    &__card {
+      min-height: 410px;
+
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+
+    &__icon-wrapper {
+      width: 165px;
+      height: 165px;
+    }
+
+    &__icon {
+      width: 155px;
+      height: 155px;
+    }
+
+    &__card-title {
+      font-size: 24px;
+    }
+
+    &__card-description {
+      font-size: 16px;
+    }
+  }
+}
+
+
+// ============================================================
+// TABLET
+// ============================================================
+
+@media (max-width: 900px) {
+
+  .start-here {
+    padding: 70px 0;
+
+    &__container {
+      padding: 0 25px;
+    }
+
+    &__title {
+      font-size: 46px;
+    }
+
+    &__description {
+      font-size: 16px;
+    }
+
+    &__services {
+      grid-template-columns: 1fr;
+
+      max-width: 600px;
+
+      margin-left: auto;
+      margin-right: auto;
+
+      gap: 16px;
+    }
+
+    &__card {
+      min-height: 400px;
+    }
+
+    &__bottom {
+      max-width: 600px;
+
+      margin-left: auto;
+      margin-right: auto;
+
+      flex-direction: column;
+    }
+
+    &__language {
+      max-width: none;
+
+      width: 100%;
+    }
+
+    &__cta {
+      width: 100%;
+    }
+
+    &__dots--top {
+      left: 25px;
+    }
+
+    &__dots--bottom {
+      right: 25px;
+    }
+  }
+}
+
+
+// ============================================================
+// MOBILE
+// ============================================================
+
+@media (max-width: 600px) {
+
+  .start-here {
+    padding: 55px 0 50px;
+
+
+    &__container {
+      padding: 0 16px;
+    }
+
+
+    // --------------------------------------------------------
+    // DOTS
+    // --------------------------------------------------------
+
+    &__dots {
+      grid-template-columns: repeat(6, 3px);
+
+      gap: 8px 9px;
+
+      span {
+        width: 3px;
+        height: 3px;
+      }
+
+      &--top {
+        top: 20px;
+        left: 15px;
+      }
+
+      &--bottom {
+        right: 15px;
+        bottom: 20px;
+      }
+    }
+
+
+    // --------------------------------------------------------
+    // HEADER
+    // --------------------------------------------------------
+
+    &__header {
+      margin-bottom: 25px;
+    }
+
+
+    &__eyebrow {
+      gap: 9px;
+
+      margin-bottom: 11px;
+
+      font-size: 9px;
+
+      letter-spacing: 1px;
+    }
+
+
+    &__eyebrow-line {
+      width: 25px;
+
+      height: 1.5px;
+    }
+
+
+    &__title {
+      font-size: 36px;
+
+      letter-spacing: -1px;
+    }
+
+
+    &__description {
+      max-width: 470px;
+
+      margin-top: 12px;
+
+      font-size: 13px;
+
+      line-height: 1.55;
+    }
+
+
+    // --------------------------------------------------------
+    // CARDS
+    // --------------------------------------------------------
+
+    &__services {
+      width: 100%;
+
+      gap: 13px;
+
+      margin-top: 20px;
+    }
+
+
+    &__card {
+      min-height: 0;
+
+      padding: 25px 18px 23px;
+
+      border-radius: 10px;
+    }
+
+
+    // --------------------------------------------------------
+    // ICON
+    // --------------------------------------------------------
+
+    &__icon-wrapper {
+      width: 135px;
+
+      height: 135px;
+
+      margin-bottom: 15px;
+    }
+
+
+    &__icon {
+      width: 128px;
+
+      height: 128px;
+    }
+
+
+    // --------------------------------------------------------
+    // TITLE
+    // --------------------------------------------------------
+
+    &__card-title {
+      font-size: 21px;
+
+      letter-spacing: -0.4px;
+    }
+
+
+    // --------------------------------------------------------
+    // DESCRIPTION
+    // --------------------------------------------------------
+
+    &__card-description {
+      max-width: 350px;
+
+      margin-top: 9px;
+
+      font-size: 14px;
+
+      line-height: 1.5;
+    }
+
+
+    // --------------------------------------------------------
+    // LINK
+    // --------------------------------------------------------
+
+    &__card-link {
+      margin-top: 18px;
+
+      padding-top: 0;
+
+      font-size: 14px;
+
+      gap: 9px;
+    }
+
+
+    &__card-link-arrow {
+      font-size: 23px;
+    }
+
+
+    // --------------------------------------------------------
+    // BOTTOM
+    // --------------------------------------------------------
+
+    &__bottom {
+      margin-top: 22px;
+
+      gap: 10px;
+    }
+
+
+    // --------------------------------------------------------
+    // LANGUAGE
+    // --------------------------------------------------------
+
+    &__language {
+      min-height: 60px;
+
+      padding: 12px 15px;
+
+      border-radius: 7px;
+
+      p {
+        font-size: 12px;
+
+        line-height: 1.45;
+      }
+    }
+
+
+    &__language-icon {
+      width: 35px;
+
+      height: 35px;
+
+      flex-basis: 35px;
+
+      margin-right: 10px;
+
+      font-size: 29px;
+    }
+
+
+    // --------------------------------------------------------
+    // CTA
+    // --------------------------------------------------------
+
+    &__cta {
+      width: 100%;
+
+      min-height: 58px;
+
+      padding: 0 18px;
+
+      border-radius: 7px;
+
+      font-size: 14px;
+
+      gap: 14px;
+    }
+
+
+    &__cta-arrow {
+      font-size: 25px;
+    }
+  }
+}
+
+
+// ============================================================
+// SMALL MOBILE
+// ============================================================
+
+@media (max-width: 380px) {
+
+  .start-here {
+
+    &__title {
+      font-size: 32px;
+    }
+
+    &__eyebrow {
+      font-size: 8px;
+    }
+
+    &__card {
+      padding: 21px 15px;
+    }
+
+    &__icon-wrapper {
+      width: 120px;
+      height: 120px;
+    }
+
+    &__icon {
+      width: 114px;
+      height: 114px;
+    }
+
+    &__card-title {
+      font-size: 19px;
+    }
+
+    &__card-description {
+      font-size: 13px;
+    }
+
+    &__card-link {
+      font-size: 13px;
+    }
+  }
+}
+.start-here__language-icon {
+  width: 45px;
+  height: 45px;
+
+  flex: 0 0 45px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 15px;
+
+  color: #1260e8;
+
+  svg {
+    width: 30px;
+    height: 30px;
+    display: block;
+  }
+}
+@media (max-width: 600px) {
+  .start-here__language-icon {
+    width: 35px;
+    height: 35px;
+    flex-basis: 35px;
+    margin-right: 10px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+.start-here__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  width: 325px;
+  min-height: 72px;
+  padding: 0 25px;
+
+  box-sizing: border-box;
+  border-radius: 8px;
+
+  background: #1260e8;
+  color: #ffffff !important;
+
+  text-decoration: none;
+
+  font-size: 17px;
+  line-height: 1.2;
+  font-weight: 800;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  span {
+    color: #ffffff !important;
+  }
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited {
+    color: #ffffff !important;
+    text-decoration: none;
+  }
+
+  &:hover {
+    background: #0d4ed5;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 25px rgba(18, 96, 232, 0.22);
+
+    span {
+      color: #ffffff !important;
+    }
+  }
+}
+
+.start-here__cta-arrow {
+  color: #ffffff !important;
+
+  font-size: 29px;
+  font-weight: 300;
+  line-height: 1;
+
+  transition: transform 0.25s ease;
+}
+
+.start-here__cta:hover .start-here__cta-arrow {
+  color: #ffffff !important;
+  transform: translateX(5px);
+}

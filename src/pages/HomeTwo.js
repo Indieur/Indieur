@@ -21,6 +21,7 @@ import {
   BestFitSystem
 } from '../containers';
 import FinalGrowthCTA from '../containers/FinalGrowthCTA/FinalGrowthCTA';
+import StartHere from '../containers/StartHere/StartHere';
 
 const HomeTwo = ()=> (
   <Fragment>
@@ -32,7 +33,8 @@ const HomeTwo = ()=> (
 />
     <HeaderThree/>
     <HeroTwo/>
-    <FeatureTwo className="space-top"/>
+    <StartHere className="space-top"/>
+    {/* <FeatureTwo className="space-top"/> */}
     <AboutThree/>
     {/* <TeamTwo className="space-top space-extra-bottom"/> */}
     {/* <CounterTwo className="space" /> */}
