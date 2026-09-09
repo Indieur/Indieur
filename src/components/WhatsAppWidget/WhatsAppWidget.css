@@ -92,7 +92,7 @@
 @media (max-width: 1024px) {
   .whatsapp-widget {
     right: 20px;
-    bottom: 20px;
+    bottom: 60px;
   }
 
   .whatsapp-widget__icon {
@@ -109,7 +109,7 @@
 @media (max-width: 768px) {
   .whatsapp-widget {
     right: 16px;
-    bottom: 16px;
+    bottom: 60px;
   }
 
   .whatsapp-widget__icon {
@@ -131,7 +131,7 @@
 @media (max-width: 480px) {
   .whatsapp-widget {
     right: 12px;
-    bottom: 12px;
+    bottom: 60px;
   }
 
   .whatsapp-widget__icon {
