@@ -22,6 +22,7 @@ import {
 } from '../containers';
 import FinalGrowthCTA from '../containers/FinalGrowthCTA/FinalGrowthCTA';
 import StartHere from '../containers/StartHere/StartHere';
+import WhatsAppWidget from '../components/WhatsAppWidget/WhatsAppWidget';
 
 const HomeTwo = ()=> (
   <Fragment>
@@ -51,6 +52,7 @@ const HomeTwo = ()=> (
     {/* <BlogFour className="space-top space-extra-bottom"/> */}
     {/* <BrandTwo className="space"/> */}
     <FooterTwo/>
+    <WhatsAppWidget/>
     <ScrollTopBtn/>
   </Fragment>
 );

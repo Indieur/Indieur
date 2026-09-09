@@ -622,5 +622,91 @@
 
   "ctaTitle": "Ready to Improve Your Lead Generation?",
   "ctaText": "Request a Lead Generation Quote"
+},
+{
+  "id": "11",
+  "slug": "website-building",
+  "title": "Website Building",
+  "breadcrumb": "Home / Services / Website Building",
+  "heading": "Build a Professional Website for Your Business",
+  "intro": "Indieur builds professional, responsive and user-friendly websites designed around your business goals, brand identity, customers and digital requirements.",
+
+  "featuresTitle": "What This Service May Include",
+  "features": [
+    "Business website development",
+    "Custom website design",
+    "Responsive mobile-friendly development",
+    "Website UI and UX design",
+    "Landing-page development",
+    "Service and portfolio websites",
+    "Ecommerce website development",
+    "WordPress website development",
+    "Shopify website development",
+    "React website development",
+    "Contact and enquiry forms",
+    "WhatsApp integration",
+    "Google Analytics and tracking setup",
+    "Basic technical SEO setup",
+    "Website speed optimisation",
+    "Domain and hosting guidance"
+  ],
+
+  "challengeTitle": "The Business Challenge",
+  "challenge": [
+    "A business website is often the first place potential customers evaluate a company, but outdated design, poor mobile experience, slow loading, unclear messaging or difficult navigation can reduce trust and enquiries.",
+    "Businesses may also struggle to connect their website with forms, WhatsApp, analytics, ecommerce systems and other tools required for day-to-day operations.",
+    "A website should not only look professional but also provide a clear and useful experience for visitors."
+  ],
+
+  "approachTitle": "Our Approach",
+  "approach": [
+    "We begin by understanding your business, target audience, services or products, brand identity and primary website objectives.",
+    "We then plan the website structure, user journey, content sections and functionality before moving into design and development.",
+    "The website is developed with responsive layouts and practical functionality so customers can easily understand your offering and take the desired action."
+  ],
+
+  "serviceFeaturesTitle": "Service Features",
+  "serviceFeatures": [
+    "Business-focused website planning",
+    "Responsive design for mobile, tablet and desktop",
+    "Modern UI and user experience",
+    "Custom page and section development",
+    "Lead and enquiry functionality",
+    "Third-party integrations",
+    "Analytics and conversion tracking",
+    "Basic technical SEO setup",
+    "Performance and usability optimisation",
+    "Website launch support"
+  ],
+
+  "faqs": [
+    {
+      "question": "Can you build a website from scratch?",
+      "answer": "Yes. We can plan, design and develop a new website from the ground up based on your business requirements, content, branding and functionality."
+    },
+    {
+      "question": "Do you build ecommerce websites?",
+      "answer": "Yes. Ecommerce websites can be developed according to the required platform, catalogue size, payment setup, shipping requirements and customer journey."
+    },
+    {
+      "question": "Can you redesign our existing website?",
+      "answer": "Yes. Existing websites can be redesigned or redeveloped to improve their visual presentation, mobile experience, usability, performance and overall customer journey."
+    },
+    {
+      "question": "Do you provide domain and hosting?",
+      "answer": "Domain and hosting requirements can be supported and suitable options can be recommended. Third-party domain, hosting and platform charges are paid separately by the client."
+    },
+    {
+      "question": "Will the website be mobile-friendly?",
+      "answer": "Yes. Responsive development is included so the website can adapt to different screen sizes and provide a consistent experience across desktop, tablet and mobile devices."
+    },
+    {
+      "question": "Can you integrate WhatsApp, forms and analytics?",
+      "answer": "Yes. Depending on the agreed scope, websites can include enquiry forms, WhatsApp integrations, analytics, conversion tracking and other relevant third-party integrations."
+    }
+  ],
+
+  "ctaTitle": "Ready to Build Your Website?",
+  "ctaText": "Request a Website Quote"
 }
 ]

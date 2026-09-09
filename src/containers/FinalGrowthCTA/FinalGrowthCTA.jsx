@@ -57,7 +57,7 @@ const FinalGrowthCTA = () => {
               </Link>
 
               <a
-                href="https://wa.me/4915562461769"
+                href="https://wa.me/+918667696097"
                 className="final-growth-whatsapp-btn"
                 target="_blank"
                 rel="noopener noreferrer"

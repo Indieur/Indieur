@@ -110,7 +110,7 @@ const DirectContactCTA = () => {
             <div className="direct-contact-cta__buttons">
 
               <a
-                href="https://wa.me/4915562461769"
+                href="https://wa.me/+918667696097"
                 className="direct-contact-cta__button direct-contact-cta__button--primary"
                 target="_blank"
                 rel="noopener noreferrer"

@@ -338,7 +338,7 @@ const SidebarTwo = () => (
 
             <div className="custom-hour-content">
               <span className="custom-hour-day">
-                Monday – Friday
+                Monday – Saturday
               </span>
 
               <span className="custom-hour-time">
@@ -348,7 +348,7 @@ const SidebarTwo = () => (
 
           </div>
 
-
+{/* 
           <div className="custom-hour">
 
             <div className="custom-hour-icon">
@@ -365,7 +365,7 @@ const SidebarTwo = () => (
               </span>
             </div>
 
-          </div>
+          </div> */}
 
 
           <div className="custom-hour">

@@ -1061,17 +1061,17 @@ const FooterTwo = () => (
                 <TableOne className="footer-schedule">
 
                   <TableOne.Item
-                    title="Mon - Fri:"
-                    text="09:00 - 06:00"
+                    title="Mon - Sat:"
+                    text="09:00am - 06:00pm"
                   />
-
+{/* 
                   <TableOne.Item
                     title="Saturday:"
                     text="09:00 - 12:00"
-                  />
+                  /> */}
 
                   <TableOne.Item
-                    title="Sunday"
+                    title="Sunday:"
                     text="Closed"
                   />
 

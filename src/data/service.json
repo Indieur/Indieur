@@ -178,5 +178,23 @@
     "title": "Lead Generation & Conversion Optimisation",
     "text": "Generate relevant enquiries and improve the journey between campaign clicks, landing pages, follow-ups and qualified leads.",
     "buttonText": "Explore Lead Generation"
-  }
+  },
+  {
+  "id": "11",
+  "slug": "website-building",
+  "path": "/service-details/website-building",
+  "image": "/images/service/11-website-building-803x627.png",
+  "alt": "Professional website building and development services for businesses and brands",
+  "cardSmallImage": "/images/service/sr-3-5.jpg",
+  "cardSmallImageAlt": "Professional website building and development service",
+  "icon": "/images/icon/sr-icon-3-5.png",
+  "iconAlt": "Website building and development icon",
+  "bgShape": "/images/bg/sr-box-bg-1.jpg",
+  "bgShapeAlt": "Website building service background",
+  "bgShape2": "/images/shape/sr-bg-shape-2-1.png",
+  "bgShape2Alt": "Website building decorative shape",
+  "title": "Website Building",
+  "text": "Build a professional, responsive and user-friendly website tailored to your business goals, brand identity and customer needs.",
+  "buttonText": "Explore Website Building"
+}
 ]

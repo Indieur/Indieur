@@ -87,7 +87,7 @@ const ContactTwo = ({ ...restProps }) => (
                   <InfoMedia
                     icon="far fa-clock"
                     title="Official Work Time"
-                    info="9:00am - 6:00pm ( Mon - Fri ) Sat, Sun & Holiday Closed"
+                    info="9:00am - 6:00pm ( Mon - Sat ) Sun & Holiday Closed"
                   />
                 </div>
               </div>

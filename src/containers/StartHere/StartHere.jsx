@@ -8,21 +8,21 @@ const services = [
         title: "Performance Marketing",
         description:
             "Generate qualified enquiries and measurable sales.",
-        link: "service",
+        link: "service-details/growth-strategy-consulting",
     },
     {
         icon: "/images/website.png",
         title: "Website Building",
         description:
             "Build a fast, professional website designed to convert.",
-        link: "service",
+        link: "service-details/website-building",
     },
     {
         icon: "/images/socialmedia.png",
         title: "Social Media Management",
         description:
             "Create a consistent brand presence with strategic content.",
-        link: "service",
+        link: "service-details/social-media-content-marketing",
     },
 ];
 
