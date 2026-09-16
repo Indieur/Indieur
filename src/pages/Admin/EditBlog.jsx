@@ -13,35 +13,721 @@ import StarterKit from "@tiptap/starter-kit";
 import TiptapLink from "@tiptap/extension-link";
 import TiptapImage from "@tiptap/extension-image";
 
+// Tiptap v3
+import { TableKit } from "@tiptap/extension-table";
+
+/*
+|--------------------------------------------------------------------------
+| HTML ESCAPE
+|--------------------------------------------------------------------------
+*/
+
+const escapeHTML = (value = "") => {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| CLEAN PASTED HTML
+|--------------------------------------------------------------------------
+|
+| IMPORTANT:
+| Do NOT extract only the table.
+|
+| If pasted content is:
+|
+| Heading
+| Paragraph
+| Table
+| Paragraph
+|
+| ALL content will be preserved.
+|
+*/
+
+const cleanPastedHTML = (html) => {
+  if (!html) return "";
+
+  const parser = new DOMParser();
+
+  const doc = parser.parseFromString(
+    html,
+    "text/html"
+  );
+
+  /*
+  |--------------------------------------------------------------------------
+  | REMOVE UNSAFE / UNWANTED ELEMENTS
+  |--------------------------------------------------------------------------
+  */
+
+  doc
+    .querySelectorAll(
+      "script, style, meta, link, iframe, object, embed, noscript"
+    )
+    .forEach((element) => {
+      element.remove();
+    });
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | CLEAN ELEMENT ATTRIBUTES
+  |--------------------------------------------------------------------------
+  */
+
+  doc.querySelectorAll("*").forEach(
+    (element) => {
+
+      /*
+      | Remove attributes that can hide content
+      */
+
+      element.removeAttribute("hidden");
+      element.removeAttribute("id");
+      element.removeAttribute("class");
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | CLEAN INLINE STYLES
+      |--------------------------------------------------------------------------
+      */
+
+      const style =
+        element.getAttribute("style");
+
+      if (style) {
+
+        const safeStyles = style
+          .split(";")
+          .map((item) => item.trim())
+          .filter(Boolean)
+          .filter((item) => {
+
+            const lower = item
+              .toLowerCase()
+              .replace(/\s+/g, "");
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | REMOVE INVISIBLE CONTENT STYLES
+            |--------------------------------------------------------------------------
+            */
+
+            if (
+              lower === "display:none" ||
+              lower === "visibility:hidden" ||
+              lower === "opacity:0"
+            ) {
+              return false;
+            }
+
+
+            /*
+            |--------------------------------------------------------------------------
+            | REMOVE COPIED TEXT COLORS
+            |--------------------------------------------------------------------------
+            |
+            | This prevents:
+            |
+            | color:white
+            |
+            | from making text invisible in the editor.
+            |
+            */
+
+            if (
+              lower.startsWith("color:") ||
+              lower.startsWith(
+                "background-color:"
+              )
+            ) {
+              return false;
+            }
+
+            return true;
+          });
+
+
+        if (safeStyles.length) {
+          element.setAttribute(
+            "style",
+            safeStyles.join("; ")
+          );
+        } else {
+          element.removeAttribute("style");
+        }
+      }
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | REMOVE INLINE JAVASCRIPT EVENTS
+      |--------------------------------------------------------------------------
+      */
+
+      [
+        ...element.attributes,
+      ].forEach((attribute) => {
+
+        if (
+          attribute.name
+            .toLowerCase()
+            .startsWith("on")
+        ) {
+          element.removeAttribute(
+            attribute.name
+          );
+        }
+      });
+    });
+
+
+  return doc.body.innerHTML;
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| PARSE MARKDOWN TABLE ROW
+|--------------------------------------------------------------------------
+|
+| Example:
+|
+| | Product | Price |
+|
+| becomes:
+|
+| ["Product", "Price"]
+|
+*/
+
+const parseMarkdownRow = (
+  line
+) => {
+
+  let value = line.trim();
+
+
+  if (value.startsWith("|")) {
+    value = value.substring(1);
+  }
+
+
+  if (value.endsWith("|")) {
+    value = value.substring(
+      0,
+      value.length - 1
+    );
+  }
+
+
+  return value
+    .split("|")
+    .map((cell) => cell.trim())
+    .map((cell) => {
+
+      return cell
+        .replace(
+          /\\\|/g,
+          "|"
+        )
+        .replace(
+          /\*\*(.*?)\*\*/g,
+          "<strong>$1</strong>"
+        )
+        .replace(
+          /\*(.*?)\*/g,
+          "<em>$1</em>"
+        );
+    });
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| MARKDOWN TABLE SEPARATOR
+|--------------------------------------------------------------------------
+|
+| Example:
+|
+| | --- | --- |
+|
+*/
+
+const isMarkdownSeparator = (
+  line
+) => {
+
+  const cells =
+    parseMarkdownRow(line);
+
+  if (!cells.length) {
+    return false;
+  }
+
+  return cells.every(
+    (cell) =>
+      /^:?-{3,}:?$/.test(
+        cell
+          .replace(
+            /<[^>]*>/g,
+            ""
+          )
+          .trim()
+      )
+  );
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| MARKDOWN TABLE TO HTML
+|--------------------------------------------------------------------------
+*/
+
+const markdownTableToHTML = (
+  lines
+) => {
+
+  if (lines.length < 2) {
+    return "";
+  }
+
+
+  const headerCells =
+    parseMarkdownRow(lines[0]);
+
+
+  const bodyLines =
+    lines.slice(2);
+
+
+  let html = `
+    <table>
+      <thead>
+        <tr>
+  `;
+
+
+  headerCells.forEach(
+    (cell) => {
+
+      html += `
+        <th>${cell}</th>
+      `;
+    }
+  );
+
+
+  html += `
+        </tr>
+      </thead>
+
+      <tbody>
+  `;
+
+
+  bodyLines.forEach(
+    (line) => {
+
+      const cells =
+        parseMarkdownRow(line);
+
+
+      if (!cells.length) {
+        return;
+      }
+
+
+      html += "<tr>";
+
+
+      const totalColumns =
+        headerCells.length;
+
+
+      for (
+        let i = 0;
+        i < totalColumns;
+        i++
+      ) {
+
+        html += `
+          <td>
+            ${cells[i] || ""}
+          </td>
+        `;
+      }
+
+
+      html += "</tr>";
+    }
+  );
+
+
+  html += `
+      </tbody>
+    </table>
+  `;
+
+
+  return html;
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| CONTAINS MARKDOWN TABLE
+|--------------------------------------------------------------------------
+|
+| Finds Markdown tables anywhere inside pasted text.
+|
+| This fixes the situation where a paragraph comes
+| BEFORE the table.
+|
+*/
+
+const containsMarkdownTable = (
+  text
+) => {
+
+  if (!text) {
+    return false;
+  }
+
+
+  const lines = text
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .split("\n");
+
+
+  for (
+    let i = 0;
+    i < lines.length - 1;
+    i++
+  ) {
+
+    const current =
+      lines[i].trim();
+
+    const next =
+      lines[i + 1].trim();
+
+
+    if (
+      current.includes("|") &&
+      next.includes("|") &&
+      isMarkdownSeparator(next)
+    ) {
+      return true;
+    }
+  }
+
+
+  return false;
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| MIXED CONTENT MARKDOWN CONVERTER
+|--------------------------------------------------------------------------
+|
+| Handles:
+|
+| Paragraph
+|
+| Paragraph
+|
+| | Name | Price |
+| | --- | --- |
+| | Rice | €10 |
+|
+| Paragraph after table
+|
+*/
+
+const convertMixedMarkdownContent = (
+  text
+) => {
+
+  if (!text) {
+    return "";
+  }
+
+
+  const normalized =
+    text
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n");
+
+
+  const lines =
+    normalized.split("\n");
+
+
+  const output = [];
+
+  let paragraphLines = [];
+
+  let index = 0;
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | FLUSH NORMAL PARAGRAPH
+  |--------------------------------------------------------------------------
+  */
+
+  const flushParagraph = () => {
+
+    if (!paragraphLines.length) {
+      return;
+    }
+
+
+    const paragraph =
+      paragraphLines
+        .map((line) =>
+          escapeHTML(
+            line.trim()
+          )
+        )
+        .filter(Boolean)
+        .join("<br>");
+
+
+    if (paragraph) {
+      output.push(
+        `<p>${paragraph}</p>`
+      );
+    }
+
+
+    paragraphLines = [];
+  };
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | PROCESS LINES
+  |--------------------------------------------------------------------------
+  */
+
+  while (
+    index < lines.length
+  ) {
+
+    const currentLine =
+      lines[index].trim();
+
+
+    const nextLine =
+      lines[index + 1]
+        ? lines[index + 1].trim()
+        : "";
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | DETECT TABLE
+    |--------------------------------------------------------------------------
+    */
+
+    const isTableStart =
+      currentLine.includes("|") &&
+      nextLine.includes("|") &&
+      isMarkdownSeparator(
+        nextLine
+      );
+
+
+    if (isTableStart) {
+
+      /*
+      | Save paragraph before table
+      */
+
+      flushParagraph();
+
+
+      /*
+      | Collect table rows
+      */
+
+      const tableLines = [
+        currentLine,
+        nextLine,
+      ];
+
+
+      index += 2;
+
+
+      while (
+        index < lines.length
+      ) {
+
+        const row =
+          lines[index].trim();
+
+
+        /*
+        | Stop when table ends
+        */
+
+        if (
+          !row ||
+          !row.includes("|")
+        ) {
+          break;
+        }
+
+
+        tableLines.push(row);
+
+        index++;
+      }
+
+
+      /*
+      | Convert table
+      */
+
+      output.push(
+        markdownTableToHTML(
+          tableLines
+        )
+      );
+
+
+      continue;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EMPTY LINE
+    |--------------------------------------------------------------------------
+    */
+
+    if (!currentLine) {
+
+      flushParagraph();
+
+    } else {
+
+      paragraphLines.push(
+        currentLine
+      );
+    }
+
+
+    index++;
+  }
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | FLUSH REMAINING CONTENT
+  |--------------------------------------------------------------------------
+  */
+
+  flushParagraph();
+
+
+  return output.join("");
+};
+
+
+/*
+|--------------------------------------------------------------------------
+| EDIT BLOG COMPONENT
+|--------------------------------------------------------------------------
+*/
 
 const EditBlog = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const { id } =
+    useParams();
 
-  const [imageFile, setImageFile] = useState(null);
-  const [uploadingImage, setUploadingImage] = useState(false);
+  const navigate =
+    useNavigate();
 
-  const [error, setError] = useState("");
 
-  const [form, setForm] = useState({
-  title: "",
-  slug: "",
-  excerpt: "",
-  content: "",
-  featured_image: "",
-  featured_image_alt: "",
-  author_name: "Admin",
-  category: "",
-  tags: "",
-  status: "draft",
-  meta_title: "",
-  meta_description: "",
-  canonical_url: "",
-  published_date: null,
-});
+  /*
+  |--------------------------------------------------------------------------
+  | STATE
+  |--------------------------------------------------------------------------
+  */
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [saving, setSaving] =
+    useState(false);
+
+
+  const [imageFile, setImageFile] =
+    useState(null);
+
+  const [
+    uploadingImage,
+    setUploadingImage,
+  ] = useState(false);
+
+
+  const [error, setError] =
+    useState("");
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | FORM
+  |--------------------------------------------------------------------------
+  */
+
+  const [form, setForm] =
+    useState({
+
+      title: "",
+
+      slug: "",
+
+      excerpt: "",
+
+      content: "",
+
+      featured_image: "",
+
+      featured_image_alt: "",
+
+      author_name: "Admin",
+
+      category: "",
+
+      tags: "",
+
+      status: "draft",
+
+      meta_title: "",
+
+      meta_description: "",
+
+      canonical_url: "",
+
+      published_date: null,
+    });
 
 
   /*
@@ -51,30 +737,350 @@ const EditBlog = () => {
   */
 
   const editor = useEditor({
+
     extensions: [
-      StarterKit,
+
+      /*
+      |--------------------------------------------------------------------------
+      | STARTER KIT
+      |--------------------------------------------------------------------------
+      */
+
+      StarterKit.configure({
+
+        heading: {
+          levels: [1, 2, 3],
+        },
+
+      }),
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | LINK
+      |--------------------------------------------------------------------------
+      */
 
       TiptapLink.configure({
+
         openOnClick: false,
+
         HTMLAttributes: {
           rel: "noopener noreferrer",
         },
+
       }),
 
+
+      /*
+      |--------------------------------------------------------------------------
+      | IMAGE
+      |--------------------------------------------------------------------------
+      */
+
       TiptapImage.configure({
+
         inline: false,
+
         allowBase64: false,
+
       }),
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | TABLE
+      |--------------------------------------------------------------------------
+      |
+      | Tiptap v3
+      |
+      */
+
+      TableKit.configure({
+
+        table: {
+
+          resizable: true,
+
+          HTMLAttributes: {
+            class: "blog-table",
+          },
+
+        },
+
+        tableRow: {
+
+          HTMLAttributes: {
+            class:
+              "blog-table-row",
+          },
+
+        },
+
+        tableHeader: {
+
+          HTMLAttributes: {
+            class:
+              "blog-table-header",
+          },
+
+        },
+
+        tableCell: {
+
+          HTMLAttributes: {
+            class:
+              "blog-table-cell",
+          },
+
+        },
+
+      }),
+
     ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | INITIAL CONTENT
+    |--------------------------------------------------------------------------
+    */
 
     content: "",
 
-    onUpdate: ({ editor }) => {
-      setForm((prev) => ({
-        ...prev,
-        content: editor.getHTML(),
-      }));
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDITOR ATTRIBUTES
+    |--------------------------------------------------------------------------
+    */
+
+    editorProps: {
+
+      attributes: {
+        class:
+          "blog-editor-content",
+      },
+
+
+      /*
+      |--------------------------------------------------------------------------
+      | CUSTOM PASTE HANDLER
+      |--------------------------------------------------------------------------
+      |
+      | IMPORTANT:
+      |
+      | We insert COMPLETE HTML.
+      |
+      | We DO NOT extract only <table>.
+      |
+      */
+
+      handlePaste(
+        view,
+        event
+      ) {
+
+        const clipboardData =
+          event.clipboardData;
+
+
+        if (!clipboardData) {
+          return false;
+        }
+
+
+        const html =
+          clipboardData.getData(
+            "text/html"
+          );
+
+
+        const text =
+          clipboardData.getData(
+            "text/plain"
+          );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | HTML PASTE
+        |--------------------------------------------------------------------------
+        |
+        | Word / Google Docs / websites
+        |
+        */
+
+        if (html) {
+
+          const cleanedHTML =
+            cleanPastedHTML(
+              html
+            );
+
+
+          if (!cleanedHTML) {
+            return false;
+          }
+
+
+          /*
+          |--------------------------------------------------------------------------
+          | INSERT COMPLETE CONTENT
+          |--------------------------------------------------------------------------
+          */
+
+          editor
+            .chain()
+            .focus()
+            .insertContent(
+              cleanedHTML
+            )
+            .run();
+
+
+          return true;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PLAIN TEXT / MARKDOWN
+        |--------------------------------------------------------------------------
+        */
+
+        if (text) {
+
+          /*
+          |--------------------------------------------------------------------------
+          | MARKDOWN TABLE
+          |--------------------------------------------------------------------------
+          */
+
+          if (
+            containsMarkdownTable(
+              text
+            )
+          ) {
+
+            const converted =
+              convertMixedMarkdownContent(
+                text
+              );
+
+
+            if (converted) {
+
+              editor
+                .chain()
+                .focus()
+                .insertContent(
+                  converted
+                )
+                .run();
+
+
+              return true;
+            }
+          }
+
+
+          /*
+          |--------------------------------------------------------------------------
+          | NORMAL PLAIN TEXT
+          |--------------------------------------------------------------------------
+          */
+
+          const paragraphs =
+            text
+              .replace(
+                /\r\n/g,
+                "\n"
+              )
+              .replace(
+                /\r/g,
+                "\n"
+              )
+              .split(
+                /\n\s*\n/
+              )
+              .map(
+                (paragraph) => {
+
+                  const lines =
+                    paragraph
+                      .split("\n")
+                      .map(
+                        (line) =>
+                          escapeHTML(
+                            line.trim()
+                          )
+                      )
+                      .filter(Boolean);
+
+
+                  if (
+                    !lines.length
+                  ) {
+                    return "";
+                  }
+
+
+                  return `
+                    <p>
+                      ${lines.join(
+                        "<br>"
+                      )}
+                    </p>
+                  `;
+                }
+              )
+              .filter(Boolean)
+              .join("");
+
+
+          if (paragraphs) {
+
+            editor
+              .chain()
+              .focus()
+              .insertContent(
+                paragraphs
+              )
+              .run();
+
+
+            return true;
+          }
+        }
+
+
+        return false;
+      },
+
     },
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EDITOR UPDATE
+    |--------------------------------------------------------------------------
+    */
+
+    onUpdate: ({
+      editor,
+    }) => {
+
+      setForm(
+        (prev) => ({
+          ...prev,
+
+          content:
+            editor.getHTML(),
+        })
+      );
+    },
+
   });
 
 
@@ -84,82 +1090,161 @@ const EditBlog = () => {
   |--------------------------------------------------------------------------
   */
 
-useEffect(() => {
-  const fetchBlog = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  useEffect(() => {
 
-      const { data, error } = await supabase
-        .from("blogs")
-        .select("*")
-        .eq("id", id)
-        .single();
+    const fetchBlog =
+      async () => {
 
-      if (error) {
-        throw error;
-      }
+        try {
 
-      if (!data) {
-        throw new Error("Blog not found.");
-      }
+          setLoading(true);
 
-      setForm({
-        title: data.title || "",
-        slug: data.slug || "",
-        excerpt: data.excerpt || "",
-        content: data.content || "",
-        featured_image: data.featured_image || "",
-        featured_image_alt: data.featured_image_alt || "",
-        author_name: data.author_name || "Admin",
+          setError("");
 
-        category: data.category || "",
 
-        tags: Array.isArray(data.tags)
-          ? data.tags.join(", ")
-          : "",
+          const {
+            data,
+            error,
+          } = await supabase
 
-        status: data.status || "draft",
+            .from("blogs")
 
-        meta_title: data.meta_title || "",
+            .select("*")
 
-        meta_description:
-          data.meta_description || "",
+            .eq(
+              "id",
+              id
+            )
 
-        canonical_url:
-          data.canonical_url || "",
+            .single();
 
-        published_date:
-          data.published_date || null,
-      });
 
-      if (editor) {
-        editor.commands.setContent(
-          data.content || ""
-        );
-      }
+          if (error) {
+            throw error;
+          }
 
-    } catch (err) {
-      console.error(
-        "Fetch blog error:",
-        err
-      );
 
-      setError(
-        err.message ||
-        "Unable to load blog."
-      );
+          if (!data) {
 
-    } finally {
-      setLoading(false);
+            throw new Error(
+              "Blog not found."
+            );
+          }
+
+
+          /*
+          |--------------------------------------------------------------------------
+          | SET FORM
+          |--------------------------------------------------------------------------
+          */
+
+          setForm({
+
+            title:
+              data.title || "",
+
+            slug:
+              data.slug || "",
+
+            excerpt:
+              data.excerpt || "",
+
+            content:
+              data.content || "",
+
+            featured_image:
+              data.featured_image ||
+              "",
+
+            featured_image_alt:
+              data.featured_image_alt ||
+              "",
+
+            author_name:
+              data.author_name ||
+              "Admin",
+
+            category:
+              data.category ||
+              "",
+
+            tags:
+              Array.isArray(
+                data.tags
+              )
+                ? data.tags.join(
+                    ", "
+                  )
+                : "",
+
+            status:
+              data.status ||
+              "draft",
+
+            meta_title:
+              data.meta_title ||
+              "",
+
+            meta_description:
+              data.meta_description ||
+              "",
+
+            canonical_url:
+              data.canonical_url ||
+              "",
+
+            published_date:
+              data.published_date ||
+              null,
+
+          });
+
+
+          /*
+          |--------------------------------------------------------------------------
+          | SET EDITOR CONTENT
+          |--------------------------------------------------------------------------
+          |
+          | false = do not emit unnecessary update
+          |
+          */
+
+          if (editor) {
+
+            editor.commands.setContent(
+              data.content || "",
+              false
+            );
+          }
+
+        } catch (err) {
+
+          console.error(
+            "Fetch blog error:",
+            err
+          );
+
+
+          setError(
+            err.message ||
+              "Unable to load blog."
+          );
+
+        } finally {
+
+          setLoading(false);
+        }
+      };
+
+
+    if (id) {
+      fetchBlog();
     }
-  };
 
-  if (id) {
-    fetchBlog();
-  }
-
-}, [id, editor]);
+  }, [
+    id,
+    editor,
+  ]);
 
 
   /*
@@ -168,16 +1253,23 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
-  const handleChange = (e) => {
+  const handleChange = (
+    e
+  ) => {
+
     const {
       name,
       value,
     } = e.target;
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    setForm(
+      (prev) => ({
+        ...prev,
+
+        [name]: value,
+      })
+    );
   };
 
 
@@ -187,13 +1279,30 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
-  const generateSlug = (title) => {
+  const generateSlug = (
+    title
+  ) => {
+
     return title
+
       .toLowerCase()
+
       .trim()
-      .replace(/[^a-z0-9\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
+
+      .replace(
+        /[^a-z0-9\s-]/g,
+        ""
+      )
+
+      .replace(
+        /\s+/g,
+        "-"
+      )
+
+      .replace(
+        /-+/g,
+        "-"
+      );
   };
 
 
@@ -203,28 +1312,44 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
-  const handleTitleChange = (e) => {
-    const title = e.target.value;
+  const handleTitleChange = (
+    e
+  ) => {
 
-    setForm((prev) => ({
-      ...prev,
-      title,
-    }));
+    const title =
+      e.target.value;
+
+
+    setForm(
+      (prev) => ({
+        ...prev,
+
+        title,
+      })
+    );
   };
 
 
   /*
   |--------------------------------------------------------------------------
-  | AUTO GENERATE SLUG
+  | GENERATE SLUG
   |--------------------------------------------------------------------------
   */
 
-  const generateSlugFromTitle = () => {
-    setForm((prev) => ({
-      ...prev,
-      slug: generateSlug(prev.title),
-    }));
-  };
+  const generateSlugFromTitle =
+    () => {
+
+      setForm(
+        (prev) => ({
+          ...prev,
+
+          slug:
+            generateSlug(
+              prev.title
+            ),
+        })
+      );
+    };
 
 
   /*
@@ -233,12 +1358,18 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
-  const handleImageSelect = (e) => {
-    const file = e.target.files?.[0];
+  const handleImageSelect = (
+    e
+  ) => {
+
+    const file =
+      e.target.files?.[0];
+
 
     if (!file) {
       return;
     }
+
 
     setImageFile(file);
   };
@@ -250,39 +1381,69 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
-  const handleImageUpload = async () => {
-    if (!imageFile) {
-      alert("Please select an image first.");
-      return;
-    }
+  const handleImageUpload =
+    async () => {
 
-    try {
-      setUploadingImage(true);
+      if (!imageFile) {
 
-      const imageUrl =
-        await uploadBlogImage(imageFile);
+        alert(
+          "Please select an image first."
+        );
 
-      setForm((prev) => ({
-        ...prev,
-        featured_image: imageUrl,
-      }));
+        return;
+      }
 
-      setImageFile(null);
 
-      alert("Image uploaded successfully.");
+      try {
 
-    } catch (err) {
-      console.error("Image upload error:", err);
+        setUploadingImage(
+          true
+        );
 
-      alert(
-        err.message ||
-        "Unable to upload image."
-      );
 
-    } finally {
-      setUploadingImage(false);
-    }
-  };
+        const imageUrl =
+          await uploadBlogImage(
+            imageFile
+          );
+
+
+        setForm(
+          (prev) => ({
+            ...prev,
+
+            featured_image:
+              imageUrl,
+          })
+        );
+
+
+        setImageFile(null);
+
+
+        alert(
+          "Image uploaded successfully."
+        );
+
+      } catch (err) {
+
+        console.error(
+          "Image upload error:",
+          err
+        );
+
+
+        alert(
+          err.message ||
+            "Unable to upload image."
+        );
+
+      } finally {
+
+        setUploadingImage(
+          false
+        );
+      }
+    };
 
 
   /*
@@ -292,37 +1453,60 @@ useEffect(() => {
   */
 
   const addLink = () => {
-    if (!editor) return;
+
+    if (!editor) {
+      return;
+    }
+
 
     const previousUrl =
-      editor.getAttributes("link").href || "";
+      editor.getAttributes(
+        "link"
+      ).href || "";
 
-    const url = window.prompt(
-      "Enter URL",
-      previousUrl
-    );
+
+    const url =
+      window.prompt(
+        "Enter URL",
+        previousUrl
+      );
+
 
     if (url === null) {
       return;
     }
 
+
     if (url === "") {
+
       editor
+
         .chain()
+
         .focus()
+
         .unsetLink()
+
         .run();
 
       return;
     }
 
+
     editor
+
       .chain()
+
       .focus()
-      .extendMarkRange("link")
+
+      .extendMarkRange(
+        "link"
+      )
+
       .setLink({
         href: url,
       })
+
       .run();
   };
 
@@ -334,12 +1518,20 @@ useEffect(() => {
   */
 
   const removeLink = () => {
-    if (!editor) return;
+
+    if (!editor) {
+      return;
+    }
+
 
     editor
+
       .chain()
+
       .focus()
+
       .unsetLink()
+
       .run();
   };
 
@@ -351,27 +1543,176 @@ useEffect(() => {
   */
 
   const addImage = () => {
-    if (!editor) return;
 
-    const url = window.prompt(
-      "Enter image URL"
-    );
+    if (!editor) {
+      return;
+    }
+
+
+    const url =
+      window.prompt(
+        "Enter image URL"
+      );
+
 
     if (!url) {
       return;
     }
 
-    const alt = window.prompt(
-      "Enter image ALT text"
-    );
+
+    const alt =
+      window.prompt(
+        "Enter image ALT text"
+      );
+
 
     editor
+
       .chain()
+
       .focus()
+
       .setImage({
+
         src: url,
+
         alt: alt || "",
+
       })
+
+      .run();
+  };
+
+
+  /*
+  |--------------------------------------------------------------------------
+  | TABLE FUNCTIONS
+  |--------------------------------------------------------------------------
+  */
+
+  const insertTable = () => {
+
+    if (!editor) {
+      return;
+    }
+
+
+    editor
+
+      .chain()
+
+      .focus()
+
+      .insertTable({
+
+        rows: 3,
+
+        cols: 3,
+
+        withHeaderRow: true,
+
+      })
+
+      .run();
+  };
+
+
+  const addRowBefore = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .addRowBefore()
+      .run();
+  };
+
+
+  const addRowAfter = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .addRowAfter()
+      .run();
+  };
+
+
+  const deleteRow = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .deleteRow()
+      .run();
+  };
+
+
+  const addColumnBefore = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .addColumnBefore()
+      .run();
+  };
+
+
+  const addColumnAfter = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .addColumnAfter()
+      .run();
+  };
+
+
+  const deleteColumn = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .deleteColumn()
+      .run();
+  };
+
+
+  const toggleHeaderRow = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .toggleHeaderRow()
+      .run();
+  };
+
+
+  const mergeCells = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .mergeCells()
+      .run();
+  };
+
+
+  const splitCell = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .splitCell()
+      .run();
+  };
+
+
+  const deleteTable = () => {
+
+    editor
+      ?.chain()
+      .focus()
+      .deleteTable()
       .run();
   };
 
@@ -382,227 +1723,262 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit =
+    async (e) => {
 
-  setError("");
-
-  /*
-  |--------------------------------------------------------------------------
-  | VALIDATION
-  |--------------------------------------------------------------------------
-  */
-
-  if (!form.title.trim()) {
-    alert("Blog title is required.");
-    return;
-  }
-
-  if (!form.slug.trim()) {
-    alert("Blog slug is required.");
-    return;
-  }
-
-  if (!form.content.trim()) {
-    alert("Blog content is required.");
-    return;
-  }
+      e.preventDefault();
 
 
-  try {
-
-    setSaving(true);
+      setError("");
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | TAGS
-    |--------------------------------------------------------------------------
-    */
+      /*
+      |--------------------------------------------------------------------------
+      | VALIDATION
+      |--------------------------------------------------------------------------
+      */
 
-    const tags = form.tags
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
+      if (
+        !form.title.trim()
+      ) {
 
+        alert(
+          "Blog title is required."
+        );
 
-    /*
-    |--------------------------------------------------------------------------
-    | PUBLISHED DATE
-    |--------------------------------------------------------------------------
-    */
-
-    let publishedDate =
-      form.published_date;
+        return;
+      }
 
 
-    /*
-    | If changing Draft → Published,
-    | create publish date.
-    */
+      if (
+        !form.slug.trim()
+      ) {
 
-    if (
-      form.status === "published" &&
-      !publishedDate
-    ) {
-      publishedDate =
-        new Date().toISOString();
-    }
+        alert(
+          "Blog slug is required."
+        );
+
+        return;
+      }
 
 
-    /*
-    | If changing Published → Draft,
-    | remove published date.
-    */
+      if (
+        !form.content.trim()
+      ) {
 
-    if (
-      form.status === "draft"
-    ) {
-      publishedDate = null;
-    }
+        alert(
+          "Blog content is required."
+        );
+
+        return;
+      }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    | UPDATE BLOG
-    |--------------------------------------------------------------------------
-    */
+      try {
 
-    const updateData = {
+        setSaving(true);
 
-      title:
-        form.title.trim(),
 
-      slug:
-        form.slug.trim(),
+        /*
+        |--------------------------------------------------------------------------
+        | TAGS
+        |--------------------------------------------------------------------------
+        */
 
-      excerpt:
-        form.excerpt.trim(),
+        const tags =
+          form.tags
 
-      content:
-        form.content,
+            .split(",")
 
-      featured_image:
-        form.featured_image || null,
+            .map(
+              (tag) =>
+                tag.trim()
+            )
 
-      featured_image_alt:
-        form.featured_image_alt.trim(),
+            .filter(Boolean);
 
-      author_name:
-        form.author_name.trim() ||
-        "Admin",
 
-      category:
-        form.category.trim() ||
-        null,
+        /*
+        |--------------------------------------------------------------------------
+        | PUBLISHED DATE
+        |--------------------------------------------------------------------------
+        */
 
-      tags,
+        let publishedDate =
+          form.published_date;
 
-      status:
-        form.status,
 
-      published_date:
-        publishedDate,
+        /*
+        |--------------------------------------------------------------------------
+        | DRAFT -> PUBLISHED
+        |--------------------------------------------------------------------------
+        */
 
-      meta_title:
-        form.meta_title.trim() ||
-        null,
+        if (
+          form.status ===
+            "published" &&
+          !publishedDate
+        ) {
 
-      meta_description:
-        form.meta_description.trim() ||
-        null,
+          publishedDate =
+            new Date()
+              .toISOString();
+        }
 
-      canonical_url:
-        form.canonical_url.trim() ||
-        null,
 
-      updated_at:
-        new Date().toISOString(),
+        /*
+        |--------------------------------------------------------------------------
+        | PUBLISHED -> DRAFT
+        |--------------------------------------------------------------------------
+        */
 
+        if (
+          form.status ===
+          "draft"
+        ) {
+
+          publishedDate =
+            null;
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | UPDATE DATA
+        |--------------------------------------------------------------------------
+        */
+
+        const updateData = {
+
+          title:
+            form.title.trim(),
+
+          slug:
+            form.slug.trim(),
+
+          excerpt:
+            form.excerpt.trim(),
+
+          content:
+            form.content,
+
+          featured_image:
+            form.featured_image ||
+            null,
+
+          featured_image_alt:
+            form.featured_image_alt.trim(),
+
+          author_name:
+            form.author_name.trim() ||
+            "Admin",
+
+          category:
+            form.category.trim() ||
+            null,
+
+          tags,
+
+          status:
+            form.status,
+
+          published_date:
+            publishedDate,
+
+          meta_title:
+            form.meta_title.trim() ||
+            null,
+
+          meta_description:
+            form.meta_description.trim() ||
+            null,
+
+          canonical_url:
+            form.canonical_url.trim() ||
+            null,
+
+          updated_at:
+            new Date().toISOString(),
+
+        };
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUPABASE UPDATE
+        |--------------------------------------------------------------------------
+        */
+
+        const {
+          data: updatedBlog,
+          error: updateError,
+        } = await supabase
+
+          .from("blogs")
+
+          .update(updateData)
+
+          .eq(
+            "id",
+            id
+          )
+
+          .select()
+
+          .single();
+
+
+        if (updateError) {
+          throw updateError;
+        }
+
+
+        if (!updatedBlog) {
+
+          throw new Error(
+            "Blog was not updated."
+          );
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SUCCESS
+        |--------------------------------------------------------------------------
+        */
+
+        alert(
+          "Blog updated successfully!"
+        );
+
+
+        navigate(
+          "/admin/blogs"
+        );
+
+      } catch (err) {
+
+        console.error(
+          "Update blog error:",
+          err
+        );
+
+
+        const message =
+          err?.message ||
+          "Unable to update blog.";
+
+
+        setError(message);
+
+
+        alert(message);
+
+      } finally {
+
+        setSaving(false);
+      }
     };
-
-
-    console.log(
-      "Updating blog:",
-      id
-    );
-
-    console.log(
-      "Update data:",
-      updateData
-    );
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | SUPABASE UPDATE
-    |--------------------------------------------------------------------------
-    */
-
-    const {
-      data: updatedBlog,
-      error: updateError,
-    } = await supabase
-      .from("blogs")
-      .update(updateData)
-      .eq("id", id)
-      .select()
-      .single();
-
-
-    if (updateError) {
-      throw updateError;
-    }
-
-
-    if (!updatedBlog) {
-      throw new Error(
-        "Blog was not updated."
-      );
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | SUCCESS
-    |--------------------------------------------------------------------------
-    */
-
-    alert(
-      "Blog updated successfully!"
-    );
-
-
-    navigate(
-      "/admin/blogs"
-    );
-
-
-  } catch (err) {
-
-    console.error(
-      "Update blog error:",
-      err
-    );
-
-
-    const message =
-      err?.message ||
-      "Unable to update blog.";
-
-
-    setError(message);
-
-
-    alert(message);
-
-
-  } finally {
-
-    setSaving(false);
-
-  }
-};
 
 
   /*
@@ -612,13 +1988,21 @@ useEffect(() => {
   */
 
   if (loading) {
+
     return (
       <>
-        <style>{adminBlogCSS}</style>
+        <style>
+          {adminBlogCSS}
+        </style>
 
         <div className="edit-blog-loading">
+
           <div className="edit-blog-spinner" />
-          <p>Loading blog...</p>
+
+          <p>
+            Loading blog...
+          </p>
+
         </div>
       </>
     );
@@ -631,16 +2015,28 @@ useEffect(() => {
   |--------------------------------------------------------------------------
   */
 
-  if (error && !form.title) {
+  if (
+    error &&
+    !form.title
+  ) {
+
     return (
       <>
-        <style>{adminBlogCSS}</style>
+        <style>
+          {adminBlogCSS}
+        </style>
 
         <div className="edit-blog-error">
-          <div className="edit-blog-error-box">
-            <h2>Unable to Load Blog</h2>
 
-            <p>{error}</p>
+          <div className="edit-blog-error-box">
+
+            <h2>
+              Unable to Load Blog
+            </h2>
+
+            <p>
+              {error}
+            </p>
 
             <Link
               to="/admin/blogs"
@@ -648,7 +2044,9 @@ useEffect(() => {
             >
               ← Back to Blogs
             </Link>
+
           </div>
+
         </div>
       </>
     );
@@ -663,28 +2061,37 @@ useEffect(() => {
 
   return (
     <>
-      <style>{adminBlogCSS}</style>
+      <style>
+        {adminBlogCSS}
+      </style>
+
 
       <div className="edit-blog-page">
 
         <div className="edit-blog-container">
+
 
           {/* HEADER */}
 
           <div className="edit-blog-header">
 
             <div>
+
               <span className="edit-blog-eyebrow">
                 BLOG MANAGEMENT
               </span>
 
-              <h1>Edit Blog</h1>
+              <h1>
+                Edit Blog
+              </h1>
 
               <p>
                 Update your blog content,
                 images and SEO settings.
               </p>
+
             </div>
+
 
             <Link
               to="/admin/blogs"
@@ -699,9 +2106,11 @@ useEffect(() => {
           {/* ERROR */}
 
           {error && (
+
             <div className="edit-blog-alert">
               {error}
             </div>
+
           )}
 
 
@@ -710,7 +2119,9 @@ useEffect(() => {
             className="edit-blog-form"
           >
 
+
             <div className="edit-blog-grid">
+
 
               {/* =====================================================
                   LEFT COLUMN
@@ -718,15 +2129,21 @@ useEffect(() => {
 
               <div className="edit-blog-main">
 
+
                 {/* BASIC INFORMATION */}
 
                 <div className="edit-blog-card">
 
                   <div className="edit-blog-card-title">
-                    <h2>Blog Information</h2>
+
+                    <h2>
+                      Blog Information
+                    </h2>
+
                     <span>
                       Main content
                     </span>
+
                   </div>
 
 
@@ -761,6 +2178,7 @@ useEffect(() => {
                       <span>*</span>
                     </label>
 
+
                     <div className="edit-slug-row">
 
                       <input
@@ -773,6 +2191,7 @@ useEffect(() => {
                         placeholder="your-blog-url"
                       />
 
+
                       <button
                         type="button"
                         onClick={
@@ -784,6 +2203,7 @@ useEffect(() => {
                       </button>
 
                     </div>
+
 
                     <small>
                       /blog/{form.slug}
@@ -820,14 +2240,20 @@ useEffect(() => {
                 <div className="edit-blog-card">
 
                   <div className="edit-blog-card-title">
-                    <h2>Featured Image</h2>
+
+                    <h2>
+                      Featured Image
+                    </h2>
+
                     <span>
                       SEO image
                     </span>
+
                   </div>
 
 
                   {form.featured_image && (
+
                     <div className="current-blog-image">
 
                       <img
@@ -841,6 +2267,7 @@ useEffect(() => {
                       />
 
                     </div>
+
                   )}
 
 
@@ -858,13 +2285,19 @@ useEffect(() => {
                       }
                     />
 
+
                     {imageFile && (
+
                       <div className="selected-file">
+
                         Selected:{" "}
+
                         <strong>
                           {imageFile.name}
                         </strong>
+
                       </div>
+
                     )}
 
                   </div>
@@ -881,9 +2314,11 @@ useEffect(() => {
                       !imageFile
                     }
                   >
+
                     {uploadingImage
                       ? "Uploading..."
                       : "Upload New Image"}
+
                   </button>
 
 
@@ -924,18 +2359,29 @@ useEffect(() => {
                 <div className="edit-blog-card">
 
                   <div className="edit-blog-card-title">
-                    <h2>Blog Content</h2>
+
+                    <h2>
+                      Blog Content
+                    </h2>
+
                     <span>
                       Rich text editor
                     </span>
+
                   </div>
 
 
                   <div className="blog-editor">
 
-                    {/* TOOLBAR */}
+
+                    {/* =================================================
+                        TOOLBAR
+                    ================================================== */}
 
                     <div className="blog-editor-toolbar">
+
+
+                      {/* BOLD */}
 
                       <button
                         type="button"
@@ -954,9 +2400,13 @@ useEffect(() => {
                             .run()
                         }
                       >
-                        <strong>B</strong>
+                        <strong>
+                          B
+                        </strong>
                       </button>
 
+
+                      {/* ITALIC */}
 
                       <button
                         type="button"
@@ -975,9 +2425,38 @@ useEffect(() => {
                             .run()
                         }
                       >
-                        <em>I</em>
+                        <em>
+                          I
+                        </em>
                       </button>
 
+
+                      {/* STRIKE */}
+
+                      <button
+                        type="button"
+                        className={
+                          editor?.isActive(
+                            "strike"
+                          )
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() =>
+                          editor
+                            ?.chain()
+                            .focus()
+                            .toggleStrike()
+                            .run()
+                        }
+                      >
+                        <s>
+                          S
+                        </s>
+                      </button>
+
+
+                      {/* H2 */}
 
                       <button
                         type="button"
@@ -1005,8 +2484,20 @@ useEffect(() => {
                       </button>
 
 
+                      {/* H3 */}
+
                       <button
                         type="button"
+                        className={
+                          editor?.isActive(
+                            "heading",
+                            {
+                              level: 3,
+                            }
+                          )
+                            ? "active"
+                            : ""
+                        }
                         onClick={() =>
                           editor
                             ?.chain()
@@ -1021,8 +2512,17 @@ useEffect(() => {
                       </button>
 
 
+                      {/* BULLET LIST */}
+
                       <button
                         type="button"
+                        className={
+                          editor?.isActive(
+                            "bulletList"
+                          )
+                            ? "active"
+                            : ""
+                        }
                         onClick={() =>
                           editor
                             ?.chain()
@@ -1035,8 +2535,17 @@ useEffect(() => {
                       </button>
 
 
+                      {/* ORDERED LIST */}
+
                       <button
                         type="button"
+                        className={
+                          editor?.isActive(
+                            "orderedList"
+                          )
+                            ? "active"
+                            : ""
+                        }
                         onClick={() =>
                           editor
                             ?.chain()
@@ -1049,6 +2558,31 @@ useEffect(() => {
                       </button>
 
 
+                      {/* BLOCKQUOTE */}
+
+                      <button
+                        type="button"
+                        className={
+                          editor?.isActive(
+                            "blockquote"
+                          )
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() =>
+                          editor
+                            ?.chain()
+                            .focus()
+                            .toggleBlockquote()
+                            .run()
+                        }
+                      >
+                        ❝ Quote
+                      </button>
+
+
+                      {/* LINK */}
+
                       <button
                         type="button"
                         onClick={
@@ -1058,6 +2592,8 @@ useEffect(() => {
                         🔗 Link
                       </button>
 
+
+                      {/* UNLINK */}
 
                       <button
                         type="button"
@@ -1069,6 +2605,8 @@ useEffect(() => {
                       </button>
 
 
+                      {/* IMAGE */}
+
                       <button
                         type="button"
                         onClick={
@@ -1078,49 +2616,248 @@ useEffect(() => {
                         🖼 Image
                       </button>
 
+
+                      {/* =================================================
+                          TABLE
+                      ================================================== */}
+
+                      <span className="toolbar-divider" />
+
+
+                      {/* INSERT TABLE */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          insertTable
+                        }
+                        title="Insert 3 × 3 table"
+                      >
+                        ▦ Table
+                      </button>
+
+
+                      {/* ADD ROW BEFORE */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          addRowBefore
+                        }
+                        disabled={
+                          !editor?.can().addRowBefore()
+                        }
+                        title="Add row before"
+                      >
+                        + Row ↑
+                      </button>
+
+
+                      {/* ADD ROW AFTER */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          addRowAfter
+                        }
+                        disabled={
+                          !editor?.can().addRowAfter()
+                        }
+                        title="Add row after"
+                      >
+                        + Row ↓
+                      </button>
+
+
+                      {/* DELETE ROW */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          deleteRow
+                        }
+                        disabled={
+                          !editor?.can().deleteRow()
+                        }
+                        title="Delete current row"
+                      >
+                        − Row
+                      </button>
+
+
+                      {/* ADD COLUMN BEFORE */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          addColumnBefore
+                        }
+                        disabled={
+                          !editor?.can().addColumnBefore()
+                        }
+                        title="Add column before"
+                      >
+                        + Col ←
+                      </button>
+
+
+                      {/* ADD COLUMN AFTER */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          addColumnAfter
+                        }
+                        disabled={
+                          !editor?.can().addColumnAfter()
+                        }
+                        title="Add column after"
+                      >
+                        + Col →
+                      </button>
+
+
+                      {/* DELETE COLUMN */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          deleteColumn
+                        }
+                        disabled={
+                          !editor?.can().deleteColumn()
+                        }
+                        title="Delete current column"
+                      >
+                        − Col
+                      </button>
+
+
+                      {/* HEADER */}
+
+                      <button
+                        type="button"
+                        className={
+                          editor?.isActive(
+                            "tableHeader"
+                          )
+                            ? "active"
+                            : ""
+                        }
+                        onClick={
+                          toggleHeaderRow
+                        }
+                        title="Toggle header row"
+                      >
+                        Header
+                      </button>
+
+
+                      {/* MERGE */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          mergeCells
+                        }
+                        disabled={
+                          !editor?.can().mergeCells()
+                        }
+                        title="Merge selected cells"
+                      >
+                        Merge
+                      </button>
+
+
+                      {/* SPLIT */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          splitCell
+                        }
+                        disabled={
+                          !editor?.can().splitCell()
+                        }
+                        title="Split cell"
+                      >
+                        Split
+                      </button>
+
+
+                      {/* DELETE TABLE */}
+
+                      <button
+                        type="button"
+                        onClick={
+                          deleteTable
+                        }
+                        disabled={
+                          !editor?.can().deleteTable()
+                        }
+                        title="Delete table"
+                      >
+                        Delete Table
+                      </button>
+
                     </div>
 
-<div className="edit-form-group">
 
-  <label>
-    Category
-  </label>
-
-  <input
-    type="text"
-    name="category"
-    value={form.category}
-    onChange={handleChange}
-    placeholder="e.g. SEO"
-  />
-
-</div>
-
-
-<div className="edit-form-group">
-
-  <label>
-    Tags
-  </label>
-
-  <input
-    type="text"
-    name="tags"
-    value={form.tags}
-    onChange={handleChange}
-    placeholder="SEO, Google Ads, Marketing"
-  />
-
-  <small>
-    Separate tags with commas.
-  </small>
-
-</div>
                     {/* EDITOR */}
 
                     <EditorContent
                       editor={editor}
                     />
+
+                  </div>
+
+
+                  {/* CATEGORY */}
+
+                  <div className="edit-form-group">
+
+                    <label>
+                      Category
+                    </label>
+
+                    <input
+                      type="text"
+                      name="category"
+                      value={
+                        form.category
+                      }
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="e.g. SEO"
+                    />
+
+                  </div>
+
+
+                  {/* TAGS */}
+
+                  <div className="edit-form-group">
+
+                    <label>
+                      Tags
+                    </label>
+
+                    <input
+                      type="text"
+                      name="tags"
+                      value={
+                        form.tags
+                      }
+                      onChange={
+                        handleChange
+                      }
+                      placeholder="SEO, Google Ads, Marketing"
+                    />
+
+                    <small>
+                      Separate tags with commas.
+                    </small>
 
                   </div>
 
@@ -1135,12 +2872,17 @@ useEffect(() => {
 
               <div className="edit-blog-sidebar">
 
+
                 {/* PUBLISH */}
 
                 <div className="edit-blog-card">
 
                   <div className="edit-blog-card-title">
-                    <h2>Publish</h2>
+
+                    <h2>
+                      Publish
+                    </h2>
+
                   </div>
 
 
@@ -1152,7 +2894,9 @@ useEffect(() => {
 
                     <select
                       name="status"
-                      value={form.status}
+                      value={
+                        form.status
+                      }
                       onChange={
                         handleChange
                       }
@@ -1174,11 +2918,15 @@ useEffect(() => {
                   <button
                     type="submit"
                     className="edit-save-btn"
-                    disabled={saving}
+                    disabled={
+                      saving
+                    }
                   >
+
                     {saving
                       ? "Saving Changes..."
                       : "Save Changes"}
+
                   </button>
 
 
@@ -1199,8 +2947,13 @@ useEffect(() => {
                 <div className="edit-blog-card">
 
                   <div className="edit-blog-card-title">
-                    <h2>Author</h2>
+
+                    <h2>
+                      Author
+                    </h2>
+
                   </div>
+
 
                   <div className="edit-form-group">
 
@@ -1229,11 +2982,15 @@ useEffect(() => {
                 <div className="edit-blog-card">
 
                   <div className="edit-blog-card-title">
-                    <h2>SEO Settings</h2>
+
+                    <h2>
+                      SEO Settings
+                    </h2>
 
                     <span>
                       Search optimization
                     </span>
+
                   </div>
 
 
@@ -1293,7 +3050,7 @@ useEffect(() => {
                   </div>
 
 
-                  {/* CANONICAL */}
+                  {/* CANONICAL URL */}
 
                   <div className="edit-form-group">
 
@@ -1352,7 +3109,11 @@ const adminBlogCSS = `
 }
 
 
-/* HEADER */
+/*
+|--------------------------------------------------------------------------
+| HEADER
+|--------------------------------------------------------------------------
+*/
 
 .edit-blog-header {
   display: flex;
@@ -1404,7 +3165,11 @@ const adminBlogCSS = `
 }
 
 
-/* GRID */
+/*
+|--------------------------------------------------------------------------
+| GRID
+|--------------------------------------------------------------------------
+*/
 
 .edit-blog-grid {
   display: grid;
@@ -1418,7 +3183,11 @@ const adminBlogCSS = `
 }
 
 
-/* CARD */
+/*
+|--------------------------------------------------------------------------
+| CARD
+|--------------------------------------------------------------------------
+*/
 
 .edit-blog-card {
   margin-bottom: 25px;
@@ -1450,7 +3219,11 @@ const adminBlogCSS = `
 }
 
 
-/* FORM */
+/*
+|--------------------------------------------------------------------------
+| FORM
+|--------------------------------------------------------------------------
+*/
 
 .edit-form-group {
   margin-bottom: 22px;
@@ -1484,8 +3257,9 @@ const adminBlogCSS = `
   color: #222;
   font-size: 14px;
   outline: none;
-  transition: border-color .2s ease,
-              box-shadow .2s ease;
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
 }
 
 .edit-form-group input:focus,
@@ -1509,7 +3283,11 @@ const adminBlogCSS = `
 }
 
 
-/* SLUG */
+/*
+|--------------------------------------------------------------------------
+| SLUG
+|--------------------------------------------------------------------------
+*/
 
 .edit-slug-row {
   display: flex;
@@ -1532,7 +3310,11 @@ const adminBlogCSS = `
 }
 
 
-/* IMAGE */
+/*
+|--------------------------------------------------------------------------
+| IMAGE
+|--------------------------------------------------------------------------
+*/
 
 .current-blog-image {
   margin-bottom: 20px;
@@ -1575,7 +3357,11 @@ const adminBlogCSS = `
 }
 
 
-/* EDITOR */
+/*
+|--------------------------------------------------------------------------
+| EDITOR
+|--------------------------------------------------------------------------
+*/
 
 .blog-editor {
   overflow: hidden;
@@ -1613,27 +3399,70 @@ const adminBlogCSS = `
   border-color: #222;
 }
 
+.blog-editor-toolbar button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.blog-editor-toolbar button:disabled:hover {
+  background: #fff;
+  color: #333;
+  border-color: #ddd;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 28px;
+  margin: 3px 3px;
+  background: #ddd;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PROSEMIRROR
+|--------------------------------------------------------------------------
+*/
+
 .blog-editor .ProseMirror {
   min-height: 450px;
   padding: 20px;
   outline: none;
   line-height: 1.8;
+  color: #222;
+  background: #fff;
 }
 
 .blog-editor .ProseMirror p {
   margin-bottom: 15px;
 }
 
+.blog-editor .ProseMirror h1 {
+  margin-top: 35px;
+  margin-bottom: 18px;
+  font-size: 34px;
+  line-height: 1.25;
+}
+
 .blog-editor .ProseMirror h2 {
   margin-top: 30px;
   margin-bottom: 15px;
   font-size: 28px;
+  line-height: 1.3;
 }
 
 .blog-editor .ProseMirror h3 {
   margin-top: 25px;
   margin-bottom: 12px;
   font-size: 22px;
+  line-height: 1.35;
+}
+
+.blog-editor .ProseMirror h4,
+.blog-editor .ProseMirror h5,
+.blog-editor .ProseMirror h6 {
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .blog-editor .ProseMirror ul,
@@ -1642,7 +3471,20 @@ const adminBlogCSS = `
   margin-bottom: 20px;
 }
 
+.blog-editor .ProseMirror li {
+  margin-bottom: 5px;
+}
+
+.blog-editor .ProseMirror blockquote {
+  margin: 20px 0;
+  padding: 12px 20px;
+  border-left: 4px solid #222;
+  background: #f7f7f7;
+  color: #555;
+}
+
 .blog-editor .ProseMirror a {
+  color: #1d4ed8;
   text-decoration: underline;
 }
 
@@ -1655,7 +3497,81 @@ const adminBlogCSS = `
 }
 
 
-/* PUBLISH */
+/*
+|--------------------------------------------------------------------------
+| TABLE
+|--------------------------------------------------------------------------
+*/
+
+.blog-editor .ProseMirror .tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 25px 0;
+}
+
+.blog-editor .ProseMirror table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: 1px solid #d5dbe3;
+  background: #fff;
+}
+
+.blog-editor .ProseMirror th,
+.blog-editor .ProseMirror td {
+  min-width: 80px;
+  padding: 10px 12px;
+  border: 1px solid #d5dbe3;
+  vertical-align: top;
+  text-align: left;
+  color: #222 !important;
+  background: #fff;
+}
+
+.blog-editor .ProseMirror th {
+  font-weight: 700;
+  background: #f5f6f8;
+  color: #222 !important;
+}
+
+.blog-editor .ProseMirror th p,
+.blog-editor .ProseMirror td p {
+  margin: 0;
+}
+
+.blog-editor .ProseMirror tr {
+  height: auto;
+}
+
+.blog-editor .ProseMirror .selectedCell {
+  background: #dbeafe !important;
+}
+
+.blog-editor .ProseMirror .selectedCell:after {
+  background: transparent !important;
+}
+
+.blog-editor .ProseMirror .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: 0;
+  width: 4px;
+  background: #3b82f6;
+  pointer-events: none;
+}
+
+.blog-editor .ProseMirror.resize-cursor {
+  cursor: ew-resize;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PUBLISH
+|--------------------------------------------------------------------------
+*/
 
 .edit-save-btn {
   width: 100%;
@@ -1696,7 +3612,11 @@ const adminBlogCSS = `
 }
 
 
-/* ALERT */
+/*
+|--------------------------------------------------------------------------
+| ALERT
+|--------------------------------------------------------------------------
+*/
 
 .edit-blog-alert {
   margin-bottom: 25px;
@@ -1709,7 +3629,11 @@ const adminBlogCSS = `
 }
 
 
-/* LOADING */
+/*
+|--------------------------------------------------------------------------
+| LOADING
+|--------------------------------------------------------------------------
+*/
 
 .edit-blog-loading {
   display: flex;
@@ -1736,7 +3660,11 @@ const adminBlogCSS = `
 }
 
 
-/* ERROR */
+/*
+|--------------------------------------------------------------------------
+| ERROR
+|--------------------------------------------------------------------------
+*/
 
 .edit-blog-error {
   display: flex;
@@ -1760,7 +3688,11 @@ const adminBlogCSS = `
 }
 
 
-/* RESPONSIVE */
+/*
+|--------------------------------------------------------------------------
+| RESPONSIVE
+|--------------------------------------------------------------------------
+*/
 
 @media (max-width: 991px) {
 
@@ -1770,11 +3702,16 @@ const adminBlogCSS = `
 
   .edit-blog-sidebar {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
     gap: 25px;
   }
 
-  .edit-blog-sidebar .edit-blog-card {
+  .edit-blog-sidebar
+  .edit-blog-card {
     margin-bottom: 0;
   }
 
@@ -1804,7 +3741,8 @@ const adminBlogCSS = `
     display: block;
   }
 
-  .edit-blog-sidebar .edit-blog-card {
+  .edit-blog-sidebar
+  .edit-blog-card {
     margin-bottom: 15px;
   }
 
@@ -1834,8 +3772,17 @@ const adminBlogCSS = `
     padding: 15px;
   }
 
+  .blog-editor .ProseMirror table {
+    min-width: 650px;
+  }
+
+  .blog-editor .ProseMirror th,
+  .blog-editor .ProseMirror td {
+    min-width: 100px;
+  }
+
 }
 
 `;
- 
+
 export default EditBlog;
